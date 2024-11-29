@@ -1,0 +1,58 @@
+* -text
+
+*.c             linguist-language=C
+*.h             linguist-language=C
+
+# assembler-with-cpp
+*.S             linguist-language=Assembly
+*.sx            linguist-language=Assembly
+
+# dvp-gas assembly
+*.dsm           linguist-language=Assembly
+*.vsm           linguist-language=Assembly
+*.vcl           linguist-language=Assembly
+
+*.mkf           linguist-language=Makefile
+Makefile.*      linguist-language=Makefile
+MakeDefs        linguist-language=Makefile
+MakeRules       linguist-language=Makefile
+PathDefs        linguist-language=Makefile
+
+# end-of-line encoding
+*.sh            text eol=lf
+*.bash          text eol=lf
+*.csh           text eol=lf
+*.tcsh          text eol=lf
+*.ksh           text eol=lf
+*.zsh           text eol=lf
+
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+*.ps1           text eol=crlf
+
+# data
+*.gz binary
+*.lzh binary
+*.rpm binary
+*.sit binary
+*.tar binary
+*.tgz binary
+*.zip binary
+
+*.gf binary
+*.ipu binary
+*.m2v binary
+*.pss binary
+
+*.bd binary
+*.hd binary
+*.inb binary
+*.int binary
+*.raw binary
+*.seq binary
+*.sq binary
+*.ssb binary
+*.vag binary
+*.vb binary
+*.vh binary
+*.wav binary

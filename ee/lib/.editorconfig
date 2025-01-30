@@ -1,0 +1,19 @@
+root = false
+
+[app.cmd]
+tab_width       = 8
+indent_size     = tab
+indent_style    = tab
+end_of_line     = lf
+
+[crt0.s]
+tab_width       = 8
+indent_size     = tab
+indent_style    = tab
+end_of_line     = lf
+
+[erxcrt0.s]
+tab_width       = 4
+indent_size     = tab
+indent_style    = tab
+end_of_line     = lf

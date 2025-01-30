@@ -1,0 +1,54 @@
+#
+# $Id: iopspecs,v 1.8 2003/01/29 08:48:07 tei Exp $
+#
+# This file copy to
+#    $distdir/lib/gcc-lib/mipsel-scei-elfl/specs
+#   and
+#    $distdir/lib/gcc-lib/mipsel-scei-ecoffl/specs
+#
+# Supprt options
+#    -irx1
+#    -rb/-relative-branch
+#    -mno-split-addresses
+#    -startfiles		use crt0.o
+#    no -Ttext option		genarate IOP relocatable object
+#    -ilb=<IOPlib>		IOP external module lib
+#    -Map=<MapFileName>		link map output
+#
+#    -Ttext <addr>		genarate IOP fixed addrss object (no support)
+#
+#
+*lib:
+
+
+*startfile:
+crt0%O%s
+
+*endfile:
+
+
+*link_command:
+%{!fsyntax-only:\
+  %{!c:%{!M:%{!MM:%{!E:%{!S:\
+ 	ioplibld %{t:-v} %{zd:-d} %{zi:--ignore-undef} -s %g.ilb.stub.s \
+			%{!A:%{!nostdlib:%{startfiles:%S}}} \
+			%{static:} %{L*} %D %o \
+			%{!nostdlib:%{!nodefaultlibs:%G}} \
+			%{!A:%{!nostdlib:%{startfiles:%E}}} \
+			: %{ilb=*:%*} \
+			%{!noiopilb:%{!nostdlib:%{!nodefaultlibs:iop.ilb%s}}}
+	as %g.ilb.stub.s -o %g.ilb.stub%O
+	iopcdtorsgen -s %g.ctors.s %o
+	as %g.ctors.s -o %g.ctors%O
+	ld %l %{Map=*:-Map %*} -dc -r %X -o %g.iop.rel%O %{t} %{u*} %{x} \
+			%{!A:%{!nostdlib:%{startfiles:%S}}} \
+			%{static:} %{L*} %D %o %g.ilb.stub%O %g.ctors%O \
+			%{!nostdlib:%{!nodefaultlibs:%G}} \
+			%{!A:%{!nostdlib:%{startfiles:%E}}}
+	iopfixup %{!Ttext*:%{e*} %{s:%{o*}} %{!s:%{o*:-r %*}}} \
+		 %{rb:--relative-branch} \
+		 %{relative-branch:--relative-branch}  \
+		 %{Ttext*:%{e*} %{o*:-f %*} -t %*} \
+		 %{irx1:--irx1} %{mno-split-addresses:--irx1} %g.iop.rel%O}
+ }}}}}}
+

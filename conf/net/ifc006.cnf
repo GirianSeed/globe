@@ -1,0 +1,9 @@
+# <Sony Computer Entertainment Inc.>
+
+type nic
+ipversion dual
+dhcp
+-address
+-netmask
+ipv6.rtsold on
+#ipv6.nameserver <IPv6 DNS server address>

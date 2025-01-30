@@ -1,0 +1,24 @@
+#			Copyright (C) 2001 Sony Computer Entertainment
+#			All Right Reserved
+#
+#
+
+VER	= $(shell cat $(TOPDIR)VERSION)
+
+NAME	= netglue_insck-$(VER)
+DSTDIR	= $(TOPDIR)dist/$(NAME)
+
+TOP = ../../../..
+EE_INCDIR	= $(TOP)/include
+
+INCDIRS	= -I$(TOPDIR)common -I$(EE_INCDIR)
+CFLAGS	= -Wall -fno-common $(INCDIRS)
+#CFLAGS	= -g -Wall -fno-common $(INCDIRS)
+ASFLAGS	= -c -xassembler-with-cpp
+
+AS	= ee-gcc
+CC	= ee-gcc
+AR	= ee-ar
+RANLIB	= ee-ranlib
+
+.PHONY:	all clean dist taz bin binpkg

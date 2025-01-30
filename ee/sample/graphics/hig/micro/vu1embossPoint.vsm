@@ -1,0 +1,1105 @@
+; flowMon::Emit() vcl 1.28 produced this code:
+		.vu
+		.align 4
+		.global	vclbump_CodeStart
+		.global	vclbump_CodeEnd
+vclbump_CodeStart:
+__vcl__MMvu1embossPoint_vcl_3:
+; [0,63) size=63 nU=44 nL=37 ic=81 [lin=44 lp=0]
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF04,5(VI00)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF01,4(VI00)                    
+              nop                                                           move.xyz        VF07,VF04                       
+              nop                                                           lq.xyz          VF02,6(VI00)                    
+              nop                                                           lq              VF04,16(VI00)                   
+              nop                                                           lq              VF06,0(VI00)                    
+              nop                                                           lq              VF05,1(VI00)                    
+              nop                                                           lq              VF09,17(VI00)                   
+              nop                                                           lq              VF12,18(VI00)                   
+              nop                                                           fcset           0                               
+              mulax           ACC,VF04,VF06x                                lq              VF10,19(VI00)                   
+              madday          ACC,VF09,VF06y                                mr32.w          VF08,VF07                       
+              maddaz          ACC,VF12,VF06z                                move.xyz        VF08,VF02                       
+              nop                                                           move.xyz        VF11,VF01                       
+              maddw           VF01,VF10,VF06w                               move.y          VF03,VF07                       
+              mulax           ACC,VF04,VF05x                                lq              VF13,2(VI00)                    
+              madday          ACC,VF09,VF05y                                mr32.xzw        VF03,VF08                       
+              maddaz          ACC,VF12,VF05z                                mr32.xy         VF07,VF11                       
+              maddw           VF02,VF10,VF05w                               nop                                             
+              mulax           ACC,VF04,VF13x                                lq              VF14,3(VI00)                    
+              madday          ACC,VF09,VF13y                                mr32.yzw        VF11,VF03                       
+              maddaz          ACC,VF12,VF13z                                mr32.xy         VF08,VF07                       
+              maddw           VF03,VF10,VF13w                               move.y          VF07,VF03                       
+              mulax           ACC,VF04,VF14x                                lq.xyz          VF15,3(VI00)                    
+              madday          ACC,VF09,VF14y                                mr32.z          VF07,VF11                       
+              maddaz          ACC,VF12,VF14z                                lq.zw           VF09,30(VI00)                   
+              maddw           VF04,VF10,VF14w                               lq.xy           VF10,30(VI00)                   
+              mulax.xyz       ACC,VF11,VF15x                                nop                                             
+              madday.xyz      ACC,VF07,VF15y                                nop                                             
+              maddz.xyz       VF12,VF08,VF15z                               nop                                             
+              mulax.x         ACC,VF06,VF11x                                nop                                             
+              madday.x        ACC,VF05,VF11y                                nop                                             
+              maddz.x         VF05,VF13,VF11z                               nop                                             
+              mulax.y         ACC,VF06,VF07x                                nop                                             
+              madday.y        ACC,VF05,VF07y                                nop                                             
+              maddz.y         VF05,VF13,VF07z                               lq.xyz          VF14,48(VI00)                   
+              mulax.z         ACC,VF06,VF08x                                move.x          VF05,VF05                       
+              madday.z        ACC,VF05,VF08y                                nop                                             
+              maddz.z         VF05,VF13,VF08z                               lq.xyz          VF06,49(VI00)                   
+              mulax.xyz       ACC,VF11,VF14x                                move.y          VF05,VF05                       
+              madday.xyz      ACC,VF07,VF14y                                nop                                             
+              maddz.xyz       VF15,VF08,VF14z                               lq.xyz          VF13,50(VI00)                   
+              mulax.xyz       ACC,VF11,VF06x                                move.z          VF05,VF05                       
+              madday.xyz      ACC,VF07,VF06y                                nop                                             
+              maddz.xyz       VF14,VF08,VF06z                               nop                                             
+              sub.xyz         VF06,VF15,VF12                                nop                                             
+              mulax.xyz       ACC,VF11,VF13x                                lq.w            VF06,52(VI00)                   
+              madday.xyz      ACC,VF07,VF13y                                lq.w            VF07,53(VI00)                   
+              sub.xyz         VF07,VF14,VF12                                lq.w            VF05,54(VI00)                   
+              maddz.xyz       VF08,VF08,VF13z                               nop                                             
+              addw.x          VF11,VF00,VF06w                               nop                                             
+              addw.y          VF11,VF00,VF07w                               nop                                             
+              addw.z          VF11,VF00,VF05w                               nop                                             
+              sub.xyz         VF08,VF08,VF12                                loi             2048.0                          
+              addi.xy         VF09,VF00,I                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           sq.xyz          VF11,100(VI00)                  
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+BUMP_START:
+; [0,6) size=6 nU=0 nL=4 ic=4 [lin=6 lp=0]
+              nop                                                           ilw.x           VI03,10(VI00)                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           xtop            VI02                            
+              nop                                                           iadd            VI03,VI02,VI03                  
+              nop                                                           iaddiu          VI04,VI03,0                     
+BUMP_GIFTAG:
+; [0,47) size=47 nU=9 nL=36 ic=45 [lin=37 lp=0]
+              nop                                                           ilw.y           VI05,0(VI02)                    
+              nop                                                           lq              VF12,8(VI00)                    
+              nop                                                           ilw.z           VI06,29(VI00)                   
+              nop                                                           ilw.x           VI08,1(VI02)                    
+              nop                                                           ilw.x           VI07,0(VI02)                    
+              nop                                                           lq.yzw          VF13,9(VI00)                    
+              nop                                                           mfir.yzw        VF14,VI00                       
+              nop                                                           ior             VI06,VI06,VI08                  
+              nop                                                           lq.x            VF11,0(VI02)                    
+              nop                                                           iaddiu          VI02,VI02,2                     
+              nop                                                           lq.xyz          VF15,0(VI02)                    
+              nop                                                           sq              VF12,0(VI04)                    
+              nop                                                           iaddiu          VI08,VI00,0x1b                  
+              nop                                                           sq.yzw          VF14,1(VI04)                    
+              mulax.xyw       ACC,VF01,VF15x                                sq.yzw          VF14,2(VI04)                    
+              madday.xyw      ACC,VF02,VF15y                                isw.x           VI05,1(VI04)                    
+              maddaz.xyw      ACC,VF03,VF15z                                isw.x           VI06,2(VI04)                    
+              maddw.xyw       VF13,VF04,VF00w                               sq.yzw          VF13,3(VI04)                    
+              nop                                                           isw.x           VI07,3(VI04)                    
+              nop                                                           isw.z           VI08,2(VI04)                    
+              nop                                                           iaddiu          VI06,VI00,0x0007                
+              nop                                                           div             Q,VF00w,VF13w                   
+              nop                                                           iaddiu          VI04,VI04,4                     
+              nop                                                           iand            VI06,VI05,VI06                  
+              nop                                                           nop                                             
+              nop                                                           iaddiu          VI05,VI00,0x7fff                
+              nop                                                           iand            VI05,VI07,VI05                  
+              nop                                                           lq.xyz          VF12,52(VI00)                   
+              mulq.xy         VF16,VF13,Q                                   lq.xyz          VF13,53(VI00)                   
+              nop                                                           lq.xyz          VF14,54(VI00)                   
+              nop                                                           lq.xyz          VF15,100(VI00)                  
+              nop                                                           iaddiu          VI07,VI00,0                     
+              sub.xy          VF16,VF16,VF09                                iaddiu          VI08,VI00,1                     
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              subw.z          VF16,VF09,VF13w                               nop                                             
+              mul.xy          VF16,VF16,VF10                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              clipw.xyz       VF16xyz,VF09w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           iaddi           VI09,VI00,0x0003                
+              nop                                                           fcand           VI01,0x3f                       
+              nop                                                           ibeq            VI09,VI06,BUMP_vertex_loop      
+              nop                                                           iadd            VI06,VI01,VI00                  
+; [0,2) size=2 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           b               BUMP_stripfan                   
+              nop                                                           nop                                             
+BUMP_vertex_loop:
+; [0,719) size=719 nU=196 nL=81 ic=277 [lin=196 lp=196]
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF17,0(VI02)                    
+              nop                                                           lq.xyz          VF19,0+4(VI02)                  
+              nop                                                           lq.xy           VF16,2+4(VI02)                  
+              nop                                                           lq.xyz          VF18,0+8(VI02)                  
+              nop                                                           lq.xy           VF20,2(VI02)                    
+              sub.xyz         VF19,VF19,VF17                                nop                                             
+              nop                                                           lq.xy           VF21,2+8(VI02)                  
+              sub.xyz         VF18,VF18,VF17                                nop                                             
+              sub.xy          VF17,VF16,VF20                                nop                                             
+              nop                                                           nop                                             
+              sub.xy          VF16,VF21,VF20                                nop                                             
+              nop                                                           nop                                             
+              addy.z          VF17,VF00,VF17y                               nop                                             
+              addx.y          VF17,VF00,VF17x                               nop                                             
+              addy.z          VF16,VF00,VF16y                               nop                                             
+              addx.y          VF16,VF00,VF16x                               nop                                             
+              nop                                                           move.x          VF20,VF18                       
+              nop                                                           move.yz         VF21,VF17                       
+              nop                                                           move.x          VF21,VF19                       
+              nop                                                           move.yz         VF20,VF16                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF21xyz,VF20xyz                        nop                                             
+              opmsub.xyz      VF17xyz,VF20xyz,VF21xyz                       nop                                             
+              addy.x          VF21,VF00,VF19y                               nop                                             
+              addy.x          VF20,VF00,VF18y                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF21xyz,VF20xyz                        nop                                             
+              opmsub.xyz      VF16xyz,VF20xyz,VF21xyz                       nop                                             
+              addz.x          VF21,VF00,VF19z                               nop                                             
+              addz.x          VF20,VF00,VF18z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF21xyz,VF20xyz                        nop                                             
+              opmsub.xyz      VF19xyz,VF20xyz,VF21xyz                       div             Q,VF00w,VF17x                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF16x                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.x          VF18,VF00,Q                                   nop                                             
+              nop                                                           div             Q,VF00w,VF19x                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.y          VF18,VF00,Q                                   nop                                             
+              addq.z          VF18,VF00,Q                                   nop                                             
+              addy.x          VF20,VF00,VF17y                               nop                                             
+              addy.y          VF20,VF00,VF16y                               nop                                             
+              addy.z          VF20,VF00,VF19y                               nop                                             
+              addz.x          VF16,VF00,VF17z                               nop                                             
+              addz.y          VF16,VF00,VF16z                               nop                                             
+              addz.z          VF16,VF00,VF19z                               nop                                             
+              mul.xyz         VF17,VF20,VF18                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF16,VF16,VF18                                nop                                             
+              nop                                                           erleng          P,VF17                          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           erleng          P,VF16                          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           mfp.x           VF18,P                          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF19,0(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF19,VF05                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xyz         VF19,VF06,VF20                                nop                                             
+              sub.xyz         VF21,VF07,VF20                                nop                                             
+              sub.xyz         VF20,VF08,VF20                                nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF23,VF19,VF19                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.w         ACC,VF00,VF23x                                nop                                             
+              madday.w        ACC,VF00,VF23y                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF22,VF21,VF21                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maddz.w         VF05,VF00,VF23z                               nop                                             
+              mulax.w         ACC,VF00,VF22x                                nop                                             
+              madday.w        ACC,VF00,VF22y                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           erleng          P,VF20                          
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maddz.w         VF05,VF00,VF22z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF25,1(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.x          VF22,VF00,Q                                   mfp.y           VF18,P                          
+              mul.xyz         VF24,VF19,VF25                                nop                                             
+              mul.xyz         VF23,VF21,VF25                                nop                                             
+              mul.xyz         VF21,VF20,VF25                                mfp.z           VF22,P                          
+              addq.y          VF22,VF00,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xyz        VF24,VF24,VF22x                               nop                                             
+              mul.xyz         VF20,VF22,VF22                                nop                                             
+              nop                                                           nop                                             
+              mulz.xyz        VF21,VF21,VF22z                               nop                                             
+              muly.xyz        VF23,VF23,VF22y                               nop                                             
+              mulax.x         ACC,VF20,VF24x                                nop                                             
+              madday.x        ACC,VF20,VF24y                                nop                                             
+              maddz.x         VF20,VF20,VF24z                               nop                                             
+              mulax.y         ACC,VF20,VF23x                                nop                                             
+              madday.y        ACC,VF20,VF23y                                nop                                             
+              maddz.y         VF20,VF20,VF23z                               nop                                             
+              mulax.z         ACC,VF20,VF21x                                nop                                             
+              madday.z        ACC,VF20,VF21y                                nop                                             
+              maddz.z         VF20,VF20,VF21z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF20,VF15                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maxx.xyz        VF20,VF20,VF00x                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xyz       ACC,VF12,VF20x                                nop                                             
+              madday.xyz      ACC,VF13,VF20y                                nop                                             
+              maddz.xyz       VF20,VF14,VF20z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              muly.xyz        VF16,VF16,VF18y                               nop                                             
+              miniw.xyz       VF21,VF20,VF00w                               lq              VF20,3(VI02)                    
+              nop                                                           nop                                             
+              mulx.xyz        VF17,VF17,VF18x                               nop                                             
+              nop                                                           mr32.w          VF05,VF16                       
+              mul.xyz         VF20,VF21,VF20                                nop                                             
+              nop                                                           move.y          VF21,VF16                       
+              nop                                                           mr32.xy         VF16,VF17                       
+              nop                                                           mr32.z          VF17,VF05                       
+              ftoi0           VF20,VF20                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           mr32.xy         VF18,VF16                       
+              nop                                                           mr32.y          VF17,VF17                       
+              mulx.xyz        VF19,VF19,VF22x                               sq              VF20,1(VI04)                    
+              nop                                                           move.y          VF16,VF21                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xy        ACC,VF17,VF19x                                nop                                             
+              madday.xy       ACC,VF16,VF19y                                nop                                             
+              maddz.xy        VF20,VF18,VF19z                               lq.x            VF19,31(VI00)                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xy         VF20,VF20,VF19x                               lq.xyz          VF19,2(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              add.xy          VF19,VF19,VF20                                lq.xyz          VF20,0(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax           ACC,VF01,VF20x                                nop                                             
+              madday          ACC,VF02,VF20y                                nop                                             
+              maddaz          ACC,VF03,VF20z                                nop                                             
+              maddw           VF20,VF04,VF00w                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF20w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xyz        VF20,VF20,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              ftoi4.xyz       VF21,VF20                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xyz        VF19,VF19,Q                                   sq.xyz          VF21,2(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xy          VF19,VF20,VF09                                sq.xyz          VF19,0(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              subw.z          VF19,VF09,VF20w                               nop                                             
+              mul.xy          VF19,VF19,VF10                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              clipw.xyz       VF19xyz,VF09w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fcand           VI01,0x003ffff                  
+              nop                                                           iaddiu          VI01,VI01,0x7fff                
+              nop                                                           isw.w           VI01,2(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF19,0+4(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF19,VF05                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xyz         VF19,VF06,VF20                                nop                                             
+              sub.xyz         VF21,VF07,VF20                                nop                                             
+              sub.xyz         VF20,VF08,VF20                                nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF23,VF19,VF19                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.w         ACC,VF00,VF23x                                nop                                             
+              madday.w        ACC,VF00,VF23y                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF22,VF21,VF21                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maddz.w         VF05,VF00,VF23z                               nop                                             
+              mulax.w         ACC,VF00,VF22x                                nop                                             
+              madday.w        ACC,VF00,VF22y                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           erleng          P,VF20                          
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maddz.w         VF05,VF00,VF22z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF25,1+4(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.x          VF22,VF00,Q                                   nop                                             
+              mul.xyz         VF24,VF19,VF25                                nop                                             
+              mul.xyz         VF23,VF21,VF25                                nop                                             
+              mul.xyz         VF21,VF20,VF25                                mfp.z           VF22,P                          
+              addq.y          VF22,VF00,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xyz        VF24,VF24,VF22x                               nop                                             
+              mul.xyz         VF20,VF22,VF22                                nop                                             
+              nop                                                           nop                                             
+              mulz.xyz        VF21,VF21,VF22z                               nop                                             
+              muly.xyz        VF23,VF23,VF22y                               nop                                             
+              mulax.x         ACC,VF20,VF24x                                nop                                             
+              madday.x        ACC,VF20,VF24y                                nop                                             
+              maddz.x         VF20,VF20,VF24z                               nop                                             
+              mulax.y         ACC,VF20,VF23x                                nop                                             
+              madday.y        ACC,VF20,VF23y                                nop                                             
+              maddz.y         VF20,VF20,VF23z                               nop                                             
+              mulax.z         ACC,VF20,VF21x                                nop                                             
+              madday.z        ACC,VF20,VF21y                                nop                                             
+              maddz.z         VF20,VF20,VF21z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF20,VF15                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maxx.xyz        VF20,VF20,VF00x                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xyz       ACC,VF12,VF20x                                nop                                             
+              madday.xyz      ACC,VF13,VF20y                                nop                                             
+              maddz.xyz       VF20,VF14,VF20z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              miniw.xyz       VF21,VF20,VF00w                               lq              VF20,3+4(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF21,VF20                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              ftoi0           VF20,VF20                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           iaddiu          VI04,VI04,3                     
+              mulx.xyz        VF19,VF19,VF22x                               sq              VF20,1(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xy        ACC,VF17,VF19x                                nop                                             
+              madday.xy       ACC,VF16,VF19y                                nop                                             
+              maddz.xy        VF20,VF18,VF19z                               lq.x            VF19,31(VI00)                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xy         VF20,VF20,VF19x                               lq.xyz          VF19,2+4(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              add.xy          VF19,VF19,VF20                                lq.xyz          VF20,0+4(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax           ACC,VF01,VF20x                                nop                                             
+              madday          ACC,VF02,VF20y                                nop                                             
+              maddaz          ACC,VF03,VF20z                                nop                                             
+              maddw           VF20,VF04,VF00w                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF20w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xyz        VF20,VF20,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              ftoi4.xyz       VF21,VF20                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xyz        VF19,VF19,Q                                   sq.xyz          VF21,2(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xy          VF19,VF20,VF09                                sq.xyz          VF19,0(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              subw.z          VF19,VF09,VF20w                               nop                                             
+              mul.xy          VF19,VF19,VF10                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              clipw.xyz       VF19xyz,VF09w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fcand           VI01,0x003ffff                  
+              nop                                                           iaddiu          VI01,VI01,0x7fff                
+              nop                                                           isw.w           VI01,2(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF19,0+8(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF19,VF05                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xyz         VF19,VF06,VF20                                nop                                             
+              sub.xyz         VF21,VF07,VF20                                nop                                             
+              sub.xyz         VF20,VF08,VF20                                nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF23,VF19,VF19                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.w         ACC,VF00,VF23x                                nop                                             
+              madday.w        ACC,VF00,VF23y                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF22,VF21,VF21                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maddz.w         VF05,VF00,VF23z                               nop                                             
+              mulax.w         ACC,VF00,VF22x                                nop                                             
+              madday.w        ACC,VF00,VF22y                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           erleng          P,VF20                          
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maddz.w         VF05,VF00,VF22z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF25,1+8(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.x          VF22,VF00,Q                                   nop                                             
+              mul.xyz         VF24,VF19,VF25                                nop                                             
+              mul.xyz         VF23,VF21,VF25                                nop                                             
+              mul.xyz         VF21,VF20,VF25                                mfp.z           VF22,P                          
+              addq.y          VF22,VF00,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xyz        VF24,VF24,VF22x                               nop                                             
+              mul.xyz         VF20,VF22,VF22                                nop                                             
+              nop                                                           nop                                             
+              mulz.xyz        VF21,VF21,VF22z                               nop                                             
+              muly.xyz        VF23,VF23,VF22y                               nop                                             
+              mulax.x         ACC,VF20,VF24x                                nop                                             
+              madday.x        ACC,VF20,VF24y                                nop                                             
+              maddz.x         VF20,VF20,VF24z                               nop                                             
+              mulax.y         ACC,VF20,VF23x                                nop                                             
+              madday.y        ACC,VF20,VF23y                                nop                                             
+              maddz.y         VF20,VF20,VF23z                               nop                                             
+              mulax.z         ACC,VF20,VF21x                                nop                                             
+              madday.z        ACC,VF20,VF21y                                nop                                             
+              maddz.z         VF20,VF20,VF21z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF20,VF15                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              maxx.xyz        VF20,VF20,VF00x                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xyz       ACC,VF12,VF20x                                nop                                             
+              madday.xyz      ACC,VF13,VF20y                                nop                                             
+              maddz.xyz       VF20,VF14,VF20z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              miniw.xyz       VF21,VF20,VF00w                               lq              VF20,3+8(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF20,VF21,VF20                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              ftoi0           VF20,VF20                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           iaddiu          VI04,VI04,3                     
+              mulx.xyz        VF19,VF19,VF22x                               sq              VF20,1(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xy        ACC,VF17,VF19x                                nop                                             
+              madday.xy       ACC,VF16,VF19y                                nop                                             
+              maddz.xy        VF17,VF18,VF19z                               lq.x            VF16,31(VI00)                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xy         VF16,VF17,VF16x                               lq.xyz          VF17,2+8(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              add.xy          VF17,VF17,VF16                                lq.xyz          VF16,0+8(VI02)                  
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax           ACC,VF01,VF16x                                nop                                             
+              madday          ACC,VF02,VF16y                                nop                                             
+              maddaz          ACC,VF03,VF16z                                nop                                             
+              maddw           VF16,VF04,VF00w                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF16w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xyz        VF16,VF16,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              ftoi4.xyz       VF19,VF16                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xyz        VF17,VF17,Q                                   sq.xyz          VF19,2(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xy          VF16,VF16,VF09                                sq.xyz          VF17,0(VI04)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              subw.z          VF16,VF09,VF16w                               nop                                             
+              mul.xy          VF16,VF16,VF10                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              clipw.xyz       VF16xyz,VF09w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fcand           VI01,0x003ffff                  
+              nop                                                           iaddiu          VI01,VI01,0x7fff                
+              nop                                                           isw.w           VI01,2(VI04)                    
+              nop                                                           iaddiu          VI04,VI04,3                     
+              nop                                                           iaddiu          VI02,VI02,3*4                   
+              nop                                                           iaddi           VI05,VI05,-3                    
+              nop                                                           nop                                             
+              nop                                                           ibne            VI05,VI00,BUMP_vertex_loop      
+              nop                                                           nop                                             
+; [0,6) size=6 nU=0 nL=2 ic=2 [lin=7 lp=0]
+              nop                                                           mtir            VI01,VF11x                      
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           ibgez           VI01,BUMP_GIFTAG                
+              nop                                                           nop                                             
+; [0,1) size=1 nU=0 nL=1 ic=1 [lin=1 lp=0]
+              nop                                                           xgkick          VI03                            
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+; [0,2) size=2 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           b               BUMP_START                      
+              nop                                                           nop                                             
+BUMP_stripfan:
+; [0,116) size=116 nU=31 nL=24 ic=55 [lin=77 lp=0]
+              nop                                                           lq.xy           VF16,2(VI02)                    
+              nop                                                           lq.xy           VF19,2+8(VI02)                  
+              nop                                                           lq.xy           VF18,2+4(VI02)                  
+              nop                                                           lq.xyz          VF17,0(VI02)                    
+              nop                                                           lq.xyz          VF21,0+4(VI02)                  
+              sub.xy          VF19,VF19,VF16                                nop                                             
+              nop                                                           nop                                             
+              sub.xy          VF16,VF18,VF16                                nop                                             
+              sub.xyz         VF18,VF21,VF17                                nop                                             
+              addx.y          VF11,VF00,VF19x                               lq.xyz          VF21,0+8(VI02)                  
+              addy.z          VF11,VF00,VF19y                               nop                                             
+              addy.z          VF16,VF00,VF16y                               nop                                             
+              addx.y          VF16,VF00,VF16x                               nop                                             
+              sub.xyz         VF20,VF21,VF17                                nop                                             
+              nop                                                           move.yz         VF17,VF11                       
+              nop                                                           move.x          VF19,VF18                       
+              nop                                                           move.yz         VF19,VF16                       
+              nop                                                           move.x          VF17,VF20                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF19xyz,VF17xyz                        nop                                             
+              opmsub.xyz      VF16xyz,VF17xyz,VF19xyz                       nop                                             
+              addz.x          VF17,VF00,VF20z                               nop                                             
+              addz.x          VF19,VF00,VF18z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF16x                   
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF19xyz,VF17xyz                        nop                                             
+              opmsub.xyz      VF21xyz,VF17xyz,VF19xyz                       nop                                             
+              addy.x          VF19,VF00,VF18y                               nop                                             
+              addy.x          VF17,VF00,VF20y                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF21x                   
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF19xyz,VF17xyz                        nop                                             
+              opmsub.xyz      VF18xyz,VF17xyz,VF19xyz                       nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.x          VF19,VF00,Q                                   nop                                             
+              nop                                                           div             Q,VF00w,VF18x                   
+              addz.y          VF17,VF00,VF18z                               nop                                             
+              addy.y          VF18,VF00,VF18y                               nop                                             
+              addq.z          VF19,VF00,Q                                   nop                                             
+              addy.z          VF18,VF00,VF21y                               nop                                             
+              addz.z          VF17,VF00,VF21z                               nop                                             
+              addz.x          VF17,VF00,VF16z                               nop                                             
+              addq.y          VF19,VF00,Q                                   nop                                             
+              addy.x          VF18,VF00,VF16y                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF17,VF17,VF19                                nop                                             
+              mul.xyz         VF16,VF18,VF19                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           erleng          P,VF17                          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           erleng          P,VF16                          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           mfp.y           VF11,P                          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              muly.xyz        VF17,VF17,VF11y                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           mfp.x           VF18,P                          
+              nop                                                           mr32.w          VF05,VF17                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xyz        VF16,VF16,VF18x                               nop                                             
+              nop                                                           mr32.z          VF10,VF05                       
+              nop                                                           nop                                             
+              nop                                                           move.y          VF11,VF17                       
+              nop                                                           mr32.xy         VF17,VF16                       
+              nop                                                           mr32.y          VF16,VF10                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           mr32.xy         VF18,VF17                       
+              nop                                                           move.y          VF17,VF11                       
+bump_start_loop:
+; [0,98) size=98 nU=55 nL=26 ic=81 [lin=77 lp=55]
+              nop                                                           lq.xyz          VF19,0(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF24,0(VI02)                    
+              nop                                                           lq.xyz          VF20,2(VI02)                    
+              mul.xyz         VF22,VF19,VF05                                lq              VF19,3(VI02)                    
+              nop                                                           lq.xyz          VF25,1(VI02)                    
+              nop                                                           iaddiu          VI02,VI02,4                     
+              nop                                                           iaddi           VI05,VI05,-1                    
+              sub.xyz         VF23,VF06,VF22                                nop                                             
+              sub.xyz         VF21,VF07,VF22                                nop                                             
+              sub.xyz         VF26,VF08,VF22                                nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF28,VF23,VF23                                nop                                             
+              mul.xyz         VF27,VF21,VF21                                nop                                             
+              mul.xyz         VF22,VF23,VF25                                erleng          P,VF26                          
+              mul.xyz         VF21,VF21,VF25                                nop                                             
+              mulax.w         ACC,VF00,VF28x                                nop                                             
+              madday.w        ACC,VF00,VF28y                                nop                                             
+              maddz.w         VF06,VF00,VF28z                               nop                                             
+              mulax.w         ACC,VF00,VF27x                                nop                                             
+              madday.w        ACC,VF00,VF27y                                nop                                             
+              maddz.w         VF05,VF00,VF27z                               nop                                             
+              mul.xyz         VF25,VF26,VF25                                rsqrt           Q,VF00w,VF06w                   
+              mulax           ACC,VF01,VF24x                                nop                                             
+              madday          ACC,VF02,VF24y                                nop                                             
+              maddaz          ACC,VF03,VF24z                                nop                                             
+              maddw           VF24,VF04,VF00w                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           rsqrt           Q,VF00w,VF05w                   
+              addq.x          VF26,VF00,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulx.xyz        VF23,VF23,VF26x                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           mfp.z           VF26,P                          
+              mulax.xy        ACC,VF16,VF23x                                nop                                             
+              madday.xy       ACC,VF17,VF23y                                nop                                             
+              maddz.xy        VF28,VF18,VF23z                               lq.x            VF29,31(VI00)                   
+              mulz.xyz        VF23,VF25,VF26z                               nop                                             
+              addq.y          VF26,VF00,Q                                   div             Q,VF00w,VF24w                   
+              mulx.xyz        VF27,VF22,VF26x                               nop                                             
+              mulx.xy         VF22,VF28,VF29x                               nop                                             
+              subw.z          VF22,VF09,VF24w                               nop                                             
+              mul.xyz         VF25,VF26,VF26                                nop                                             
+              muly.xyz        VF21,VF21,VF26y                               nop                                             
+              add.xy          VF20,VF20,VF22                                nop                                             
+              mulq.xyz        VF24,VF24,Q                                   nop                                             
+              mulax.x         ACC,VF25,VF27x                                nop                                             
+              madday.x        ACC,VF25,VF27y                                nop                                             
+              mulax.y         ACC,VF25,VF21x                                nop                                             
+              maddz.x         VF25,VF25,VF27z                               nop                                             
+              madday.y        ACC,VF25,VF21y                                nop                                             
+              mulax.z         ACC,VF25,VF23x                                nop                                             
+              maddz.y         VF25,VF25,VF21z                               nop                                             
+              madday.z        ACC,VF25,VF23y                                nop                                             
+              maddz.z         VF25,VF25,VF23z                               nop                                             
+              sub.xy          VF21,VF24,VF09                                nop                                             
+              mulq.xyz        VF23,VF20,Q                                   nop                                             
+              ftoi4.xyz       VF20,VF24                                     nop                                             
+              mul.xyz         VF24,VF25,VF15                                nop                                             
+              mul.xy          VF22,VF21,VF10                                nop                                             
+              nop                                                           sq.xyz          VF23,0(VI04)                    
+              nop                                                           sq.xyz          VF20,2(VI04)                    
+              maxx.xyz        VF24,VF24,VF00x                               nop                                             
+              clipw.xyz       VF22xyz,VF09w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulax.xyz       ACC,VF12,VF24x                                nop                                             
+              madday.xyz      ACC,VF13,VF24y                                fcand           VI01,0x003ffff                  
+              maddz.xyz       VF24,VF14,VF24z                               iand            VI09,VI01,VI07                  
+              nop                                                           fcand           VI01,0xfff                      
+              nop                                                           ior             VI01,VI01,VI06                  
+              nop                                                           iand            VI01,VI01,VI08                  
+              miniw.xyz       VF24,VF24,VF00w                               iadd            VI09,VI01,VI09                  
+              nop                                                           iaddiu          VI09,VI09,0x7fff                
+              nop                                                           isw.w           VI09,2(VI04)                    
+              nop                                                           nop                                             
+              mul.xyz         VF19,VF24,VF19                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              ftoi0           VF19,VF19                                     nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           sq              VF19,1(VI04)                    
+              nop                                                           iaddiu          VI04,VI04,3                     
+              nop                                                           ibne            VI05,VI00,bump_start_loop       
+              nop                                                           nop                                             
+; [0,6) size=6 nU=0 nL=2 ic=2 [lin=7 lp=0]
+              nop                                                           mtir            VI01,VF11x                      
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           ibgez           VI01,BUMP_GIFTAG                
+              nop                                                           nop                                             
+; [0,1) size=1 nU=0 nL=1 ic=1 [lin=1 lp=0]
+              nop                                                           xgkick          VI03                            
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+; [0,2) size=2 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           b               BUMP_START                      
+              nop                                                           nop                                             
+		.align 4
+vclbump_CodeEnd:
+;	iCount=1069

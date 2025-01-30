@@ -1,0 +1,26 @@
+#
+# Creating gf file from bmp
+#
+# How to use the program
+# > Makefile
+# > ./bmp2gf bmp2gf.txt sample_k.gf
+#
+# gf2pb setting file format
+#
+# Characters after '#' are neglected as comments.
+#
+# Samples are shown below:
+
+# source="xxx.bmp" : Specify original bmp file
+source="sample_k.bmp"
+
+# csize= width(dec) height(dec) : Specify the size of one character
+csize="26 26"
+
+# mode= mode(0=vertical 1=horizontal)
+mode="1"
+
+# negative=neg(0!=reverse)
+negative="1"
+
+#[eof]

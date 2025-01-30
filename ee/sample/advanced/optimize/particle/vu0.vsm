@@ -1,0 +1,56 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/*
+ *              Emotion Engine Library Sample Program
+ *
+ *                         - <particle> -
+ *
+ *                         Version <1.00>
+ *                           Shift-JIS
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.0.0         2000/9/13        Kumagae   First design 
+ */
+
+	NOP				LOI 0.3
+	NOP				IADDIU VI01, VI00, 0
+	NOP     			IADDIU VI02, VI00, 0
+	MULI.xzyw VF04, VF00, I  	IADDIU VI03, VI00, 99
+LOOP:
+	NOP     			LQI VF01, (VI01++)
+	ADD.xyz    VF06,VF00,VF01	LQ VF02, 0(VI01)
+	SUB.xyz VF05,VF02,VF01 		LOI -0.1		
+	MUL.xyz VF10,VF05,VF05          NOP
+	ADDy.xyz  VF08,VF10,VF10		NOP
+	ADDx.xyz  VF09,VF08,VF10	      	NOP
+	NOP				RSQRT Q, VF04w,VF09z
+	MULi    VF11,VF00,I	    	WAITQ
+	ADDq    VF12 ,VF11, Q 		NOP
+	MULw.xyz VF03, VF05, VF12	NOP
+	SUB.xyz VF13xyz,VF01xyz,VF03xyz 		NOP
+	ADD.xyz VF14xyz,VF02xyz,VF03xyz  	SQI VF13,(VI02++)
+	NOP                      	SQ  VF14,0(VI02)
+	NOP                             IBNE VI01, VI03, LOOP
+	NOP                             NOP
+	NOP[T]				NOP
+	NOP				NOP
+	NOP[E]				NOP
+	NOP				NOP
+	
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,275 @@
+.include "vumacros.h"
+
+/*---------- extern */
+.global sce_micro_cull
+.global	sce_micro_vertex_cull
+.global	sce_micro_lambert_cull
+.global sce_micro_phong_cull
+
+.global sce_micro_pointl
+.global sce_micro_vertex_point
+.global sce_micro_lambert_point
+.global sce_micro_phong_point
+
+.global sce_micro_spotl
+.global sce_micro_vertex_spot
+.global sce_micro_lambert_spot
+.global sce_micro_phong_spot
+
+.global sce_micro_fog
+.global sce_micro_anti
+.global sce_micro_PwithSpc
+
+.global sce_micro_embossbump
+.global sce_micro_shadowTex
+.global sce_micro_shadowSTQ
+.global sce_micro_shadowSTQCull
+.global sce_micro_lightmapSTQ
+.global sce_micro_lightmapSTQCull
+
+.global sce_micro_reflectS
+.global sce_micro_reflectR
+.global sce_micro_refractS
+.global sce_micro_refractR
+.global sce_micro_fisheye
+
+.global sce_micro_clone
+.global sce_micro_vertexCspec
+.global sce_micro_noshade
+
+.global sce_micro_skin
+.global sce_micro_no_clip
+
+/*---------- dma packet */
+
+/*--- backface culling only */
+sce_micro_cull:
+sce_micro_vertex_cull:
+DMAret *
+MPG 0, *
+.include "vu1cullVo.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_lambert_cull:
+DMAret *
+MPG 0, *
+.include "vu1cullLo.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_phong_cull:
+DMAret *
+MPG 0, *
+.include "vu1cullSo.vsm"
+.EndMPG
+.EndDmaData
+
+/*--- backface culling and point light */
+sce_micro_pointl:
+sce_micro_vertex_point:
+DMAret *
+MPG 0, *
+.include "vu1pointVo.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_lambert_point:
+DMAret *
+MPG 0, *
+.include "vu1pointLo.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_phong_point:
+sce_micro_PwithSpc:
+DMAret *
+MPG 0, *
+.include "vu1pointSo.vsm"
+.EndMPG
+.EndDmaData
+
+/*--- backface culling and spot light */
+sce_micro_spotl:
+sce_micro_vertex_spot:
+DMAret *
+MPG 0, *
+.include "vu1spotVo.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_lambert_spot:
+DMAret *
+MPG 0, *
+.include "vu1spotLo.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_phong_spot:
+DMAret *
+MPG 0, *
+.include "vu1spotSo.vsm"
+.EndMPG
+.EndDmaData
+
+/*--- backface culling and fog */
+sce_micro_fog:
+DMAret *
+MPG 0, *
+.include "vu1fogVo.vsm"
+.EndMPG
+.EndDmaData
+
+/*--- backface culling and anti */
+sce_micro_anti:
+DMAret *
+MPG 0, *
+.include "vu1antiVo.vsm"
+.EndMPG
+.EndDmaData
+
+
+/********************************/
+/*	EmbossBump		*/
+/********************************/
+sce_micro_embossbump:
+DMAret *
+MPG 0, *
+.include "vu1embossPoint.vsm"
+.EndMPG
+.EndDmaData
+
+/********************************/
+/*	ShadowMap & LightMap	*/
+/********************************/
+sce_micro_shadowTex:
+DMAret *
+MPG 0, *
+.include "vu1shadowTex.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_shadowSTQ:
+DMAret *
+MPG 0, *
+.include "vu1shadowSTQ.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_shadowSTQCull:
+DMAret *
+MPG 0, *
+.include "vu1shadowSTQCull.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_lightmapSTQ:
+DMAret *
+MPG 0, *
+.include "vu1lightmapSTQ.vsm"
+.EndMPG
+.EndDmaData
+ 
+sce_micro_lightmapSTQCull:
+DMAret *
+MPG 0, *
+.include "vu1lightmapSTQCull.vsm"
+.EndMPG
+.EndDmaData     
+
+/********************************/
+/*	Reflection		*/
+/********************************/
+sce_micro_reflectS:
+DMAret *
+MPG 0, *
+.include "vu1reflectS.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_reflectR:
+DMAret *
+MPG 0, *
+.include "vu1reflectR.vsm"
+.EndMPG
+.EndDmaData
+
+/********************************/
+/*	Refraction		*/
+/********************************/
+sce_micro_refractS:
+DMAret *
+MPG 0, *
+.include "vu1refractS.vsm"
+.EndMPG
+.EndDmaData
+
+sce_micro_refractR:
+DMAret *
+MPG 0, *
+.include "vu1refractR.vsm"
+.EndMPG
+.EndDmaData
+
+/********************************/
+/*	FishEyeLens		*/
+/********************************/
+sce_micro_fisheye:
+DMAret *
+MPG 0, *
+.include "vu1fisheye.vsm"
+.EndMPG
+.EndDmaData
+
+/********************************/
+/*      Clone micro             */
+/********************************/        
+sce_micro_clone:
+DMAret *
+MPG 0, *
+.include "vu1clone.vsm"
+.EndMPG
+.EndDmaData  
+
+
+/********************************/
+/*      vertex color dir out    */
+/********************************/   
+sce_micro_noshade:
+DMAret *
+MPG 0, *
+.include "vu1noshade.vsm"
+.EndMPG
+.EndDmaData
+ 
+
+/********************************/
+/*      vertex color + specular */
+/********************************/          
+sce_micro_vertexCspec:
+DMAret *
+MPG 0, *
+.include "vu1vertexCspec.vsm"
+.EndMPG
+.EndDmaData      
+
+
+/********************************/
+/*      skin                    */
+/********************************/  
+sce_micro_skin:
+DMAret *
+MPG 0, *
+.include "vu1skin.vsm"
+.EndMPG
+.EndDmaData  
+
+/********************************/
+/*      no vu1 primitive clip   */
+/********************************/  
+sce_micro_no_clip:
+DMAret *
+MPG 0, *
+.include "vu1basicVo.vsm"
+.EndMPG
+.EndDmaData

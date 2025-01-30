@@ -1,0 +1,34 @@
+Libname libpfont  _scePFont_entry
+Version 1.1
+Entry/8 -
+Entry/8 -
+Entry/8 -
+Entry/8 -
+Entry scePFontCalcCacheSize
+Entry scePFontInit
+Entry scePFontRelease
+Entry scePFontSetGsCtxt
+Entry scePFontSetTexMem
+Entry scePFontFlush
+Entry scePFontAttachData
+Entry scePFontGetFontInfo
+Entry scePFontGetBlock
+Entry scePFontGetGlyph
+Entry scePFontSetScreenMatrix
+Entry scePFontGetScreenMatrix
+Entry scePFontSetFontMatrix
+Entry scePFontGetFontMatrix
+Entry scePFontSetLocate
+Entry scePFontGetLocate
+Entry scePFontSetColor
+Entry scePFontGetColor
+Entry scePFontSetPitch
+Entry scePFontGetPitch
+Entry scePFontSetWidth
+Entry scePFontGetWidth
+Entry scePFontPutc
+Entry scePFontPuts
+Entry scePFontPutsContinue
+Entry scePFontCalcRect
+Entry scePFontSetFilter
+

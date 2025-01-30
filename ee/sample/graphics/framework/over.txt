@@ -1,0 +1,501 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library  Release 3.0
+        Copyright (C) 2001 Sony Computer Entertainment Inc.
+                                        All Rights Reserved
+                                                  Mar. 2001 
+
+Graphics framework
+
+# Overview
+
+The graphics framework is a framework for building a graphics environment. It is designed to be used as a starting point for creating game programs, as a sample program for original architecture development, and as a viewer for easily displaying model data. It provides a framework for achieving efficient processing on the PlayStation 2 architecture as well as providing an environment for realistic modeling and scene configuration.
+
+The development objectives and special features of the graphics framework are briefly summarized below.
+- Provide superior drawing performance
+- Ensure a path from authoring tool output data
+- Guarantee readability and reusability for both data and programs
+
+To achieve these objectives, the following features have been implemented.
+-  A model data format has been defined which is highly abstract and flexible while maintaining an awareness of realistic drawing processing.  Tools are also provided for performing data conversions from authoring tool output data via the intermediate file format eS.
+- A manager is provided for managing model data and texture data.
+- To increase the reusability of microprograms without losing the high speed of VU1 processing, a VU1 usage method (VU-Mem memory format) has been defined.
+- The DMA&VIF command manager is provided for controlling the data flow of a series of operations including VU1 calculations and transfers to GS.
+
+	The graphics framework is a framework used to build graphics environments. It is a framework that satisfies the merits of both efficient processing and development efficiency for the PlayStation 2 architecture in realistic modeling and scenery composition. It functions as a starting point for game program production, as a sample program for original architecture development, and is produced with the objective of also being used as a viewer to easily display model data.
+
+	The production plan and merits of the graphics framework are simply shown below. 
+	 - Excellent drawing performance
+	 - Ensure a path from authoring tool output data
+	 - Ensure readability and reusability in both data and programs
+	
+	The following items have been implemented in order to achieve these objectives.
+
+	- A flexible model data format is stipulated, which has a high degree of abstraction while being aware of the actual drawing process. In addition, tools are provided that convert data from the output data of authoring tools using an eS intermediate file format.
+	- Managers are provided which manage model data and texture data.
+	- Stipulate how to use VU1 (VU-Mem memory format) to increase the reuse efficiency of microprograms without impacting the high-speed of VU1 processing.
+	- Control series of data flows such as calculation processing in VU1 and transfers to GS. A DMA&VIF command manager is provided.
+
+# Changes in Release 2.1 from Release 2.0.3 
+
+In Release 2.1, each file and data structure of the framework was reevaluated. Each function, variable and type has also been rebuilt following specific naming conventions in order to avoid namespace collision when framework source is reused (see # Naming Conventions).
+
+As for data structures, we extended MICRO_FRAME, SHAPE_FRAME, TEXTURE_FRAME and HIERARCHY_FRAME of Release 2.0.3 to be compatible with the structures in eSTD. We also worked on looking at the data structures as separate operating classes for Mode, Object, Data, Camera, Light, Model, Packbuf, Vumem1, Info, Pad, Micro, Shape, Share, Tex2d, Hrchy, Anime and Debug (see # Data Structures and Classes).
+
+Measures to statically link model data binaries to executable files to provide compatibility with multiple objects were ceased and a mechanism to individually load the binaries from a host machine was introduced. Because of this, a data directory is provided in a sub directory as a data file directory.
+
+Compatibility with Triangle Strip for additional functions planned in Release 2.0.3 has been achieved (see # 2.1 Additional Functions).
+
+# Configuration Overview
+
+The following specific components of the graphics framework are provided.
+
+- Documents
+- Sample programs
+- Sample VU1 microprograms
+- Sample data
+
+# Workflow
+
+The recommended workflow is described below.
+A name enclosed in double quotes (" ") indicates a file.
+
+3D tool -> "HMD" -> hmd2es -> "eS(eSTD)" -> es2raw -> ".s" -> framework
+
+For information related to HMD exporters, refer to the documents of each 3D tool company.
+For information about eS and converters, refer to the eS package documents.
+
+A converter from LightWave3D to eS format has been released from D. Storm Inc.
+
+# Data Structures
+
+The structures that the framework supports in the standard name space eSTD are described below.
+
+Shape
+	Structure that includes shape information and exterior appearance information
+
+Geometry
+	Geometrical shape structure
+
+Material
+	Material information structure
+
+Texture
+	Texture information structure
+
+Share
+	Shared shape structure
+
+Hierarchy
+	Hierarchy structure
+
+Animation
+	Key frame animation structure
+
+Caution
+-------
+es2raw internally sorts Geometry in terms of individual Materials. This is done to reduce the number of texture transfers in an actual device. If texture transfers are performed frequently, drawing performance declines dramatically because VU1 must be temporarily stopped, which lowers the calculation efficiency. To avoid this, the relationship Material > Geometry exists. However, in eSTD, the relationship becomes Material < Geometry. Therefore, the internal structure of Shape differs between eSTD and es2raw.
+
+
+For details on the data formats, refer to doc/es2raw.txt in the eS package.
+
+# Processing Flow
+	
+An overall snapshot of processing in the graphics framework is shown below.
+
+Initialization
+Create data flow list			[Data flow manager]
+Register entries in data flow list	[Data flow manager]
+ V 
+(each frame)
+Controller input processing		[CPU]
+Camera and other matrix calculations	[VU0+CPU]
+ V 
+(each frame, each model)
+Animation calculation				[VU0+CPU]
+Hierarchical coordinate matrix calculations	[VU0+CPU]
+Shared polygon vertex calculations		[VU0+CPU]
+ V 
+(each frame)
+Pass data flow list to DMAC
+ V 
+(each frame)
+Transfer microprogram to VU1		[DMAC]
+Transfer GF-VU1 format data to VUMEM1	[DMAC/PATH2]
+(each material)
+	Transfer texture to GS			[DMAC]
+	(a) Transfer polygon data to VUMEM1	[DMAC]
+	(b) Compute polygon data		[VU1]
+	(c) Draw polygons in GS			[PATH1]
+
+
+# Data Structures and Classes
+
+In framework, the various types were divided based on a concept of class that corresponds to the behavior of each type of data. Each class is divided into files using the class name (note: there are also classes that do not have source files). 
+
+Each class is further separated into a "data operation class" and a "mode operation class" that corresponds to the different types of operations. The data operation class mainly deals with operations on data created by es2raw. The mode operation class manages each mode (Model/Camera/Light/Micro) in the framework application. The data operation class and the mode operation class are classes just like a Micro class. A list of the classes and operations are shown below.
+	
+
+Mode	:  Mode operation class
+
+This is a core class in the framework that manages function calls corresponding to modes switched in the application.
+
+Object	: Data operation class  
+
+This class performs operations on objects in the framework. The fwObject_t type (the type of this class) exists as a superclass type because it contains data of the Micro/Shape/Share/Tex2d/Hrchy/Anime classes (described next). Unified fields are provided using a form for performing all operations through the fwObject_t type.
+
+Data	: Data operation class
+
+This class defines a data type converted by es2raw. Data converted by es2raw has header information of type fwDataHead_t in this class. This class has no source file.
+
+Camera	: Mode operation class
+
+This class manages camera modes in the framework.
+
+Light	: Mode operation class
+
+This class manages light modes in the framework.
+
+Model	: Mode operation class
+
+This class manages model modes in the framework.
+
+Packbuf	: Data operation class
+
+This class performs integration of DMA & VIF command groups in the framework for managing the DMA & VIF packet buffers and creating packet lists.
+
+Vumem1	: Data operation class
+
+This class is convenient for using Vu1 memory.
+
+Info	: Data operation class
+
+This class displays each type of data (such as display of total number of vertices, quantity of transferred textures and CPU power) as information.
+
+Pad	: Data operation class
+
+This class makes it easy to use input from pads in applications.
+		
+Micro	: Mode operation class, Data operation class
+This class manages data that uses micro mode operations and microcode in the framework.
+
+Shape	: Data operation class
+
+This class works with data related to shapes. Specifically, this class reads data necessary to compose shapes from framework data created by es2raw, then creates DMA & VIF commands using the Packbuf class. 
+This class functions as a subclass of the Object class (called from Object class functions).
+
+Share	: Data operation class
+
+This class works with shared vertex data. Specifically, this class reads data necessary to share vertices from framework data created by es2raw, then rewrites the Vertex value and Normal value of each vertex.
+This class functions as a subclass of the Object class (called from Object class functions). 
+
+Tex2d	: Data operation class
+
+This class works with 2D Texture data. Specifically, this class reads data necessary to compose 2D Textures from framework data created by es2raw, then creates data used to transfer textures (texel and CLUT) such as GIFtag or GS register settings using the Packbuf class.
+This class functions as a subclass of the Object class (called from Object class functions). 
+
+Hrchy	: Data operation class
+
+This class works with hierarchically structured data of each shape. Specifically, this class reads data necessary to build a hierarchy from framework data created by es2raw, then calculates the matrix of each shape.
+This class functions as a subclass of the Object class (called from Object class functions). 
+
+Anime	: Data operation class
+
+This class works with animation data. Specifically, this class reads data necessary to create an animation from framework data created by es2raw, then applies the calculation result to the matrix of each shape.
+This class functions as a subclass of the Object class (called from Object class functions). 
+
+Debug	: Data operation class
+
+This is an auxiliary class used for debug data in the framework.
+
+Precaution
+The utility es2raw sorts the geometry in material units internally. This is to minimize texture transfers in an actual machine. If there are frequent transfers, the image drawing performance will be greatly reduced. This is because it would be necessary to temporarily stop VU1, reduceing the efficiency of calculations. In order to avoid this problem, the relationship Material > Geometry is necessary. However, in eSTD the relationship is Material < Geometry. Consequently, this would cause differences in the internal structure of Shape between eSTD and es2raw.
+
+For details on the data formats refer to doc/es2raw.txt included in the eS package.
+
+# Naming Conventions 
+
+There has been a redesign following specific naming conventions in order to avoid any namespace collisions when reusing source and to improve the readability of source in framework Release 2.1.
+
+The following naming conventions are used.
+
+	Function	: Function names have the following form. 
+			fw <CLASS-NAME> <ACTION> <TARGET>
+		   
+			CLASS-NAME	class name
+			ACTION		operation/action
+			TARGET		target
+
+	Type	:  Class types have this form.
+			fw <CLASS-NAME> <KIND> _t
+		   
+			CLASS-NAME	class name
+			KIND		type
+
+	Variable	: Variables other than auto 
+			  variables have a name of the form.
+			fw <CLASS-NAME> <KIND>
+		   
+			CLASS-NAME	class name
+			KIND		type
+
+Local functions, variables and types are distinguished by starting with an underbar(_).
+
+
+# Dataflow Management
+
+A powerful, high-speed dataflow management mechanism is required to have data flow to the VU1-GS rendering engine with double buffering control.
+The graphics framework provides a means that enables the flow of graphics data to be managed by integrating the DMA&VIF command group with main memory, VU1 memory, and GS local memory.
+
+# Dataflow Management Overview
+
+The dataflow management of the graphics framework is conceptually based on the following kinds of data structures. (To represent actual model data, several kinds of additional processing are required.)
+
+      KickBuffer (MainMem)
+      +---------+----------+
+      |   NOP   |  DMAcall |---> Model data flow list
+      |   NOP   |  DMAcall |---> Model data flow list
+      |   NOP   |  DMAcall |->+
+      |    .    |     .    |  |
+      |         |  DMAend  |  |                           Texture (MainMem)
+      +--------------------+  |                              +------------+
+     128       64          0  |                           +--|texture_head|
+                              |                           |  +------------+
+                              |                           |  |texture_data|
+                              | Model data flow list      |  |            |
+                              | (MainMem)                 |  +------------+
+     +---------+              +--------------------+      |
+     |         |<-------------|VIFdirect|  DMAref  |<-----+    raw data
+     |GSreg&mem|    +---------|VIFunpack|  DMAref  |<------+   (MainMem)
+     |         |    | +-------|VIFunpack|  DMAref  |<----+ | +------------+
+     +---------+    | | +-----|VIFunpack|  DMAref  |<--+ | +-|   vertex   |
+                    | | |     |    .    |     .    |   | |   +------------+
+        +--------+  VIF1      |    .    |     .    |   | +---|   normal   |
+        |        |<-+ | |     |         |  DMAret  |   |     +------------+
+        |        |    | |     +--------------------+   +-----|     ST     |
+        | VUmem1 |<---+ |    128        64         0         +------------+
+        |        |      |                                    |    color   |
+        |        |<-----+                                    +------------+
+        +--------+
+
+The sequence of VIF commands and DMA tags (model data flow list) that are shown in the middle of the figure form the core of dataflow management from main memory to the VU1-GS for each individual object.
+This is a data structure that pairs up a DMAref pointing to texture data or polygon data in main memory, with a VIF command pointing to its corresponding transfer destination.
+
+The sequence of DMAcalls shown at the top left of the figure (KickBuffer) manages these multiple model data flow lists.
+Since the objects are drawn in the order that they were registered here, changing the registration order enables sorted objects to be easily drawn.
+
+# Runtime Generation of Data Flow Lists
+
+The model data flow lists and order table can also be prepared in advance together with the model data during the authoring stage.
+However, the graphics framework has adopted a policy of generating data flow lists at runtime by creating functions for this processing and calling those functions as initialization processing after reading the model data.
+This policy was adopted to increase data independence and to simplify user-proprietary customization in line with an open source strategy.
+Users can construct original drawing dataflows to suit the characteristics of their model data.
+
+
+# GF-VU1 Standard Memory Format
+
+The graphics framework has standardized the VUMem1 memory format, that is, the format of the data to be processed by VU1.
+Standardizing the data format not only significantly increases the independence of data and VU1 microprograms, but also improves development efficiency by increasing reusability.
+At the same time, by simplifying VU1 microprogram switching, individual microprograms can be consolidated into a simple design specialized for a particular use.
+This is directly linked to program readability. In addition to improving development efficiency, it also has the effect of increasing processing speed by enabling sufficient optimization to be performed.
+On the other hand, although the CPU+VU0 will have to perform preprocessing for data that deviates from the standard format, this will ultimately clarify the role distinctions between the VU1-GS, which is the rendering engine, and the CPU+VU0, which is the geometry engine, and will improve development efficiency because it will be an improvement from the perspective of overall game processing.
+
+# GF-VU1 Standard Memory Format Details
+
+A general outline of the GF-VU1 standard memory format is shown below. The addresses are in qword units.
+
+	Address
+	     0 +----------------------------+
+	       | SHAPE_FRAME parameters     | Transferred from SHAPE_FRAME 
+               |                            | structure
+	    16 |----------------------------|
+	       | MICRO_FRAME parameters     | Transferred from MICRO_FRAME
+               |                            | structure
+	    68 |----------------------------|
+	       |     free work area         |
+	   120 |----------------------------|
+	       | Double buffer 0            |
+	       |          GIFtag, etc.      | Generated from model data and
+               |                            | transferred
+	       |         vertex data        | Transferred from model data
+	       |        XGKICK Buffer       | VU1 microprogram calculation 
+               |                            | result
+	       |----------------------------|
+	       | Double buffer 1            |
+	       |          GIFtag. etc.      | Generated from model data and
+               |                            | transferred
+	       |         vertex data        | Transferred from model data
+	       |        XGKICK Buffer       | VU1 microprogram calculation 
+               |                            | result
+	       |----------------------------|
+	       |          user area         |
+	  1024 +----------------------------+
+
+	Details of each section are shown below.
+
+	 - SHAPE_FRAME-supported parameter group
+	These are parameters for each Shape, which are transferred from SHAPE_FRAME.
+	        x,y,z,w
+	    0  +------------------------+
+	       |local_world             | local_world matrix
+	    4  |----------------------- |
+	       |light_rotation          | light_rotation matrix
+	       |                        |  (excluding scale, trans from 
+               |----------------------- |   local_world)
+            8  | giftag for PRIM/PRMOD  |
+            9  | giftag for vertex      |
+            10 | packsize               | XKICK address = in_pointer*packsize
+	    12 |----------------------- |
+	       |calc_data(free use)     | Calculation coefficients
+	    16 |----------------------- |
+
+	 - MICRO_FRAME-supported parameter group
+These are parameters for each scene, which are transferred from MICRO_FRAME.
+
+              x,y,z,w
+    16 |----------------------- |
+       |world_screen            | world_screen matrix
+    20 |----------------------- |
+       |world_clip              | world_clip matrix
+       |----------------------- |
+    24 |diffuse color(R,G,B,A)  | material_color
+    25 |specular color(R,G,B,s) | s .. shininess parameter
+    26 |emission color (R,G,B,-)|
+    27 |ambient color (R,G,B,-) |          
+       |----------------------- | micro_init_data
+    28 |camera_pos(x,y,z),AA1p  | AA1p... AA1 cut_off parameter
+    29 |fogA,fogB,attribute,-   | fogA,fogB ... fog parameter, micro_attribute
+    30 |clipping parameter      | 
+       |----------------------- |
+    32 |l1dx,l2dx,l3dx, -       | dir. light directions (transposed)
+    33 |l1dy,l2dy,l3dy, -       |
+    34 |l1dz,l2dz,l3dz, -       |
+       |                        |
+    40 |light0_color(RGB),-     | dir. light colors
+    41 |light1_color(RGB),-     |
+    42 |light2_color(RGB),-     |
+       |------------------------|
+    43 |ambient_light_color     |
+       |----------------------- |
+    48 |light0_pos(xyz),-       | point light positions
+    49 |light1_pos(xyz),-       |
+    50 |light2_pos(xyz),-       |
+       |                        |
+    52 |light0_color(RGB),i1    | point light colors
+    53 |light1_color(RGB),i2    | i1,i2,i3 ... light intensities
+    54 |light2_color(RGB),i3    |
+       |                        | 
+       |------------------------|
+    56 |l1dx,l2dx,l3dx, -       | spot  light directions (transposed)
+    57 |l1dy,l2dy,l3dy, -       |
+    58 |l1dz,l2dz,l3dz, -       |
+       |                        |
+    60 |light0_pos(xyz),a1      | spot light positions
+    61 |light1_pos(xyz),a2      | a1,a2,a3 ... spot light angles
+    62 |light2_pos(xyz),a3      |
+       |                        |
+    64 |light0_color(RGB),i1    | spot light colors
+    65 |light1_color(RGB),i2    | i1,i2,i3 ... light intensities
+    66 |light2_color(RGB),i3    | 
+       |                        |    
+    68 |------------------------|
+
+
+	 - Free area
+
+	    68 |----------------------- |
+	       |                        |
+	       |                        |
+	       |                        |
+	       |                        |
+	    100|----------------------- |
+
+	 - Double buffer
+This is a buffer area for receiving vertex data from main memory, storing the results of calculations performed by VU1, and sending results to GS.
+	Further details are described later.
+
+            120|----------------------- |
+               |  IN buffer0-0          | Data transferred from main memory
+               |  :                     |
+               |  IN buffer0-N          |
+               |----------------------- |
+               |  OUT buffer0-0         |Image data transferred to GS by XGKICK
+               |  :                     | (Stored by VU1)
+               |  OUT buffer0-N         |
+               |----------------------- |<-- 120 + (1024-120- user area)/2
+               |  IN buffer1-0          | Data transferred from main memory
+               |  :                     |
+               |  IN buffer1-N          |
+               |----------------------- |
+               |  OUT buffer0-0         |Image data transferred to GS by XGKICK
+               |  :                     | (Stored by VU1)
+               |  OUT buffer0-N         |
+           user|----------------------- |
+
+
+	 - User area
+This is a user area that can be freely used by a VU1 microprogram. Its area can also be freely set. The size is set when the model data flow lists are created within the program.
+
+	   user+------------------------+
+	       |        user area	|
+	       |                        |
+	   1024+------------------------+
+
+# Vertex Data Format Within Double Buffer
+
+Details of the data format within the double buffer are as follows.
+
+	IN buffer          
+               x,y,z,w
+	     |-----------------------|
+	     | nVertex+eop,PRIM,-,-  |    GIFtag generation information
+             | PRMODE,-,-,-          |    
+	     | --------------------- |
+	     |   vertex              |    Vertex data that was transferred from
+             |   normal              |     model data
+	     |   st                  |    Interleaved configuration with vertex, 
+             |   color               |    normal, st, and color listed for each 
+             |                       |     vertex
+	     | --------------------- |
+	     |            :          |
+	     |            :          |
+	     |-----------------------|
+
+
+	OUT buff          
+	     |-----------------------|
+	     | giftag for PRIM/PRMOD |    PRIM/PRMOD GIFtag
+	     | PRIM setting          |
+	     | PRMOD setting         |
+	     | --------------------- |    GifTag for vertex
+	     |    STQ                |    GS primitive data that was  
+	     |    rgba               |    calculated by the microprogram
+	     |    xyzf2              |
+	     |-----------------------|
+	     |            :          |
+	     |            :          |
+	     |-----------------------|
+
+To include special information for each vertex, the w field of the vertex, w field of the normal, z and w fields of st, etc. can be used.
+
+
+# 2.2 Additional Functions
+
+The following functions were added to 2.1 for framework Release 2.2. 
+
+	 - Support for Combination light (parallel light source + point light source, etc.)
+	 - Point, Line, LineStrip, TriangleFan compatibility
+
+# Future Outlook
+
+In the future we plan on adding additional sequences, functions and corrections to the graphics framework.
+
+Additional functions planned at present are shown below
+
+- Compatibility with texture transfers exceeding 256x256
+- Compatibility with MIPMAP
+- Sort by Shape units
+- Clipping in Shape/Object units
+- Compatibility with Joint MIMe
+- shape animation
+- Optimization of DMA transfers
+

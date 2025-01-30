@@ -1,0 +1,221 @@
+; flowMon::Emit() version 1.3.3 produced this code:
+		.align 4
+		.global	hair_CodeStart
+		.global	hair_CodeEnd
+hair_CodeStart:
+__v_hairsim_vcl_4:
+; _LNOPT_w=[ normal ] 2 [2 0] 2   [__v_hairsim_vcl_4]
+         NOP                                                        iaddiu        VI02,VI00,0                         
+         NOP                                                        iadd          VI03,VI00,VI01                      
+calcforce:
+; _LNOPT_w=[ normal ] 2 [2 0] 2   [calcforce]
+         NOP                                                        ibeq          VI01,VI00,next                      
+         NOP                                                        NOP                                               
+; _LNOPT_w=[ normal ] 4 [13 0] 13   [__v_hairsim_vcl_6]
+         NOP                                                        lq.xyz        VF01,0(VI03)                        
+         sub.xyz       VF01,VF01,VF30                               NOP                                                      ;	STALL_LATENCY ?3
+         mulx.xyz      VF01,VF01,VF29x                              NOP                                                      ;	STALL_LATENCY ?3
+         add.xyz       VF01,VF31,VF01                               iaddiu        VI04,VI00,0x00000004                       ;	STALL_LATENCY ?3
+loop:
+; _LNOPT_w=[ dUp ] 9 [11 0] 12   [loop]
+         NOP                                                        lq.xyz        VF02,0(VI02)                        
+         NOP                                                        lq.xyz        VF03,0(VI03)                        
+         suba.xyz      ACC,VF02,VF03                                isubiu        VI04,VI04,0x00000001                       ;	STALL_LATENCY ?3
+         maddaw.xyz    ACC,VF02,VF00w                               isubiu        VI01,VI01,0x00000001                
+         maddz.xyz     VF02,VF01,VF29z                              sqi.xyz       VF02,(VI03++)                       
+         NOP                                                        NOP                                               
+         NOP                                                        NOP                                               
+         NOP                                                        ibeq          VI04,VI00,calcforce                 
+         NOP                                                        sqi.xyz       VF02,(VI02++)                       
+; _LNOPT_w=[ normal ] 2 [2 0] 2   [__v_hairsim_vcl_8]
+         NOP                                                        ibne          VI01,VI00,loop                      
+         NOP                                                        NOP                                               
+next:
+; _LNOPT_w=[ dUp ] 5 [5 0] 5   [next]
+         NOP                                                        loi           0x3f000000                          
+         addi.z        VF01,VF00,I                                  loi           0x3f800000                          
+         NOP                                                        iaddiu        VI02,VI00,0x00000003                
+         NOP                                                        iaddiu        VI01,VI00,0                         
+         addi.x        VF02,VF00,I                                  iaddiu        VI03,VI00,0x00000004                
+EXPL_hairsim_vcl_constraintloop__ENTRY_POINT:
+; _LNOPT_w=[ ] 27 [37 0] 43   [EXPL_hairsim_vcl_constraintloop__ENTRY_POINT]
+         NOP                                                        lq.xyz        VF12,5(VI01)                        
+         NOP                                                        lq.xyz        VF10,4(VI01)                        
+         sub.xyz       VF22,VF12,VF10                               lq.xyz        VF07,17(VI01)                              ;	STALL_LATENCY ?3
+         mul.xyz       VF11,VF22,VF22                               lq.xyz        VF05,16(VI01)                              ;	STALL_LATENCY ?3
+         adday.x       ACC,VF11,VF11y                               lq.xyz        VF06,12(VI01)                              ;	STALL_LATENCY ?3
+         maddz.x       VF01,VF02,VF11z                              lq.xyz        VF11,13(VI01)                       
+         sub.xyz       VF09,VF07,VF05                               lq.xyz        VF03,25(VI01)                       
+         sub.xyz       VF20,VF11,VF06                               isubiu        VI02,VI02,0x00000001                       ;	STALL_LATENCY ?2
+         addy.x        VF01,VF01,VF29y                              NOP                                               
+         mul.xyz       VF19,VF09,VF09                               NOP                                               
+         mul.xyz       VF16,VF20,VF20                               NOP                                                      ;	STALL_LATENCY ?1
+         NOP                                                        div           Q,VF29y,VF01x                       
+         adday.x       ACC,VF19,VF19y                               NOP                                               
+         maddz.x       VF01,VF02,VF19z                              NOP                                               
+         adday.x       ACC,VF16,VF16y                               NOP                                               
+         maddz.x       VF19,VF02,VF16z                              NOP                                               
+         NOP                                                        waitq                                                    ;	STALL_LATENCY ?2
+         subq.z        VF02,VF01,Q                                  lq.xyz        VF16,28(VI01)                       
+         addy.x        VF04,VF19,VF29y                              lq.xyz        VF19,29(VI01)                       
+         mulz.xyz      VF23,VF22,VF02z                              NOP                                                      ;	STALL_LATENCY ?2
+         sub.xyz       VF22,VF19,VF16                               div           Q,VF29y,VF04x                       
+         NOP                                                        waitq                                                    ;	STALL_LATENCY ?6
+         add.xyz       VF10,VF10,VF23                               lq.xyz        VF04,24(VI01)                       
+         mul.xyz       VF15,VF22,VF22                               lq.xyz        VF14,20(VI01)                       
+         sub.xyz       VF23,VF12,VF23                               lq.xyz        VF12,21(VI01)                       
+         addy.x        VF17,VF01,VF29y                              ibeq          VI02,VI00,EXPL_hairsim_vcl_constraintloop__EPI0
+         sub.xyz       VF08,VF03,VF04                               iaddiu        VI01,VI01,0x00000001                
+EXPL_hairsim_vcl_constraintloop__MAIN_LOOP:
+; _LPOPT_w=[ dUp ] 76 [72 72] 76   [EXPL_hairsim_vcl_constraintloop__MAIN_LOOP]
+         adday.x       ACC,VF15,VF15y                               iaddiu        VI01,VI01,0x00000001                
+         sub.xyz       VF23,VF12,VF14                               sq.xyz        VF23,3(VI01)                        
+         maddz.x       VF10,VF02,VF15z                              sq.xyz        VF10,2(VI01)                        
+         mul.xyz       VF18,VF08,VF08                               div           Q,VF29y,VF17x                       
+         subq.z        VF10,VF01,Q                                  NOP                                               
+         mul.xyz       VF15,VF23,VF23                               lq.xyz        VF17,7(VI01)                        
+         addy.x        VF10,VF10,VF29y                              lq.xyz        VF21,6(VI01)                        
+         adday.x       ACC,VF18,VF18y                               NOP                                               
+         maddz.x       VF01,VF02,VF18z                              NOP                                               
+         adday.x       ACC,VF15,VF15y                               NOP                                               
+         sub.xyz       VF24,VF17,VF21                               div           Q,VF29y,VF10x                       
+         maddz.x       VF10,VF02,VF15z                              NOP                                               
+         mulz.xyz      VF20,VF20,VF10z                              NOP                                               
+         subq.z        VF15,VF01,Q                                  NOP                                               
+         mul.xyz       VF18,VF24,VF24                               NOP                                               
+         addy.x        VF15,VF10,VF29y                              NOP                                               
+         sub.xyz       VF25,VF11,VF20                               NOP                                               
+         subq.z        VF11,VF01,Q                                  lq.xyz        VF10,-1(VI01)                       
+         adday.x       ACC,VF18,VF18y                               lq.xyz        VF13,-2(VI01)                       
+         maddz.x       VF15,VF02,VF18z                              div           Q,VF29y,VF15x                       
+         mulz.xyz      VF09,VF09,VF15z                              sq.xyz        VF25,11(VI01)                       
+         mulz.xyz      VF11,VF22,VF11z                              NOP                                               
+         sub.xyz       VF22,VF10,VF13                               NOP                                               
+         addy.x        VF15,VF15,VF29y                              NOP                                               
+         sub.xyz       VF07,VF07,VF09                               NOP                                               
+         sub.xyz       VF19,VF19,VF11                               NOP                                               
+         mul.xyz       VF25,VF22,VF22                               NOP                                               
+         subq.z        VF02,VF01,Q                                  div           Q,VF29y,VF15x                       
+         add.xyz       VF11,VF16,VF11                               sq.xyz        VF07,15(VI01)                       
+         add.xyz       VF07,VF05,VF09                               lq.xyz        VF15,4(VI01)                        
+         adday.x       ACC,VF25,VF25y                               lq.xyz        VF18,3(VI01)                        
+         maddz.x       VF09,VF02,VF25z                              sq.xyz        VF19,27(VI01)                       
+         mulz.xyz      VF05,VF23,VF02z                              sq.xyz        VF11,26(VI01)                       
+         add.xyz       VF06,VF06,VF20                               NOP                                               
+         sub.xyz       VF23,VF15,VF18                               NOP                                               
+         addy.x        VF09,VF09,VF29y                              sq.xyz        VF07,14(VI01)                       
+         subq.z        VF09,VF01,Q                                  NOP                                               
+         sub.xyz       VF20,VF12,VF05                               sq.xyz        VF06,10(VI01)                       
+         mul.xyz       VF06,VF23,VF23                               lq.xyz        VF07,16(VI01)                       
+         add.xyz       VF11,VF14,VF05                               lq.xyz        VF05,15(VI01)                       
+         mulz.xyz      VF14,VF24,VF09z                              div           Q,VF29y,VF09x                       
+         addy.x        VF20,VF01,VF29y                              sq.xyz        VF20,19(VI01)                       
+         adday.x       ACC,VF06,VF06y                               NOP                                               
+         sub.xyz       VF09,VF07,VF05                               sq.xyz        VF11,18(VI01)                       
+         maddz.x       VF12,VF02,VF06z                              lq.xyz        VF11,12(VI01)                       
+         add.xyz       VF19,VF21,VF14                               lq.xyz        VF06,11(VI01)                       
+         sub.xyz       VF14,VF17,VF14                               NOP                                               
+         mul.xyz       VF17,VF09,VF09                               div           Q,VF29y,VF20x                       
+         NOP                                                        NOP                                               
+         sub.xyz       VF20,VF11,VF06                               sq.xyz        VF19,6(VI01)                        
+         addy.x        VF14,VF12,VF29y                              sq.xyz        VF14,7(VI01)                        
+         subq.z        VF19,VF01,Q                                  NOP                                               
+         adday.x       ACC,VF17,VF17y                               NOP                                               
+         mul.xyz       VF12,VF20,VF20                               NOP                                               
+         subq.z        VF14,VF01,Q                                  div           Q,VF29y,VF14x                       
+         mulz.xyz      VF22,VF22,VF19z                              NOP                                               
+         maddz.x       VF17,VF02,VF17z                              NOP                                               
+         adday.x       ACC,VF12,VF12y                               NOP                                               
+         maddz.x       VF12,VF02,VF12z                              NOP                                               
+         mulz.xyz      VF14,VF08,VF14z                              NOP                                               
+         add.xyz       VF08,VF13,VF22                               NOP                                               
+         subq.z        VF17,VF01,Q                                  NOP                                               
+         addy.x        VF13,VF12,VF29y                              lq.xyz        VF19,28(VI01)                       
+         sub.xyz       VF12,VF03,VF14                               lq.xyz        VF16,27(VI01)                       
+         add.xyz       VF14,VF04,VF14                               lq.xyz        VF03,24(VI01)                       
+         mulz.xyz      VF04,VF23,VF17z                              sq.xyz        VF08,-2(VI01)                       
+         sub.xyz       VF08,VF10,VF22                               div           Q,VF29y,VF13x                       
+         sub.xyz       VF22,VF19,VF16                               sq.xyz        VF12,23(VI01)                       
+         NOP                                                        sq.xyz        VF14,22(VI01)                       
+         add.xyz       VF10,VF18,VF04                               isubiu        VI02,VI02,0x00000001                
+         sub.xyz       VF23,VF15,VF04                               lq.xyz        VF12,20(VI01)                       
+         mul.xyz       VF15,VF22,VF22                               lq.xyz        VF04,23(VI01)                       
+         NOP                                                        sq.xyz        VF08,-1(VI01)                       
+         NOP                                                        lq.xyz        VF14,19(VI01)                       
+         addy.x        VF17,VF17,VF29y                              ibne          VI02,VI00,EXPL_hairsim_vcl_constraintloop__MAIN_LOOP
+         sub.xyz       VF08,VF03,VF04                               NOP                                               
+EXPL_hairsim_vcl_constraintloop__EPI0:
+; _LNOPT_w=[ ] 60 [50 0] 68   [EXPL_hairsim_vcl_constraintloop__EPI0]
+         adday.x       ACC,VF15,VF15y                               NOP                                               
+         sub.xyz       VF23,VF12,VF14                               sq.xyz        VF23,4(VI01)                        
+         maddz.x       VF01,VF02,VF15z                              NOP                                               
+         mul.xyz       VF15,VF08,VF08                               div           Q,VF29y,VF17x                       
+         subq.z        VF02,VF01,Q                                  sq.xyz        VF10,3(VI01)                        
+         mul.xyz       VF13,VF23,VF23                               lq.xyz        VF10,8(VI01)                        
+         addy.x        VF18,VF01,VF29y                              lq.xyz        VF17,7(VI01)                        
+         adday.x       ACC,VF15,VF15y                               NOP                                               
+         maddz.x       VF01,VF02,VF15z                              NOP                                               
+         adday.x       ACC,VF13,VF13y                               NOP                                               
+         sub.xyz       VF15,VF10,VF17                               div           Q,VF29y,VF18x                       
+         maddz.x       VF21,VF02,VF13z                              NOP                                               
+         mulz.xyz      VF13,VF20,VF02z                              NOP                                               
+         subq.z        VF02,VF01,Q                                  NOP                                               
+         mul.xyz       VF18,VF15,VF15                               NOP                                               
+         addy.x        VF21,VF21,VF29y                              NOP                                               
+         sub.xyz       VF24,VF11,VF13                               NOP                                               
+         subq.z        VF21,VF01,Q                                  lq.xyz        VF20,-1(VI01)                       
+         adday.x       ACC,VF18,VF18y                               lq.xyz        VF11,0(VI01)                        
+         maddz.x       VF21,VF02,VF18z                              div           Q,VF29y,VF21x                       
+         mulz.xyz      VF09,VF09,VF02z                              NOP                                               
+         mulz.xyz      VF18,VF22,VF21z                              NOP                                               
+         sub.xyz       VF22,VF11,VF20                               NOP                                               
+         addy.x        VF24,VF21,VF29y                              sq.xyz        VF24,12(VI01)                       
+         sub.xyz       VF21,VF07,VF09                               NOP                                               
+         mul.xyz       VF07,VF22,VF22                               NOP                                                      ;	STALL_LATENCY ?1
+         sub.xyz       VF19,VF19,VF18                               NOP                                               
+         add.xyz       VF05,VF05,VF09                               sq.xyz        VF21,16(VI01)                       
+         adday.x       ACC,VF07,VF07y                               NOP                                                      ;	STALL_LATENCY ?1
+         maddz.x       VF19,VF02,VF07z                              sq.xyz        VF19,28(VI01)                       
+         subq.z        VF02,VF01,Q                                  div           Q,VF29y,VF24x                       
+         add.xyz       VF06,VF06,VF13                               NOP                                               
+         addy.x        VF05,VF19,VF29y                              sq.xyz        VF05,15(VI01)                              ;	STALL_LATENCY ?1
+         mulz.xyz      VF23,VF23,VF02z                              NOP                                               
+         NOP                                                        waitq                                                    ;	STALL_LATENCY ?2
+         subq.z        VF05,VF01,Q                                  div           Q,VF29y,VF05x                       
+         sub.xyz       VF06,VF12,VF23                               sq.xyz        VF06,11(VI01)                       
+         add.xyz       VF12,VF14,VF23                               NOP                                               
+         addy.x        VF14,VF01,VF29y                              NOP                                               
+         mulz.xyz      VF23,VF15,VF05z                              NOP                                               
+         add.xyz       VF16,VF16,VF18                               div           Q,VF29y,VF14x                              ;	STALL_LATENCY_THRUPUT ?2
+         add.xyz       VF17,VF17,VF23                               NOP                                               
+         NOP                                                        NOP                                               
+         sub.xyz       VF23,VF10,VF23                               NOP                                               
+         NOP                                                        NOP                                               
+         subq.z        VF10,VF01,Q                                  sq.xyz        VF17,7(VI01)                        
+         NOP                                                        waitq                                                    ;	STALL_LATENCY ?1
+         subq.z        VF23,VF01,Q                                  sq.xyz        VF23,8(VI01)                        
+         NOP                                                        NOP                                               
+         mulz.xyz      VF22,VF22,VF10z                              NOP                                               
+         NOP                                                        NOP                                               
+         mulz.xyz      VF23,VF08,VF23z                              isubiu        VI03,VI03,0x00000001                
+         sub.xyz       VF11,VF11,VF22                               sq.xyz        VF16,27(VI01)                              ;	STALL_LATENCY ?1
+         add.xyz       VF08,VF20,VF22                               sq.xyz        VF06,20(VI01)                       
+         sub.xyz       VF03,VF03,VF23                               sq.xyz        VF12,19(VI01)                       
+         add.xyz       VF04,VF04,VF23                               sq.xyz        VF11,0(VI01)                               ;	STALL_LATENCY ?1
+         NOP                                                        sq.xyz        VF08,-1(VI01)                       
+         NOP                                                        sq.xyz        VF03,24(VI01)                       
+         NOP                                                        ibeq          VI03,VI00,exit                      
+         NOP                                                        sq.xyz        VF04,23(VI01)                       
+; _LNOPT_w=[ normal ] 3 [3 0] 3   [__v_hairsim_vcl_13]
+         NOP                                                        iaddiu        VI02,VI00,0x00000003                
+         NOP                                                        b             EXPL_hairsim_vcl_constraintloop__ENTRY_POINT
+         NOP                                                        iaddiu        VI01,VI01,0x0000001d                
+exit:
+         NOP[E]                                                     NOP                                               
+         NOP                                                        NOP                                               
+		.align 4
+hair_CodeEnd:
+;	iCount=192
+; register stats:
+;   4 VU User integer registers
+;  28 VU User floating point registers

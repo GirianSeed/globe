@@ -1,0 +1,31 @@
+#EE-ILB# [PsIIlibpfont1200]
+L libpfont
+V 0x0101
+F 0x0000
+E 004 scePFontCalcCacheSize
+E 005 scePFontInit
+E 006 scePFontRelease
+E 007 scePFontSetGsCtxt
+E 008 scePFontSetTexMem
+E 009 scePFontFlush
+E 010 scePFontAttachData
+E 011 scePFontGetFontInfo
+E 012 scePFontGetBlock
+E 013 scePFontGetGlyph
+E 014 scePFontSetScreenMatrix
+E 015 scePFontGetScreenMatrix
+E 016 scePFontSetFontMatrix
+E 017 scePFontGetFontMatrix
+E 018 scePFontSetLocate
+E 019 scePFontGetLocate
+E 020 scePFontSetColor
+E 021 scePFontGetColor
+E 022 scePFontSetPitch
+E 023 scePFontGetPitch
+E 024 scePFontSetWidth
+E 025 scePFontGetWidth
+E 026 scePFontPutc
+E 027 scePFontPuts
+E 028 scePFontPutsContinue
+E 029 scePFontCalcRect
+E 030 scePFontSetFilter

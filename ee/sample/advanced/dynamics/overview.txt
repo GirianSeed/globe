@@ -1,0 +1,229 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library Release 3.0
+       Copyright (C) 2002 Sony Computer Entertainment Inc.
+                                       All Rights Reserved
+
+<Sample 1 Overview>
+
+This program executes a rigid body dynamics simulation without taking into account friction or couplings between objects. Also, no calculations are done for objects that are stationary and in contact. To move objects apart that are stationary in order to prevent them from mutually colliding with each other because of gravity or some other external force, the objects are intentionally separated along the collision normal line when they are located within a fixed distance (permissible value correction). Even when it appears that objects overlap and are at a standstill, oscillations actually occur on a microscopic scale.
+ 	
+The fourth-order Runge-Kutta method is used for integrating the equations of motion.	
+
+The GJK algorithm is used for collision detection. (See advanced/collision/*.txt.)
+
+When the objects are in close proximity, a faster method (broad phase collision detection algorithm) can be used to increase performance.
+	
+Although HiG/HiP is used for drawing, the hierarchy plugin is not used.
+	
+
+<Sample 1 Restrictions>
+
+The algorithm that is used here for calculating the distance between two objects does not calculate a negative distance (depth of collided parts). When the distance between the objects approaches a certain fixed distance, a collision is assumed. Therefore, no objects can intersect before the integration step during the simulation process (i.e. during the simulation() function).
+	
+When two objects do not intersect before the integration step but do intersect after it, at that time the get_coll_time() function uses an interpolation method to calculate the collision time tc (when there is a tiny distance between the two objects) and the state variables (x, rq, p, and L, which are described later). If this interpolation method fails because of numerical error, the state variables x and rq from the previous step are used instead of the exact state variables at time tc. (State variables p and L are not updated.)
+
+The sample program works properly when this method is combined with permissible value correction, however, in rare cases the method may not work. When a certain object is sandwiched between two other objects, the objects may end up intersecting because of the numerical error correction, and the simulation() function will not generate the normal behavior of the bodies. To eliminate this numerical error, a more thorough method must be used so that the objects are separated in advance.
+	
+<Summary of Rigid Body Simulation>
+
+0.  Use the following function to define the kind of external force (for example, gravity) to be applied to the body.
+
+   	   	calc_force()
+
+1.  Perform collision detection by creating gjkobjs (see readme_j.txt and overview_j.txt in advanced/collision).
+
+  	   collision_init():  Load Vu0 microcode into Vu0 program memory.
+
+  	   gjk_init():  Initialize the GJKObj and Simplex structures to be used in this sample.
+
+	   alloc_gjkobj_neighbors():  Allocate memory for the nearest-neighbor-table.
+	       
+2. Initialize the simulation system.
+
+	   alloc_mem():  Allocate memory that is used to integrate the equations of motion.
+
+	   init_body_*():  Initialize a rigid-body object (mass, inertial_tensor, state variables)
+
+  	   Assign collision (gjk) object to rigid body:  body0.gjkobj=&(my_gjkobj[OBJA]);
+
+  	   Create rigid body list:  bodylist[0]=&body0;
+
+3. Execute the simulation.
+
+   	   simulation():  Start simulation and update local_world and light_rot matrices to draw objects on the screen.
+
+4. Free allocated memory.
+
+ 	   free_gjkobj_neighbors():  Free memory that was used for the nearest-neighbor-table.
+				      
+  	   free_mem():  Free memory used for integration.
+
+
+<Description of Rigid Body Structure>
+
+	typedef struct _body{
+
+  	  int type;
+  	  /* constants */
+ 	  float m; 		/* mass */
+  	  float invM; 		/* inverse mass */
+  	  sceVu0FMATRIX Iinv; 	/* inverse Inertia tensor */
+
+  	  /* state variables */
+  	  sceVu0FVECTOR x;	/* center of mass position */
+  	  sceVu0FVECTOR rq;	/* rotation quaternion */
+  	  sceVu0FVECTOR p;	/* linear momentum */
+  	  sceVu0FVECTOR L;	/* angular momentum */
+
+  	  /* force and torque accumulator */
+  	  sceVu0FVECTOR F;
+  	  sceVu0FVECTOR torque;
+
+  	  /* internal temp var. */
+  	  sceVu0FMATRIX Iinv_t;
+  	  sceVu0FVECTOR omega;
+
+  	  /* pointer to gjkobj */
+  	  GJKObj *gjkobj;
+
+	} rigid_body;
+
+The Iinv_t and omega members are only used internally by the simulation() function. After the simulation() function is called, there is no guarantee that they will contain accurate values.
+
+All state variables (x, rq, p, and L) are valid (they contain accurate values) before and after the simulation() function is called. The values are not valid during the calc_force() callback.
+	
+The constants m, invM, and Iinv are always valid and are not changed by the simulation() function.
+	
+	
+The type member may be PASSIVE, in which case the body position is assumed to be fixed and the mass is assumed to be infinite. Or it may be ACTIVE, in which case the body is fully involved in the simulation process
+
+
+<Relationship Between the State Vector "Xn" and the Rigid Body List "bodylist">
+
+Each rigid body has four state vectors, which uniquely determine each rigid body state. (x indicates the center of mass position, rq indicates the rotation quaternion, p indicates the linear momentum, and L indicates the angular momentum.)
+
+The rigid body list "bodylist" is passed as an argument of the simulation() function.
+	
+The simulation() function processes this rigid body group internally as NOBJECTS*VECTOR_DIM*STATE_DIM vectors "Xn."
+	(NOBJECTS ... Number of objects, VECTOR_DIM ... Vector size(sceVu0FVector)=4, and STATE_DIM=4 because there are four state variables per object)
+	
+When the simulation() function starts, the state variables of all bodies in "bodylist" are copied to "Xn," and when the function ends, the "Xn" state variables are copied to the individual rigid bodies of "bodylist." During the simulation, only "Xn" is updated. The state variables of the bodies of "bodylist" are not updated.
+	
+
+<Applying an External Force (using calc_force())>
+
+The user can define the kinds of external forces that are to be applied to individual objects during the simulation.
+
+In this sample program, the user can use the function
+	void calc_force(sceVu0FVECTOR *Xn,rigid_body **bodylist,int nbody,float t)
+to define the kinds of external forces that were entered or how gravity was applied to individual objects.
+ 
+This calc_force() function is passed as an argument of the simulation() function and called multiple times within the simulation() function.
+	 
+	- bodylist is used to access "rigid body constants" (such as mass).
+	- When the external force varies as a function of the "state variables" of the body, "Xn" must be used for the state variables. The reason for this is that the bodylist state variables are not valid during a simulation() call (see the above explanation).
+	-  t is used for forces that depend on "time."
+	
+
+<About the simulation() Function>
+
+The simulation() function simulates the movement of a rigid body. It also sets up the local_world and light_rot matrices for drawing.
+	
+	The parameters are given below.
+
+	void simulation(rigid_body **bodylist,int nbody,float tstep,
+		int nsteps,float tstart,SimMEM *mem,void (*calc_force)
+		(sceVu0FVECTOR *,rigid_body **,int ,float ))
+
+	bodylist ... List of rigid bodies involved in the simulation
+	nbody ... Number of bodies in bodylist
+	tstep ... Size of one time step
+	nsteps ... Number of integration steps executed by simulation()
+	tstart ... Simulation start time
+	mem ... Memory allocated by the user for simulation
+	calc_force ... Function for executing external force calculation and applying external force (e.g. gravity)
+
+
+	Pseudo code for the simulation() function:
+
+	for n-integration steps {
+
+ 	  calculate external forces 
+
+ 	  integrate equations of motion
+
+ 	  loop over all possible collision-pairs {
+
+ 	    calculate distance between objects
+  
+ 	    if (distance < COLL_DIST) {
+   	      if (distance < SEPARATE_DIST) interpolate state vectors 
+			to get the state vectors at the collision time
+   	      
+	      if (distance < WARNING_DIST) separate objects 
+			artificially along the collision normal
+
+	      analyze contact and check if objects are approaching each other
+   	      
+	      if (objects are approaching each other) apply collision response
+	    } 
+	  }  
+	}
+
+	Description of constants used by the simulation() function:
+
+ 	COLL_DIST:  When the distance between objects is less than COLL_DIST, it is assumed that the objects are colliding.
+
+ 	WARNING_DIST:  When the distance between objects is less than WARNING_DIST, the permissible value correction is applied (the objects are separated in the direction of the collision normal).
+
+ 	SEPARATE_DIST: When the distance between objects is less than SEPARATE_DIST, it is assumed that the objects are intersecting. The collision time is calculated from interpolation, and the state variables are also calculated at the time of collision.
+
+<About the Elasticity of Objects>
+
+In a closed system with no friction, energy is conserved and an object will not be permanently brought to rest and bound to the floor.
+
+The analyze_collision() function has a parameter named "epsilon," which can be set so that energy loss occurs when two objects collide.
+ 	
+  	epsilon = 0 ... 100% energy loss:  When a collision occurs, the objects stick together
+  	0 < epsilon < 1 ... When a collision occurs, the objects lose energy
+  	epsilon = 1 ... Energy is conserved
+  	epsilon > 1 ... When a collision occurs, the objects acquire energy
+
+In this sample program, elasticity is uniform for all objects.
+
+
+<Sample 2 Overview>
+
+This program performs a rigid body simulation with friction. Object coupling is not supported. To separate objects at a steady state of contact, that is, to prevent them from mutually crashing into each other due to gravity or some external force, a micro collision [1] (collision for which the restoration force "collision coefficient epsilon" is intentionally raised) is performed for the objects. As is the case with sample 1, even if it appears that the objects overlap and come to a standstill, microscopic-scale oscillations actually occur. 
+
+
+<Differences with Sample 1>
+	
+	1. Sample 2 includes friction. (For information about the friction model, see reference [2].)
+	2. Sample 2 handles contacts between objects as "micro collisions" [1].
+	3. Sample 2 uses simulation_with_rollback() instead of simulation(). Although simulation_with_rollback() internally uses the same variables as simulation(), it searches for the first collision t=tc within the simulation step. It also rolls back all objects to their positions at tc before applying the collision. (Sample 1 checks collisions by using a total impact formula and assigns impulses in the order they were found.)
+
+
+<Sample 2 Restrictions>
+
+	A loop within the simulation step searches for the first collision. However, this may not work if several collisions occur within the same step. The simulation will fail in the following three situations.
+	
+	A. Since the objects intersected in the previous frame, the collision time tc cannot be calculated. (This is checked within get_coll_time().) This problem can be solved by using a strong micro collision (increase to EPSILON_MAX).
+	B. The interpolation task for obtaining the collision time tc within get_coll_time() fails. (The partitioned interpolation task is repeated up to 10,000 times and is stopped if it is unsuccessful.)
+	C. The collision time tc cannot be found because of numerical error.
+
+	Error messages are displayed for all of these situations.
+
+
+<Future Plans>
+
+	Point coupling
+	Improving the algorithm that calculates the contact resting state
+	Optimization
+
+For details concerning rigid body simulations, see the following references.
+
+"Physically Based Modeling", SIGGRAPH'97, Course Notes
+"Interactive Simulation of Solid Rigid Bodies", 1995, IEEE Computer 
+Graphics and Application, Vol. 15, 1995, pp. 63
+

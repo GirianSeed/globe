@@ -1,0 +1,606 @@
+<html lang="ja">
+<head>
+
+<script language="JavaScript">
+<!--
+  function startFixed(){
+    fixedLAYER('fixedLay0','rightBottom',-35,-35)
+  }
+
+  var ie= !!document.all
+  var n4= !!document.layers
+  var w3c=!!document.getElementById
+  var mac45 
+    = navigator.userAgent.indexOf('MSIE 4.5; Mac_PowerPC')
+
+  if(document.layers)window.onresize=resizeFunc
+  function resizeFunc(e){location.reload()}
+
+  function iniFunc(){
+    if(ie&&!(mac45!=-1))window.onscroll = startFixed
+    startFixed()
+  }
+
+  var tid=new Array()
+
+  function fixedLAYER(layName,posString,offSetX,offSetY){
+
+    offSetX = parseInt(offSetX,10)
+    offSetY = parseInt(offSetY,10)
+
+ if( posString == 'rightBottom' ){
+
+      if(ie) offLeft = document.body.clientWidth   + offSetX
+      else   offLeft = window.innerWidth           + offSetX
+      if(ie) offTop  = document.body.clientHeight  + offSetY
+      else   offTop  = window.innerHeight          + offSetY
+
+    }
+    else {
+
+      if(ie) offLeft =                               offSetX
+      else   offLeft =                               offSetX
+      if(ie) offTop  =                               offSetY
+      else   offTop  =                               offSetY
+
+    }
+
+    offLeft = parseInt(offLeft)
+    offTop  = parseInt(offTop)
+
+    if(document.all){
+      var mx = parseInt(document.body.scrollLeft +offLeft)
+      var my = parseInt(document.body.scrollTop  +offTop)
+    } else {
+      var mx = parseInt(self.pageXOffset+offLeft)
+      var my = parseInt(self.pageYOffset+offTop)
+
+    }
+
+    moveLAYER(layName,mx,my)
+
+    if(!(ie&&!(mac45!=-1)))
+      setTimeout("fixedLAYER('"+layName+"','"+posString
+                   +"','" +offSetX+"','"+offSetY+"')",100)
+  }
+
+  function moveLAYER(layName,x,y){
+      
+      if(document.getElementById){
+        document.getElementById(layName).style.left=x
+        document.getElementById(layName).style.top=y
+      }
+      else if(document.all){
+        document.all(layName).style.pixelLeft=x
+        document.all(layName).style.pixelTop=y
+      }
+      else if(document.layers)
+        document.layers[layName].moveTo(x,y)
+  }
+
+  function reloadMnTp(){
+        if(parent.menu_top){            
+                parent.menu_top.location.reload(true)
+        } 
+ }
+//-->
+</script>
+<title>フォントファイルフォーマット</title>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="Author" Content="Sony Computer Entertainment Inc.">
+<style type="text/css"><!--
+    div.fixedLay{position:absolute;z-index:100;left:0px;top:0px;}
+--></style>
+</head>
+<body onload="iniFunc()" bgcolor="#ffffff" text="#000000" >
+<a name=TOP></a>
+<div id="fixedLay0" class="fixedLay">
+<a href="#TOP"><img src="gif/link.gif" border="0" alt="TOP"></a>
+</div>
+<table WIDTH="100%">
+<tr><td>
+<h3>"PlayStation 2" Programmer Tool Runtime Library libpfont Version 1.2</h3>
+</td>
+</tr>
+</table>
+<hr noshade size=6>
+<center><h1>
+フォントファイルフォーマット
+</h1></center>
+</a>
+<div align=center>
+<table border=0 bgcolor=#F5F5F5 width=90%><tr><td>
+<h2><u>
+        <b>目次</b><br>
+</u></h2>
+
+<ul>
+<p><a href="#Heading3_1">  1 <b>ファイルフォーマット</b></a>
+<ul>
+<a href="#Heading4_1_1"> <b>全体構造</b></a><br>
+<a href="#Heading4_1_2"> <b>ヘッダセクション</b></a><br>
+<a href="#Heading4_1_3"> <b>BLOCKセクション構造</b></a><br>
+<a href="#Heading4_1_4"> <b>フォントデータ情報</b></a><br>
+</ul>
+<p><a href="#Heading3_2">  2 <b>データの内容について</b></a>
+<ul>
+<a href="#Heading4_2_1"> <b>指定codeのblock内文字番号の求め方</b></a><br>
+<a href="#Heading4_2_2"> <b>コードの優先順位</b></a><br>
+<a href="#Heading4_2_3"> <b>proportinal データ</b></a><br>
+</ul>
+<br></td></tr></table></div>
+
+<!-- 見出し　２，章見出し -->
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_1">
+
+<h2>
+ 1 <!-- hp --><b>ファイルフォーマット</b>
+<hr noshade>
+</h2>
+
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_1_1">
+<a href="#Heading3_1"> 1. </a>1 <b>全体構造</b>
+</a>
+</h3>
+<div style="margin-left:50px;"></div>
+<div style="margin-left:50px;"></div>
+<div align=center>
+<p>
+<img src="gif/fontformat001.gif"><p>
+
+</div>
+<br>
+<div style="margin-left:50px;"><br>数値は特に明示しない限りsignedとして扱います。<br>予約領域、パディング領域は常に0です。<br></div>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_1_2">
+<a href="#Heading3_1"> 1. </a>2 <b>ヘッダセクション</b>
+</a>
+</h3>
+
+<div style="margin-left:40px;"><h4><b>ヘッダ部</b><br><br></h4></div>
+
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;ID&nbsp;</td>
+<td valign="TOP">&nbsp;4 (0x00000000:unsigned)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;VERSION&nbsp;</td>
+<td valign="TOP">&nbsp;4 (0x00000000:unsigned)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;SIZE&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:バイト数（ID部含む）)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;RESERVED&nbsp;</td>
+<td valign="TOP">&nbsp;4 (0)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<div style="margin-left:40px;"><h4><b>共通情報</b><br><br></h4></div>
+
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;フォント名&nbsp;</td>
+<td valign="TOP">&nbsp;31+1 (UTF8'\0')&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;コメント&nbsp;</td>
+<td valign="TOP">&nbsp;31+1 (UTF8'\0')&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;フォント全体の最大 ASCENT&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;=0:ブロック毎にスケールを&nbsp;<br>&nbsp;適用したもので計算)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;フォント全体の最大 DESCENT&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&lt;=0:ブロック毎にスケールを&nbsp;<br>&nbsp;適用したもので計算)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;フォント全体の最大 WIDTH&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;0:ブロック毎にスケールを&nbsp;<br>&nbsp;適用したもので計算)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;reserved&nbsp;</td>
+<td valign="TOP">&nbsp;2 (0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;BLOCK 数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0:n)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;BLOCK 1 オフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:ヘッダ部先頭から)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;BLOCK 2 オフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:ヘッダ部先頭から)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;：&nbsp;</td>
+<td valign="TOP">&nbsp;：&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;BLOCK n オフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:ヘッダ部先頭から)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_1_3">
+<a href="#Heading3_1"> 1. </a>3 <b>BLOCKセクション構造</b>
+</a>
+</h3>
+<div style="margin-left:50px;"></div>
+<div style="margin-left:50px;"></div>
+<div align=center>
+<p>
+<img src="gif/fontformat002.gif"><p>
+
+</div>
+<br>
+
+<div style="margin-left:40px;"><h4><b>BLOCKヘッダ情報</b><br><br></h4></div>
+
+<div style="margin-left:67px;">ブロック先頭はqwordの境界になければならなりません。<br><br></div>
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td bgcolor="#cccccc" valign="top">&nbsp;<b>名称</b>&nbsp;</td>
+<td colspan= 2  bgcolor="#cccccc" valign="top">&nbsp;<b>byte</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;ID&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 (0x00000000:unsigned)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;VERSION&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 (0x00000000:unsigned)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;SIZE&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 (&gt;0:バイト数（ID部含む）)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;RESERVED&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 (0)&nbsp;</td>
+</tr>
+<tr>
+<td rowspan= 4  valign="top">&nbsp;フラグ&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 ()&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;0-2bit&nbsp;</td>
+<td valign="top">&nbsp;3bits TEXTURE カラーモード&nbsp;<br>&nbsp;000…4bit index &nbsp;<br>&nbsp;　　 (imageは横8,縦4pixel単位を推奨) 32&nbsp;<br>&nbsp;001…8bit index &nbsp;<br>&nbsp;　　 (imageは横8,縦2pixel単位を推奨) 64&nbsp;<br>&nbsp;010…16bit direct &nbsp;<br>&nbsp;　　 (imageは横4,縦2pixel単位を推奨) 64&nbsp;<br>&nbsp;011…24bit direct &nbsp;<br>&nbsp;　　 (imageは横8,縦2pixel単位を推奨) 192&nbsp;<br>&nbsp;100…32bit direct&nbsp;<br>&nbsp;　　 (imageは横2,縦2pixel単位を推奨) 64&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;3bit&nbsp;</td>
+<td valign="top">&nbsp;1bit  proportional形式&nbsp;<br>&nbsp;0…固定&nbsp;<br>&nbsp;1…個別&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;4- 31bit&nbsp;</td>
+<td valign="top">&nbsp;28bits Reserved(0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;出力サイズ補正値X&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 (float)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;出力サイズ補正値Y&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;4 (float)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;IMAGE 1 文字 幅 pixel&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;2 (&gt;0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;IMAGE 1 文字 高さ pixel&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;2 (&gt;0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;BLOCK 内の最大 ASCENT&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;2 (&gt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;BLOCK 内の最大&nbsp;<br>&nbsp;DESCENT&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;2 (&lt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;BLOCK 内の最大 WIDTH&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;2 (&gt;0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;reserved&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;2 (0)&nbsp;</td>
+</tr></table>
+</div>
+<br>
+<br>
+
+<div style="margin-left:40px;"><h4><b>BLOCKヘッダ（オフセットテーブル）</b><br><br></h4></div>
+
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;文字数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:M)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;image データの先頭へのオフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:BLOCK 先頭から、&nbsp;<br>&nbsp;qword境界、バイト単位)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;codeindex 数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:N)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;codeindex データの先頭へのオフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0:BLOCK 先頭から、&nbsp;<br>&nbsp;qword境界、バイト単位)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;codemap 数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0:L)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;codemap データの先頭へのオフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0:BLOCK 先頭から、&nbsp;<br>&nbsp;qword境界、バイト単位)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;proportional 数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;0 or 1:M)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;proportional データの先頭へのオフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0:BLOCK 先頭から、&nbsp;<br>&nbsp;qword境界、バイト単位)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;kerning 数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0:K 現在は0固定)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;kerningデータの先頭へのオフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0:BLOCK 先頭から、&nbsp;<br>&nbsp;qword境界、バイト単位)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;clut エントリ数&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;clut データの先頭へのオフセット&nbsp;</td>
+<td valign="TOP">&nbsp;4 (&gt;=0)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_1_4">
+<a href="#Heading3_1"> 1. </a>4 <b>フォントデータ情報</b>
+</a>
+</h3>
+
+<div style="margin-left:40px;"><h4><b>image 情報</b><br><br></h4></div>
+
+<div style="margin-left:50px;">イメージは必ず128ビット単位。size(qword)=(bitcount*w*h+127)/128<br>パディングには 0 を入れます。<br></div>
+<div style="margin-left:80px;">文字 0 番目<br></div>
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte数</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;IMAGE DATA&nbsp;</td>
+<td valign="TOP">&nbsp;X&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<div style="margin-left:80px;">文字 1 番目<br>　：<br>文字 M-1 番目<br></div>
+
+<div style="margin-left:40px;"><h4><b>codeindex 情報</b><br><br></h4></div>
+
+<div style="margin-left:67px;">codeindex同士で範囲が重なってはいけません。<br>codeindexは昇順にソートされていなければなりません。<br>文字コードで指定される先頭の文字は必ず存在しなくてはいけません。<br></div>
+<div style="margin-left:80px;">0 番目<br></div>
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte数</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;先頭文字コード&nbsp;</td>
+<td valign="TOP">&nbsp;4 (UCS2)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;終端文字コード&nbsp;</td>
+<td valign="TOP">&nbsp;4 (UCS2)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;先頭map番号&nbsp;</td>
+<td valign="TOP">&nbsp;4 (0～L-1)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;先頭文字番号&nbsp;</td>
+<td valign="TOP">&nbsp;4 (0～M-1)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<div style="margin-left:80px;">1 番目<br>　：<br>N - 1 番目<br><br></div>
+
+<div style="margin-left:40px;"><h4><b>codemap 情報</b><br><br></h4></div>
+
+<div style="margin-left:67px;">codemap のindexは昇順になっていなければなりません。<br>indexに0xffffUが出現した場合それを参照するコードは無効です (文字が無い)。<br></div>
+<div style="margin-left:80px;">0 番目<br></div>
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte数</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;index&nbsp;</td>
+<td valign="TOP">&nbsp;2 (0～65534 or 65535:unsigned)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<div style="margin-left:80px;">1 番目<br>　：<br>L - 1 番目<br></div>
+
+<div style="margin-left:40px;"><h4><b>proportional 情報</b><br><br></h4></div>
+
+<div style="margin-left:67px;">固定時は１つのみ。個別時は文字数分(M個)存在します。<br></div>
+<div style="margin-left:80px;">文字 0 番目<br></div>
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>名称</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>byte数</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;BASE POINT X&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;BASE POINT Y&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;L BEARING&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&lt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;R BEARING&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;ASCENT&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;DESCENT&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&lt;=0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;WIDTH&nbsp;</td>
+<td valign="TOP">&nbsp;2 (&gt;0)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;kerningTAG&nbsp;</td>
+<td valign="TOP">&nbsp;2 (0:予約)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<div style="margin-left:80px;">文字 1 番目<br>　：<br>文字 M-1 番目<br></div>
+
+<div style="margin-left:40px;"><h4><b>kerning 情報</b><br><br></h4></div>
+
+<div style="margin-left:67px;">予約（現在0固定）<br></div>
+
+<div style="margin-left:40px;"><h4><b>clut 情報</b><br><br></h4></div>
+
+<div style="margin-left:67px;">CLUT エントリ GS の PSMCT32 形式のデータがエントリー番号で昇順に並んでいます。<br></div>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_2">
+
+<h2>
+ 2 <!-- hp --><b>データの内容について</b>
+<hr noshade>
+</h2>
+
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_2_1">
+<a href="#Heading3_2"> 2. </a>1 <b>指定codeのblock内文字番号の求め方</b>
+</a>
+</h3>
+        <div style="margin-left:80px;"><pre><font size=3>int search(int code){
+  for(n = 0; n &lt; N; n++){
+    if((code &gt;= codeindex[n].先頭文字コード) &amp;&amp; (code &lt;= codeindex[n].終端文字コード)){
+      int ofs = code - codeindex[n].先頭文字コード;
+      u_char idx = codemap[codeindex[n].先頭map番号 + ofs];
+      if((0 != ofs) &amp;&amp; (0 == idx)){
+        return -1; //このブロック内に指定文字は無い
+      }
+      return codeindex[n].先頭文字番号 + idx; // 見つけた文字番号
+    }
+  }
+  return -1; // このブロックに指定文字は無い
+}
+</font></pre></div>
+<div style="margin-left:50px;"><br></div>
+<div style="margin-left:67px;">codemapとはcodeindexで指定された範囲内で実際に存在する文字を区別します。<br></div>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_2_2">
+<a href="#Heading3_2"> 2. </a>2 <b>コードの優先順位</b>
+</a>
+</h3>
+<div style="margin-left:67px;">同じ文字コードが複数のcodemapや複数のblockに存在する場合先に出現したものが優先されます。<br><br></div>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_2_3">
+<a href="#Heading3_2"> 2. </a>3 <b>proportinal データ</b>
+</a>
+</h3>
+<div style="margin-left:67px;"></div>
+<div style="margin-left:67px;"></div>
+<div style="margin-left:67px;">
+<p>
+<img src="gif/fontformat003.gif"><p>
+
+</div>
+<br>
+<div style="margin-left:50px;"><br></div>
+<div style="margin-left:67px;">ASCENT/DESCENT/R BEARING/L BEARING の符号は、BASE POINT (X, Y)を (0, 0) の原点とし、<br></div>
+<div style="margin-left:67px;"></div>
+<div style="margin-left:67px;">
+<p>
+<img src="gif/fontformat004.gif"><p>
+
+</div>
+<br>
+<div style="margin-left:67px;">とします。<br>よって、ASCENT/R BEARING は正、DESCENT/L BEARING は負の値となります。<br>その他数値は全て正です。KERNING 情報タグは予約です。<br><br></div>
+<p><p><hr>
+<div ALIGN="right">
+    Copyright (c) 2003 Sony Computer Entertainment Inc.  All Rights Reserved.<br>
+    SCE CONFIDENTIAL
+</div>
+</body>
+</html>

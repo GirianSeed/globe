@@ -1,0 +1,80 @@
+#
+# Creating pb file from gf
+#
+# How to use the program
+# > Makefile
+# > ./gf2pb gf2pb.txt sample_k.pb
+#
+# Characters from U+e000 to U+f8ff of ucs are for private use
+#
+# gf2pb setting file format
+#
+# Characters after '#' are neglected as comments.
+#
+# Samples are shown below:
+
+# source="xxx.gf" : Specify gf file
+source="sample_k.gf"
+
+# csize="width(dec) height(dec)" : Character size
+csize="26 26"
+
+# base= x(dec) y(dec) : Base lines
+base="1 24"
+
+# border= border(dec) : The width regarded as character borders
+border="1"
+
+# fix="0 or 1": 0=Save individual size information, 1=All characters are the same size
+fix="0"
+
+# Note: If fix=1, base must be specified.
+
+# index(hex or '_'=auto)="ucs(U+hex) count(dec) mode(0=prop 0<fix_width(dec) 0>skip)"
+# Note:Left justify
+0000="U+F8D0  1	0"	# K LETTER A
+0001="U+F8D1  1	0"	# K LETTER B
+0002="U+F8D2  1	0"	# K LETTER CH
+0003="U+F8D3  1	0"	# K LETTER D
+0004="U+F8D4  1	0"	# K LETTER E
+0005="U+F8D5  1	0"	# K LETTER GH
+0006="U+F8D6  1	0"	# K LETTER H
+0007="U+F8D7  1	0"	# K LETTER I
+0008="U+F8D8  1	0"	# K LETTER J
+0009="U+F8D9  1	0"	# K LETTER L
+000a="U+F8DA  1	0"	# K LETTER M
+000b="U+F8DB  1	0"	# K LETTER N
+000c="U+F8DC  1	0"	# K LETTER NG
+000d="U+F8DD  1	0"	# K LETTER O
+000e="U+F8DE  1	0"	# K LETTER P
+000f="U+F8DF  1	0"	# K LETTER Q
+0010="U+F8E0  1	0"	# K LETTER QH
+0011="U+F8E1  1	0"	# K LETTER R
+0012="U+F8E2  1	0"	# K LETTER S
+0013="U+F8E3  1	0"	# K LETTER T
+0014="U+F8E4  1	0"	# K LETTER TLH
+0015="U+F8E5  1	0"	# K LETTER U
+0016="U+F8E6  1	0"	# K LETTER V
+0017="U+F8E7  1	0"	# K LETTER W
+0018="U+F8E8  1	0"	# K LETTER Y
+0019="U+F8E9  1	0"	# K LETTER GLOTTAL STOP
+001a="U+F8EA  1	-1"	# (This position shall not be used)
+001b="U+F8EB  1	-1"	# (This position shall not be used)
+001c="U+F8EB  1	-1"	# (This position shall not be used)
+001d="U+F8ED  1	-1"	# (This position shall not be used)
+001e="U+F8EE  1	-1"	# (This position shall not be used)
+001f="U+F8EF  1	-1"	# (This position shall not be used)
+_="U+F8F0  1	30"	# K DIGIT ZERO
+_="U+F8F1  1	30"	# K DIGIT ONE
+_="U+F8F2  1	30"	# K DIGIT TWO
+_="U+F8F3  1	30"	# K DIGIT THREE
+_="U+F8F4  1	30"	# K DIGIT FOUR
+_="U+F8F5  1	30"	# K DIGIT FIVE
+_="U+F8F6  1	30"	# K DIGIT SIX
+_="U+F8F7  1	30"	# K DIGIT SEVEN
+_="U+F8F8  1	30"	# K DIGIT EIGHT
+_="U+F8F9  1	30"	# K DIGIT NINE
+_="U+F8FA  5	-1"	# (This position shall not be used)
+_="U+F8FF  1	0"	# K SYMBOL FOR EMPIRE
+
+#[eof]

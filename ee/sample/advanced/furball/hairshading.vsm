@@ -1,0 +1,188 @@
+; flowMon::Emit() vcl 1.3.3 produced this code:
+		.vu
+		.align 4
+		.global	hairshading_CodeStart
+		.global	hairshading_CodeEnd
+hairshading_CodeStart:
+__v_hairshading_vcl_4:
+; _LNOPT_w=[ normal ] 12 [12 0] 12   [__v_hairshading_vcl_4]
+         NOP                                                        lq            VF01,16(VI00)                       
+         NOP                                                        lq            VF02,17(VI00)                       
+         NOP                                                        lq            VF03,18(VI00)                       
+         NOP                                                        lq            VF04,19(VI00)                       
+         NOP                                                        loi           0x45000000                          
+         NOP                                                        lq.xyz        VF05,3(VI00)                        
+         NOP                                                        lq.xyz        VF06,32(VI00)                       
+         NOP                                                        lq.xyz        VF07,33(VI00)                       
+         NOP                                                        lq.xyz        VF08,34(VI00)                       
+         NOP                                                        lq.zw         VF10,30(VI00)                       
+         NOP[E]                                                     lq.xy         VF11,30(VI00)                       
+         addi.xy       VF09,VF00,I                                  fcset         0                                   
+; _LNOPT_w=[ ] 2 [0 0] 2   [__v_hairshading_vcl_5]
+         NOP[E]                                                     NOP                                               
+         NOP                                                        NOP                                               
+PARTICLEC_START:
+; _LNOPT_w=[ normal ] 4 [6 0] 6   [PARTICLEC_START]
+         NOP                                                        ilw.x         VI03,10(VI00)                       
+         NOP                                                        xtop          VI02                                
+         NOP                                                        iadd          VI03,VI02,VI03                             ;	STALL_LATENCY ?2
+         NOP                                                        iaddiu        VI04,VI03,0                         
+PARTICLEC_GIFTAG:
+; _LNOPT_w=[ normal ] 34 [34 0] 34   [PARTICLEC_GIFTAG]
+         NOP                                                        lq            VF13,8(VI00)                        
+         NOP                                                        ilw.y         VI01,0(VI02)                        
+         NOP                                                        ilw.z         VI07,29(VI00)                       
+         NOP                                                        lq.yzw        VF12,9(VI00)                        
+         NOP                                                        ilw.x         VI05,0(VI02)                        
+         NOP                                                        mfir.yzw      VF14,VI00                           
+         NOP                                                        ilw.x         VI08,1(VI02)                        
+         NOP                                                        lq.x          VF10,0(VI02)                        
+         NOP                                                        iaddiu        VI02,VI02,0x00000002                
+         NOP                                                        lq.xyz        VF20,0(VI02)                        
+         NOP                                                        iaddiu        VI06,VI00,0x0000001b                
+         NOP                                                        sq            VF13,0(VI04)                        
+         NOP                                                        sq.yzw        VF14,1(VI04)                        
+         sub.xyz       VF17,VF20,VF05                               ior           VI07,VI07,VI08                      
+         mulax         ACC,VF01,VF20x                               sq.yzw        VF14,2(VI04)                        
+         madday        ACC,VF02,VF20y                               isw.x         VI01,1(VI04)                        
+         maddaz        ACC,VF03,VF20z                               isw.x         VI07,2(VI04)                        
+         maddw         VF20,VF04,VF00w                              erleng        P,VF17                              
+         NOP                                                        iaddiu        VI01,VI00,0x00007fff                
+         NOP                                                        isw.z         VI06,2(VI04)                        
+         NOP                                                        sq.yzw        VF12,3(VI04)                        
+         NOP                                                        div           Q,VF00w,VF20w                       
+         NOP                                                        isw.x         VI05,3(VI04)                        
+         NOP                                                        iaddiu        VI04,VI04,0x00000004                
+         NOP                                                        iand          VI05,VI05,VI01                      
+         NOP                                                        lq.xyz        VF12,40(VI00)                       
+         NOP                                                        iaddiu        VI02,VI02,0x00000004                
+         NOP                                                        lq.xyz        VF16,-2(VI02)                       
+         mulq.xyz      VF19,VF20,Q                                  lq.xyz        VF13,41(VI00)                       
+         sub.w         VF16,VF00,VF00                               lq.xyz        VF14,42(VI00)                       
+         subw.z        VF18,VF10,VF20w                              iaddi         VI05,VI05,-1                        
+         mulq.xyz      VF20,VF16,Q                                  lq.xyz        VF15,43(VI00)                       
+         sub.xy        VF18,VF19,VF09                               ibeq          VI05,VI00,EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EPI1
+         ftoi4.xyz     VF16,VF19                                    iaddiu        VI04,VI04,0x00000003                
+; _LNOPT_w=[ ] 19 [33 0] 25   [EXPL_hairshading_vcl_PARTICLEC_vertex_loop__PRO1]
+         NOP                                                        lq.xyz        VF21,0(VI02)                        
+         mul.xy        VF18,VF18,VF11                               sq            VF16,-1(VI04)                              ;	STALL_LATENCY ?2
+         sub.xyz       VF17,VF21,VF05                               move.xyz      VF16,VF17                                  ;	STALL_LATENCY ?2
+         mulax         ACC,VF01,VF21x                               waitp                                                    ;	STALL_LATENCY ?2
+         madday        ACC,VF02,VF21y                               sq.xyz        VF20,-3(VI04)                       
+         maddaz        ACC,VF03,VF21z                               mfp.x         VF21,P                              
+         maddw         VF20,VF04,VF00w                              erleng        P,VF17                              
+         mulx.xyz      VF21,VF16,VF21x                              lq.xyz        VF16,2(VI02)                               ;	STALL_LATENCY ?2
+         clipw.xyz     VF18xyz,VF10w                                div           Q,VF00w,VF20w                       
+         mulax.xyz     ACC,VF06,VF21x                               NOP                                                      ;	STALL_LATENCY ?2
+         madday.xyz    ACC,VF07,VF21y                               waitq                                                    ;	STALL_LATENCY ?3
+         maddz.xyz     VF21,VF08,VF21z                              iaddiu        VI04,VI04,0x00000003                
+         NOP                                                        waitp                                                    ;	STALL_LATENCY ?11
+         mulq.xyz      VF19,VF20,Q                                  iaddiu        VI02,VI02,0x00000004                
+         subw.z        VF18,VF10,VF20w                              iaddi         VI05,VI05,-1                        
+         maxx.xyz      VF21,VF21,VF00x                              fcand         VI01,4095                           
+         mulq.xyz      VF20,VF16,Q                                  iaddiu        VI01,VI01,0x00007fff                
+         sub.xy        VF18,VF19,VF09                               ibeq          VI05,VI00,EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EPI0
+         ftoi4.xyz     VF16,VF19                                    isw.w         VI01,-4(VI04)                       
+EXPL_hairshading_vcl_PARTICLEC_vertex_loop__MAIN_LOOP:
+; _LPOPT_w=[ dUp ] 25 [25 25] 25   [EXPL_hairshading_vcl_PARTICLEC_vertex_loop__MAIN_LOOP]
+         mulax.xyz     ACC,VF12,VF21x                               lq.xyz        VF22,0(VI02)                        
+         madday.xyz    ACC,VF13,VF21y                               iaddiu        VI04,VI04,0x00000003                
+         maddaz.xyz    ACC,VF14,VF21z                               lq            VF19,-5(VI02)                       
+         maddw.xyz     VF21,VF15,VF00w                              sq            VF16,-4(VI04)                       
+         sub.xyz       VF17,VF22,VF05                               move.xyz      VF16,VF17                           
+         mulax         ACC,VF01,VF22x                               sq.xyz        VF20,-6(VI04)                       
+         madday        ACC,VF02,VF22y                               move.w        VF05,VF19                           
+         maddaz        ACC,VF03,VF22z                               mfp.x         VF23,P                              
+         maddw         VF20,VF04,VF00w                              erleng        P,VF17                              
+         mul.xy        VF18,VF18,VF11                               iaddiu        VI02,VI02,0x00000004                
+         miniw.xyz     VF22,VF21,VF00w                              NOP                                               
+         mulx.xyz      VF21,VF16,VF23x                              NOP                                               
+         ftoi0.w       VF05,VF05                                    div           Q,VF00w,VF20w                       
+         clipw.xyz     VF18xyz,VF10w                                NOP                                               
+         mul.xyz       VF16,VF22,VF19                               NOP                                               
+         mulax.xyz     ACC,VF06,VF21x                               lq.xyz        VF19,-2(VI02)                       
+         madday.xyz    ACC,VF07,VF21y                               sq.w          VF05,-8(VI04)                       
+         maddz.xyz     VF21,VF08,VF21z                              fcand         VI01,4095                           
+         subw.z        VF18,VF10,VF20w                              iaddiu        VI01,VI01,0x00007fff                
+         mulq.xyz      VF22,VF20,Q                                  isw.w         VI01,-4(VI04)                       
+         ftoi0.xyz     VF16,VF16                                    NOP                                               
+         maxx.xyz      VF21,VF21,VF00x                              iaddi         VI05,VI05,-1                        
+         mulq.xyz      VF20,VF19,Q                                  NOP                                               
+         sub.xy        VF18,VF22,VF09                               ibne          VI05,VI00,EXPL_hairshading_vcl_PARTICLEC_vertex_loop__MAIN_LOOP
+         ftoi4.xyz     VF16,VF22                                    sq.xyz        VF16,-8(VI04)                       
+EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EPI0:
+; _LNOPT_w=[ ] 30 [38 0] 45   [EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EPI0]
+         mulax.xyz     ACC,VF12,VF21x                               waitp                                                    ;	STALL_LATENCY ?7
+         madday.xyz    ACC,VF13,VF21y                               sq.xyz        VF20,-3(VI04)                       
+         maddaz.xyz    ACC,VF14,VF21z                               sq            VF16,-1(VI04)                              ;	STALL_LATENCY ?1
+         maddw.xyz     VF19,VF15,VF00w                              move.xyz      VF16,VF17                           
+         mul.xy        VF18,VF18,VF11                               mfp.x         VF20,P                              
+         miniw.xyz     VF19,VF19,VF00w                              lq            VF21,-5(VI02)                              ;	STALL_LATENCY ?2
+         mulx.xyz      VF16,VF16,VF20x                              NOP                                               
+         clipw.xyz     VF18xyz,VF10w                                NOP                                               
+         mul.xyz       VF21,VF19,VF21                               NOP                                                      ;	STALL_LATENCY ?1
+         mulax.xyz     ACC,VF06,VF16x                               NOP                                               
+         madday.xyz    ACC,VF07,VF16y                               NOP                                               
+         maddz.xyz     VF18,VF08,VF16z                              NOP                                               
+         ftoi0.xyz     VF16,VF21                                    NOP                                               
+         maxx.xyz      VF21,VF18,VF00x                              NOP                                                      ;	STALL_LATENCY ?2
+         NOP                                                        sq.xyz        VF16,-5(VI04)                       
+         mulax.xyz     ACC,VF12,VF21x                               move.w        VF05,VF21                                  ;	STALL_LATENCY ?2
+         madday.xyz    ACC,VF13,VF21y                               NOP                                               
+         maddaz.xyz    ACC,VF14,VF21z                               lq            VF14,-1(VI02)                       
+         maddw.xyz     VF15,VF15,VF00w                              NOP                                               
+         ftoi0.w       VF05,VF05                                    NOP                                               
+         miniw.xyz     VF15,VF15,VF00w                              NOP                                                      ;	STALL_LATENCY ?2
+         NOP                                                        sq.w          VF05,-5(VI04)                       
+         NOP                                                        move.w        VF05,VF14                           
+         mul.xyz       VF14,VF15,VF14                               NOP                                                      ;	STALL_LATENCY ?1
+         ftoi0.w       VF05,VF05                                    fcand         VI01,4095                                  ;	STALL_LATENCY ?1
+         NOP                                                        iaddiu        VI01,VI01,0x00007fff                
+         ftoi0.xyz     VF14,VF14                                    isw.w         VI01,-1(VI04)                       
+         NOP                                                        sq.w          VF05,-2(VI04)                              ;	STALL_LATENCY ?1
+         NOP                                                        b             EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EXIT_POINT
+         NOP                                                        sq.xyz        VF14,-2(VI04)                       
+EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EPI1:
+; _LNOPT_w=[ ] 24 [38 0] 45   [EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EPI1]
+         NOP                                                        waitp                                                    ;	STALL_LATENCY ?7
+         mul.xy        VF18,VF18,VF11                               sq.xyz        VF20,-3(VI04)                              ;	STALL_LATENCY ?1
+         NOP                                                        sq            VF16,-1(VI04)                              ;	STALL_LATENCY ?1
+         NOP                                                        move.xyz      VF16,VF17                           
+         NOP                                                        mfp.x         VF20,P                              
+         clipw.xyz     VF18xyz,VF10w                                NOP                                               
+         mulx.xyz      VF16,VF16,VF20x                              NOP                                                      ;	STALL_LATENCY ?2
+         mulax.xyz     ACC,VF06,VF16x                               NOP                                                      ;	STALL_LATENCY ?3
+         madday.xyz    ACC,VF07,VF16y                               NOP                                               
+         maddz.xyz     VF18,VF08,VF16z                              NOP                                               
+         maxx.xyz      VF18,VF18,VF00x                              NOP                                                      ;	STALL_LATENCY ?3
+         mulax.xyz     ACC,VF12,VF18x                               NOP                                                      ;	STALL_LATENCY ?3
+         madday.xyz    ACC,VF13,VF18y                               NOP                                               
+         maddaz.xyz    ACC,VF14,VF18z                               lq            VF14,-1(VI02)                       
+         maddw.xyz     VF15,VF15,VF00w                              NOP                                               
+         NOP                                                        move.w        VF05,VF14                                  ;	STALL_LATENCY ?2
+         miniw.xyz     VF15,VF15,VF00w                              NOP                                               
+         ftoi0.w       VF05,VF05                                    NOP                                                      ;	STALL_LATENCY ?2
+         mul.xyz       VF14,VF15,VF14                               NOP                                               
+         NOP                                                        sq.w          VF05,-2(VI04)                              ;	STALL_LATENCY ?2
+         ftoi0.xyz     VF14,VF14                                    fcand         VI01,4095                           
+         NOP                                                        iaddiu        VI01,VI01,0x00007fff                
+         NOP                                                        isw.w         VI01,-1(VI04)                       
+         NOP                                                        sq.xyz        VF14,-2(VI04)                              ;	STALL_LATENCY ?1
+EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EXIT_POINT:
+; _LNOPT_w=[ ] 4 [4 0] 4   [EXPL_hairshading_vcl_PARTICLEC_vertex_loop__EXIT_POINT]
+         NOP                                                        mtir          VI01,VF10x                          
+         NOP                                                        NOP                                               
+         NOP                                                        ibgez         VI01,PARTICLEC_GIFTAG               
+         NOP                                                        NOP                                               
+; _LNOPT_w=[ normal ] 2 [1 0] 2   [__v_hairshading_vcl_11]
+         NOP[E]                                                     xgkick        VI03                                
+         NOP                                                        NOP                                               
+; _LNOPT_w=[ normal ] 2 [2 0] 2   [__v_hairshading_vcl_12]
+         NOP                                                        b             PARTICLEC_START                     
+         NOP                                                        NOP                                               
+		.align 4
+hairshading_CodeEnd:
+;	iCount=158
+; register stats:
+;   8 VU User integer registers
+;  23 VU User floating point registers

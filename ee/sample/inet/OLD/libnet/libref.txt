@@ -1,0 +1,895 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library Release 2.5
+     Copyright (C)  2001 Sony Computer Entertainment Inc.
+                                      All Rights Reserved
+
+                            libnet Library
+                           ================
+
+
+ 1 Functions
+=============
+
+=========================================================================
+libnet_init                                                    [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        void libnet_init(
+        	sceSifMClientData *cd
+        	unsigned int buffersize,
+        	unsigned int stacksize,
+        	int priority
+        );
+        
+[Arguments]
+        cd         Client data for the MSIFRPC system
+        buffersize Size of the receive buffer for capturing 
+		   send data from SceSifMCallRpc().
+                   The buffersize is normally 2048 bytes.
+        stacksize  Stack size for IOP threads that perform 
+		   SceSifMCallRpc() requests. 
+		   The minimum size is 512 bytes.
+                   The stacksize is normally 8192 bytes.
+        priority   Priority of IOP threads that perform 
+		   SceSifMCallRpc() requests. Since the system uses 
+		   values of 10 or less, a greater value should 
+		   be specified. 
+                   The priority is normally 32.        
+        
+[Return value]
+None
+        
+[Description]
+This function initializes libnet. It changes buffersize to match the size of packets for sending and receiving.
+        
+=========================================================================
+libnet_term                                                    [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        void libnet_term(
+        	sceSifMClientData *cd
+        );
+        
+[Arguments]
+        cd	Client data for the MSIFRPC system
+        
+[Return value]
+None
+        
+[Description]
+This function terminates libnet.
+        
+=========================================================================
+reg_handler                                                    [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int reg_handler(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        );
+        
+[Arguments]
+        cd	Client data for the MSIFRPC system
+        buf	SIF send/receive buffer
+        
+[Return value]
+When processing terminates normally, zero is returned. When an error occurs, a negative value is returned.
+        
+[Description]
+This function uses inetctl.irx to register the event handler for catching Attach or Start. It is required for the wait_get_addr_only() function.
+        
+=========================================================================
+unreg_handler                                                  [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int unreg_handler(
+        	sceSifMClientData *cd,
+        	u_int *buf
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system 
+        buf		SIF send/receive buffer
+        
+        
+[Return value]
+When processing terminates normally, zero is returned. When an error occurs, a negative value is returned.
+        
+[Description]
+This function removes an event handler that was registered with reg_handler().
+        
+=========================================================================
+load_set_conf                                                  [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int load_set_conf(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	char *fname,
+        	char *usr_name
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system
+        buf		SIF send/receive buffer
+        fname		Network configuration DB filename
+        usr_name	Network configuration name to be used
+       
+[Return value]
+When an error occurs, a negative value is returned.
+        
+[Description]
+This function loads the network configuration file specified by user_name. It also prepares for automatically bringing the interface Up.
+        
+=========================================================================
+load_set_conf_only                                             [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int load_set_conf_only(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	char *fname,
+        	char *usr_name
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system
+        buf		SIF send/receive buffer
+        fname		Network configuration DB filename
+        usr_name	Network configuration name to be used
+        
+[Return value]
+When an error occurs, a negative value is returned.
+        
+[Description]
+This function loads the network configuration file specified by user_name.
+        
+=========================================================================
+get_interface_id                                               [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int get_interface_id(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int *if_id
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system
+        buf		SIF send/receive buffer
+        if_id		Area for storing interface ID
+        
+[Return value]
+        When an error occurs, a negative value is returned.
+        
+[Description]
+This function gets the interface ID.
+The interface ID to be passed to up_interface() is required to manually bring Up the interface by using load_set_conf_only().
+This function is not used when load_set_conf() is used.
+        
+=========================================================================
+sceInetAbort                                                   [Function]
+=========================================================================
+                                                         Abort processing
+[Syntax]
+        #include <libnet.h>
+        int sceInetAbort(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	int flags
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        cid		Connection ID
+        flags		Reserved (must be 0)
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetAddress2Name                                            [Function]
+=========================================================================
+           Convert dot-formatted IP address to host name (reverse lookup)
+[Syntax]
+        #include <libnet.h>
+        int sceInetAddress2Name(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int flags,
+        	char *name,
+        	int len,
+        	sceInetAddress_t *paddr
+        	int ms,
+        	int nretry
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd     Client data for the MSIFRPC system
+        buf    SIF send/receive buffer
+        flags  Conversion flags (always 0)
+        name   Buffer address for storing conversion results
+        len    Buffer length (bytes)
+        paddr  Internal-format IP address
+        ms     Timeout interval (ms)
+        nretry Retry count        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetAddress2String                                          [Function]
+=========================================================================
+                         Convert internal-format IP address to dot format
+[Syntax]
+        #include <libnet.h>
+        int sceInetAddress2String(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	char *name,
+        	int len,
+        	sceInetAddress_t *paddr
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        name		Buffer address for storing conversion results
+        len		Buffer length (bytes)
+        paddr		Internal-format IP address
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetChangeThreadPriority                                    [Function]
+=========================================================================
+                                                   Change thread priority
+[Syntax]
+        #include <libnet.h>
+        int sceInetChangeThreadPriority(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int prio
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd   	Client data for the MSIFRPC system
+        buf  	SIF send/receive buffer
+        prio 	Priority (1-63)
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetClose                                                   [Function]
+=========================================================================
+                                                         Close Connection
+[Syntax]
+        #include <libnet.h>
+        int sceInetClose(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd  	Client data for the MSIFRPC system
+        buf 	SIF send/receive buffer
+        cid 	Connection ID
+        ms  	Timeout interval (ms)
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetControl                                                 [Function]
+=========================================================================
+                                                       Control Connection
+[Syntax]
+        #include <libnet.h>
+        int sceInetControl(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	int code,
+        	void *ptr,
+        	int len
+        )
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd   	Client data for the MSIFRPC system
+        buf  	SIF send/receive buffer
+        cid  	Target Connection ID
+        code 	Control code representing the operation
+        ptr  	Starting address of data area
+        len  	Size of data area (bytes)
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetCreate                                                  [Function]
+=========================================================================
+                                                        Create Connection
+[Syntax]
+        #include <libnet.h>
+        int sceInetCreate(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	sceInetParam_t *param
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd    	Client data for the MSIFRPC system
+        buf   	SIF send/receive buffer
+        param 	Connection parameter
+        
+        
+[Return value]
+Connection ID
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetGetInterfaceList                                        [Function]
+=========================================================================
+                                           Get list of network interfaces
+[Syntax]
+        #include <libnet.h>
+        int sceInetGetInterfaceList(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int *interface_id,
+        	int n
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd           	Client data for the MSIFRPC system
+        buf          	SIF send/receive buffer
+        interface_id 	Buffer address for storing interface ID list
+        n            	Maximum number of interface IDs to be obtained
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetGetLog                                                  [Function]
+=========================================================================
+                                                                  Get log
+[Syntax]
+        #include <libnet.h>
+        int sceInetGetLog(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	char *log_buf,
+        	int len,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd      	Client data for the MSIFRPC system
+        buf     	SIF send/receive buffer
+        log_buf 	Pointer to buffer for storing log
+        len     	Size of buffer for storing log (bytes)
+        ms      	Interval until timeout (ms)
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetAbortLog                                                [Function]
+=========================================================================
+                                                    Abort log acquisition
+[Syntax]
+        #include <inet.h>
+        int sceInetAbortLog(
+        	sceSifMClientData *cd,
+        	u_int *buf
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd      Client data for the MSIFRPC system
+        buf     SIF send/receive buffer
+        
+[Return value]
+0	Normal termination
+>0	Number of times SetEventFlag() caused an error
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetGetNameServers                                          [Function]
+=========================================================================
+                                              Get name server information
+[Syntax]
+        #include <libnet.h>
+        int sceInetGetNameServers(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	sceInetAddress_t *paddr,
+        	int n
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd    	Client data for the MSIFRPC system
+        buf   	SIF send/receive buffer
+        paddr 	Pointer to area for getting name server information
+        n	Maximum number of entries to be obtained
+        
+        
+[Return value]
+When processing terminates normally, the number of entries (greater than or equal to 0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetGetRoutingTable                                         [Function]
+=========================================================================
+                                                Get routing control table
+[Syntax]
+        #include <libnet.h>
+        int sceInetGetRoutingTable(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	sceInetRoutingEntry_t *p,
+        	int n
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd  	Client data for the MSIFRPC system
+        buf 	SIF send/receive buffer
+        p   	Pointer to area for getting routing control tables
+        n   	Maximum number of entries to be obtained
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetInterfaceControl                                        [Function]
+=========================================================================
+                         Reference or set parameters of network interface
+[Syntax]
+        #include <libnet.h>
+        int sceInetInterfaceControl(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int interface_id,
+        	int code,
+        	void *ptr,
+        	int len
+        );
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd           	Client data for the MSIFRPC system
+        buf          	SIF send/receive buffer
+        interface_id 	ID of target network interface
+        code         	Control code that represents the operation
+        ptr          	Starting address of data area
+        len          	Size of data area (bytes)
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetName2Address                                            [Function]
+=========================================================================
+       Convert from host name or dot format to internal-format IP address
+
+[Syntax]
+        #include <libnet.h>
+        int sceInetName2Address(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int flags,
+        	sceInetAddress_t *paddr,
+        	char *name,
+        	int ms,
+        	int nretry
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd     	Client data for the MSIFRPC system
+        buf    	SIF send/receive buffer
+        flags  	Conversion flag
+        paddr	Address of structure variable for accepting 
+		internal-format IP address
+        name	Dot-format IP address or host name
+        ms	Timeout interval (ms)
+        nretry	Retry count
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetOpen                                                    [Function]
+=========================================================================
+                                                   Establish a Connection
+[Syntax]
+        #include <libnet.h>
+        int sceInetOpen(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        cid		Connection ID
+        ms		Timeout interval (ms)
+        
+        
+[Return value]
+When processing terminates normally, sceINETE_OK (=0) is returned. When an error occurs, an error code (negative value) is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetRecv                                                    [Function]
+=========================================================================
+                                                             Receive data
+[Syntax]
+        #include <libnet.h>
+        int sceInetRecv(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	void *ptr,
+        	int count,
+        	int *pflags,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        cid		Connection ID
+        ptr		Buffer address for storing receiving data
+        count		Data size to be received (bytes)
+        pflags		Address of variable for storing status flags
+        ms		Timeout interval (ms)
+        
+        
+[Return value]
+The number of bytes received is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetRecvFrom                                                [Function]
+=========================================================================
+             Receive data (also get IP address and port number of sender)
+
+[Syntax]
+        #include <libnet.h>
+        int sceInetRecvFrom(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	void *ptr,
+        	int count,
+        	int *pflags,
+        	sceInetAddress_t *iadr,
+        	int *port,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        cid		Connection ID
+        ptr		Buffer address for storing reception data
+        count		Data size to be received (bytes)
+        pflags		Address of variable for storing status flags
+        iadr		Address of variable for storing IP address of sender
+        port		Address of variable for storing port
+        ms		Timeout interval (ms)
+        
+        
+[Return value]
+The number of bytes received is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetSend                                                    [Function]
+=========================================================================
+                                                                Send data
+[Syntax]
+        #include <libnet.h>
+        int sceInetSend(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	void *ptr,
+        	int count,
+        	int *pflags,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        cid		Connection ID
+        ptr		Buffer address where transmission data was stored
+        count		Size of send data (bytes)
+        pflags		Address of variable for storing status flags
+        ms		Timeout interval (ms)
+        
+        
+[Return value]
+The number of bytes sent is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+sceInetSendTo                                                  [Function]
+=========================================================================
+                        Send data to specified IP address and port number
+[Syntax]
+        #include <libnet.h>
+        int sceInetSendTo(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int cid,
+        	void *ptr,
+        	int count,
+        	int flags,
+        	sceInetAddress_t *iadr,
+        	int port,
+        	int ms
+        );
+        
+[Calling conditions]
+Can be called from a thread
+Multithread safe (must be called in an interrupt-enabled state)
+        
+[Arguments]
+        cd		Client data for the MSIFRPC system
+        buf		SIF send/receive buffer
+        cid		Connection ID
+        ptr		Buffer address where send data is stored
+        count		Size of send data (bytes)
+        flags		Status flags
+        iadr		Address of variable where IP address of 
+		        send destination is stored
+        port		Port
+        ms		Timeout interval (ms)
+        
+        
+[Return value]
+The number of bytes sent is returned.
+        
+[Description]
+See the inet library reference for the IOP.
+        
+=========================================================================
+wait_get_addr                                                  [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int wait_get_addr(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int *if_id,
+        	struct sceInetAddress *myaddr
+        );
+        
+[Arguments]
+        cd     	Client data for the MSIFRPC system
+        buf    	SIF send/receive buffer
+        if_id  	For storing the interface ID
+        myaddr 	For storing the address
+        
+        
+[Return value]
+When an error occurs, a negative value is returned.
+        
+[Description]
+This function gets the IP address of this machine.
+At the same time, it places the interface in Up state.
+This function is called when load_set_conf() is used.
+
+=========================================================================
+wait_get_addr_only                                             [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int wait_get_addr_only(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int *if_id,
+        	struct sceInetAddress *myaddr
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system
+        buf		SIF send/receive buffer
+        if_id		Area for storing interface ID
+        myaddr		Area for storing address
+        
+[Return value]
+When an error occurs, a negative value is returned.
+        
+[Description]
+This function gets the local IP address. 
+The interface is brought Up with up_interface(), and processing waits until the local IP address can be obtained.
+This function is called when load_set_conf_only() is used.
+
+=========================================================================
+up_interface                                                   [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int up_interface(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int id
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system
+        buf		SIF send/receive buffer
+        id		ID of interface to be brought Up
+        
+[Return value]
+Return value of sceInetCtlUpInterface()
+        
+[Description]
+This function brings the interface Up.
+This function is not needed when load_set_conf() is called.
+        
+=========================================================================
+down_interface                                                 [Function]
+=========================================================================
+                                                                         
+[Syntax]
+        int down_interface(
+        	sceSifMClientData *cd,
+        	u_int *buf,
+        	int id
+        );
+        
+[Arguments]
+        cd		Client data for MSIFRPC system
+        buf		SIF send/receive buffer
+        id		ID of interface to be brought Down
+        
+[Return value]
+Return value of sceInetCtlDownInterface()
+        
+[Description]
+This function brings the interface Down.
+If id is set to 0, this function will bring Down all interfaces that can be brought Down.
+

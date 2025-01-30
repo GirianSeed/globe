@@ -1,0 +1,5 @@
+vcl  -g -t3 -A  -ovu1shadowTex.vsm vu1shadowTex.vcl
+vcl  -g -t3 -A  -ovu1shadowSTQCull.vsm vu1shadowSTQCull.vcl
+vcl  -g -t3 -A  -ovu1shadowSTQ.vsm vu1shadowSTQ.vcl
+vcl  -g -t3 -A  -ovu1lightmapSTQCull.vsm vu1lightmapSTQCull.vcl
+vcl  -g -t3 -A  -ovu1lightmapSTQ.vsm vu1lightmapSTQ.vcl    

@@ -1,0 +1,2352 @@
+<html lang="ja">
+<head>
+
+<script language="JavaScript">
+<!--
+  function startFixed(){
+    fixedLAYER('fixedLay0','rightBottom',-35,-35)
+  }
+
+  var ie= !!document.all
+  var n4= !!document.layers
+  var w3c=!!document.getElementById
+  var mac45 
+    = navigator.userAgent.indexOf('MSIE 4.5; Mac_PowerPC')
+
+  if(document.layers)window.onresize=resizeFunc
+  function resizeFunc(e){location.reload()}
+
+  function iniFunc(){
+    if(ie&&!(mac45!=-1))window.onscroll = startFixed
+    startFixed()
+  }
+
+  var tid=new Array()
+
+  function fixedLAYER(layName,posString,offSetX,offSetY){
+
+    offSetX = parseInt(offSetX,10)
+    offSetY = parseInt(offSetY,10)
+
+ if( posString == 'rightBottom' ){
+
+      if(ie) offLeft = document.body.clientWidth   + offSetX
+      else   offLeft = window.innerWidth           + offSetX
+      if(ie) offTop  = document.body.clientHeight  + offSetY
+      else   offTop  = window.innerHeight          + offSetY
+
+    }
+    else {
+
+      if(ie) offLeft =                               offSetX
+      else   offLeft =                               offSetX
+      if(ie) offTop  =                               offSetY
+      else   offTop  =                               offSetY
+
+    }
+
+    offLeft = parseInt(offLeft)
+    offTop  = parseInt(offTop)
+
+    if(document.all){
+      var mx = parseInt(document.body.scrollLeft +offLeft)
+      var my = parseInt(document.body.scrollTop  +offTop)
+    } else {
+      var mx = parseInt(self.pageXOffset+offLeft)
+      var my = parseInt(self.pageYOffset+offTop)
+
+    }
+
+    moveLAYER(layName,mx,my)
+
+    if(!(ie&&!(mac45!=-1)))
+      setTimeout("fixedLAYER('"+layName+"','"+posString
+                   +"','" +offSetX+"','"+offSetY+"')",100)
+  }
+
+  function moveLAYER(layName,x,y){
+      
+      if(document.getElementById){
+        document.getElementById(layName).style.left=x
+        document.getElementById(layName).style.top=y
+      }
+      else if(document.all){
+        document.all(layName).style.pixelLeft=x
+        document.all(layName).style.pixelTop=y
+      }
+      else if(document.layers)
+        document.layers[layName].moveTo(x,y)
+  }
+
+  function reloadMnTp(){
+        if(parent.menu_top){            
+                parent.menu_top.location.reload(true)
+        } 
+ }
+//-->
+</script>
+<title>簡易フォントライブラリ</title>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="Author" Content="Sony Computer Entertainment Inc.">
+<style type="text/css"><!--
+    div.fixedLay{position:absolute;z-index:100;left:0px;top:0px;}
+--></style>
+</head>
+<body onload="iniFunc()" bgcolor="#ffffff" text="#000000" >
+<a name=TOP></a>
+<div id="fixedLay0" class="fixedLay">
+<a href="#TOP"><img src="gif/link.gif" border="0" alt="TOP"></a>
+</div>
+<table WIDTH="100%">
+<tr><td>
+<h3>"PlayStation 2" Programmer Tool Runtime Library libpfont Version 1.2</h3>
+</td>
+</tr>
+</table>
+<hr noshade size=6>
+<a name="Heading2">
+<center><h1>
+簡易フォントライブラリ
+</h1></center>
+</a>
+<font size=4><b>構造体</b></font>
+<hr border=1 width=100%><br>
+<table>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontBlock"> scePFontBlock<br></a></td>
+<td>&nbsp;</td><td>フォントデータのメモリー内表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontBlockAttribute"> scePFontBlockAttribute<br></a></td>
+<td>&nbsp;</td><td>フォントデータのメモリー内表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontCodeIndex"> scePFontCodeIndex<br></a></td>
+<td>&nbsp;</td><td>フォントデータのメモリー内表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontControl"> scePFontControl<br></a></td>
+<td>&nbsp;</td><td>コールバックに渡される関数テーブル<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGlyph"> scePFontGlyph<br></a></td>
+<td>&nbsp;</td><td>フォントデータのメモリー内表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontInfo"> scePFontInfo<br></a></td>
+<td>&nbsp;</td><td>フォントデータのメモリー内表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontProportional"> scePFontProportional<br></a></td>
+<td>&nbsp;</td><td>フォントデータのメモリー内表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontRect"> scePFontRect<br></a></td>
+<td>&nbsp;</td><td>フォント用の矩形領域表現<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontTag"> scePFontTag<br></a></td>
+<td>&nbsp;</td><td>フォントタグ<br></td></tr>
+</table><br>
+<font size=4><b>関数</b></font>
+<hr border=1 width=100%><br>
+<table>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontAttachData"> scePFontAttachData<br></a></td>
+<td>&nbsp;</td><td>フォントデータと関連づけ<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontCalcCacheSize"> scePFontCalcCacheSize<br></a></td>
+<td>&nbsp;</td><td>フォント初期化に必要なメインメモリーのサイズを計算<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontCalcRect"> scePFontCalcRect<br></a></td>
+<td>&nbsp;</td><td>フォント出力範囲計算<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontFlush"> scePFontFlush<br></a></td>
+<td>&nbsp;</td><td>出力途中の文字列を破棄<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetBlock"> scePFontGetBlock<br></a></td>
+<td>&nbsp;</td><td>フォントブロック情報の取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetColor"> scePFontGetColor<br></a></td>
+<td>&nbsp;</td><td>描画色取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetErxEntries"> scePFontGetErxEntries<br></a></td>
+<td>&nbsp;</td><td>ライブラリのエントリの取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetFontInfo"> scePFontGetFontInfo<br></a></td>
+<td>&nbsp;</td><td>フォント情報の取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetFontMatrix"> scePFontGetFontMatrix<br></a></td>
+<td>&nbsp;</td><td>変形マトリクスを取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetGlyph"> scePFontGetGlyph<br></a></td>
+<td>&nbsp;</td><td>指定文字コードのグリフを取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetLocate"> scePFontGetLocate<br></a></td>
+<td>&nbsp;</td><td>描画位置取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetPitch"> scePFontGetPitch<br></a></td>
+<td>&nbsp;</td><td>字間（ピッチ）の取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetScreenMatrix"> scePFontGetScreenMatrix<br></a></td>
+<td>&nbsp;</td><td>座標変換マトリクスを取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontGetWidth"> scePFontGetWidth<br></a></td>
+<td>&nbsp;</td><td>計算上の文字幅を取得<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontInit"> scePFontInit<br></a></td>
+<td>&nbsp;</td><td>フォント初期化<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontPutc"> scePFontPutc<br></a></td>
+<td>&nbsp;</td><td>１文字出力<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontPuts"> scePFontPuts<br></a></td>
+<td>&nbsp;</td><td>文字列出力<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontPutsContinue"> scePFontPutsContinue<br></a></td>
+<td>&nbsp;</td><td>文字列の続きを出力<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontRelease"> scePFontRelease<br></a></td>
+<td>&nbsp;</td><td>フォントリソース解放<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetColor"> scePFontSetColor<br></a></td>
+<td>&nbsp;</td><td>描画色設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetFilter"> scePFontSetFilter<br></a></td>
+<td>&nbsp;</td><td>フィルター関数設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetFontMatrix"> scePFontSetFontMatrix<br></a></td>
+<td>&nbsp;</td><td>変形マトリクスの設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetGsCtxt"> scePFontSetGsCtxt<br></a></td>
+<td>&nbsp;</td><td>GSパケットのコンテキストを指定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetLocate"> scePFontSetLocate<br></a></td>
+<td>&nbsp;</td><td>描画開始位置設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetPitch"> scePFontSetPitch<br></a></td>
+<td>&nbsp;</td><td>字間（ピッチ）を設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetScreenMatrix"> scePFontSetScreenMatrix<br></a></td>
+<td>&nbsp;</td><td>座標変換マトリクスの設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetTexMem"> scePFontSetTexMem<br></a></td>
+<td>&nbsp;</td><td>テクスチャ転送用のGSメモリー設定<br></td></tr>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td><a href="#scePFontSetWidth"> scePFontSetWidth<br></a></td>
+<td>&nbsp;</td><td>計算上の文字幅を設定<br></td></tr>
+</table>
+
+<!-- 見出し　１，部見出し -->
+<br></td></tr></table></div>
+
+<!-- 見出し　２，章見出し -->
+<hr border=1 width=100%><br>
+<center><h2>構造体</h2></center>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontBlock"><font size=6>scePFontBlock<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータのメモリー内表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontBlock{
+	scePFontTag <i>tag</i>;
+	scePFontBlockAttribute <i>attr</i>;
+	float <i>scale_x</i>;
+	float <i>scale_y</i>;
+	short <i>image_width</i>;
+	short <i>image_height</i>;
+	short <i>max_ascent</i>;
+	short <i>max_descent</i>;
+	short <i>max_width</i>;
+	short <i>reserved</i>;
+	struct{
+		int <i>character_num</i>;
+		int <i>image_offset</i>;
+		int <i>codeindex_num</i>;
+		int <i>codeindex_offset</i>;
+		int <i>codemap_num</i>;
+		int <i>codemap_offset</i>;
+		int <i>proportional_num</i>;
+		int <i>proportional_offset</i>;
+		int <i>kerning_num</i>;
+		int <i>kerning_offset</i>;
+		int <i>clut_num</i>;
+		int <i>clut_offset</i>;
+	}data;
+}<b>scePFontBlock</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>tag</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォントタグ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>attr</i>&nbsp;</td>
+<td valign="TOP">&nbsp;scePFontBlockAttributeの内容&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>scale_x</i>&nbsp;</td>
+<td valign="TOP">&nbsp;出力サイズ補正値X&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>scale_y</i>&nbsp;</td>
+<td valign="TOP">&nbsp;出力サイズ補正値Y&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>image_width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;IMAGE 1 文字 幅 pixel&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>image_height</i>&nbsp;</td>
+<td valign="TOP">&nbsp;IMAGE 1 文字 高さ pixel&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>max_ascent</i>&nbsp;</td>
+<td valign="TOP">&nbsp;BLOCK 内の最大 ASCENT&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>max_descent</i>&nbsp;</td>
+<td valign="TOP">&nbsp;BLOCK 内の最大DESCENT&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>max_width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;BLOCK 内の最大 WIDTH&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>reserved</i>&nbsp;</td>
+<td valign="TOP">&nbsp;予約&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>character_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;文字数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>image_offset</i>&nbsp;</td>
+<td valign="TOP">&nbsp;image データの先頭へのオフセット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>codeindex_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;codeindex 数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>codeindex_offset</i>&nbsp;</td>
+<td valign="TOP">&nbsp;codeindex データの先頭へのオフセット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>codemap_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;codemap 数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>codemap_offset</i>&nbsp;</td>
+<td valign="TOP">&nbsp;codemap データの先頭へのオフセット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>proportional_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;proportional 数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>proportional_offset</i>&nbsp;</td>
+<td valign="TOP">&nbsp;proportional データの先頭へのオフセット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>kerning_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;kerning 数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>kerning_offset</i>&nbsp;</td>
+<td valign="TOP">&nbsp;kerningデータの先頭へのオフセット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>clut_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;clut エントリ数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>clut_offset</i>&nbsp;</td>
+<td valign="TOP">&nbsp;clut データの先頭へのオフセット&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontBlockAttribute"><font size=6>scePFontBlockAttribute<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータのメモリー内表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontBlockAttribute{
+	u_int <i>color_mode</i>:3;
+	u_int <i>propotional</i>:1;
+	u_int <i>reserved</i>:28;
+}<b>scePFontBlockAttribute</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>color_mode</i>&nbsp;</td>
+<td valign="TOP">&nbsp;TEXTUREカラーモード&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>propotional</i>&nbsp;</td>
+<td valign="TOP">&nbsp;proportional形式&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>reserved</i>&nbsp;</td>
+<td valign="TOP">&nbsp;予約&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontCodeIndex"><font size=6>scePFontCodeIndex<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータのメモリー内表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontCodeIndex{
+	int <i>start_code</i>;
+	int <i>end_code</i>;
+	int <i>map_index</i>;
+	int <i>chr_index</i>;
+	}<b>scePFontCodeIndex</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>start_code</i>&nbsp;</td>
+<td valign="TOP">&nbsp;先頭文字コード&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>end_code</i>&nbsp;</td>
+<td valign="TOP">&nbsp;終端文字コード&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>map_index</i>&nbsp;</td>
+<td valign="TOP">&nbsp;先頭map番号&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>chr_index</i>&nbsp;</td>
+<td valign="TOP">&nbsp;先頭文字番号&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontControl"><font size=6>scePFontControl<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>コールバックに渡される関数テーブル<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontControl{
+	int (* const <i>Getc</i>)(int fd);
+	int (* const <i>Ungetc</i>)(int fd);
+	int (* const <i>Putc</i>)(int fd, int chr);
+	int (* const <i>PutcX</i>)(int fd, int chr);
+	int (* const <i>Calc</i>)(int fd, int chr, scePFontFRect* pRect_i, scePFontFRect* pRect_o);
+}<b>scePFontControl</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td rowspan= 3  valign="top">&nbsp;<i>Getc</i>&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;文字取得&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;fd&nbsp;</td>
+<td valign="top">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;return&nbsp;</td>
+<td valign="top">&nbsp;文字コード（0=終了,-1=エラー）&nbsp;</td>
+</tr>
+<tr>
+<td rowspan= 3  valign="top">&nbsp;<i>Ungetc</i>&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;文字の取得位置を１文字戻す&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;fd&nbsp;</td>
+<td valign="top">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;return&nbsp;</td>
+<td valign="top">&nbsp;0=成功, -1=先頭位置だった&nbsp;</td>
+</tr>
+<tr>
+<td rowspan= 4  valign="top">&nbsp;<i>Putc</i>&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;文字出力&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;fd&nbsp;</td>
+<td valign="top">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;chr&nbsp;</td>
+<td valign="top">&nbsp;文字コード&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;return&nbsp;</td>
+<td valign="top">&nbsp;0=成功,-1=メモリー不足,-2=グリフが無い&nbsp;</td>
+</tr>
+<tr>
+<td rowspan= 4  valign="top">&nbsp;<i>PutcX</i>&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;文字出力(実際の描画はせず計算のみ)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;fd&nbsp;</td>
+<td valign="top">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;chr&nbsp;</td>
+<td valign="top">&nbsp;文字コード&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;return&nbsp;</td>
+<td valign="top">&nbsp;0=成功,-1=メモリー不足,-2=グリフが無い&nbsp;</td>
+</tr>
+<tr>
+<td rowspan= 6  valign="top">&nbsp;<i>Calc</i>&nbsp;</td>
+<td colspan= 2  valign="top">&nbsp;文字の出力矩形を計算&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;fd&nbsp;</td>
+<td valign="top">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;chr&nbsp;</td>
+<td valign="top">&nbsp;文字コード&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;pRect_i&nbsp;</td>
+<td valign="top">&nbsp;内側の矩形を受け取る(NULL=受け取らない)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;pRect_o&nbsp;</td>
+<td valign="top">&nbsp;外側の矩形を受け取る(NULL=受け取らない)&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;return&nbsp;</td>
+<td valign="top">&nbsp;0=成功,-1=メモリー不足,-2=グリフが無い&nbsp;</td>
+</tr></table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">コールバックに渡される関数テーブル<br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGlyph"><font size=6>scePFontGlyph<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータのメモリー内表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontGlyph{
+	scePFontBlock const* <i>block</i>;
+	u_long128 const* <i>image</i>;
+	scePFontPropotional const* <i>prop</i>;
+	void const* <i>kerning</i>;
+}<b>scePFontGlyph</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>block</i>&nbsp;</td>
+<td valign="TOP">&nbsp;ブロックへのポインタ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>image</i>&nbsp;</td>
+<td valign="TOP">&nbsp;イメージへのポインタ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>prop</i>&nbsp;</td>
+<td valign="TOP">&nbsp;プロポーショナルデータへのポインタ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>kerning</i>&nbsp;</td>
+<td valign="TOP">&nbsp;予約(NULL)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontInfo"><font size=6>scePFontInfo<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータのメモリー内表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontInfo{
+	scePFontTag <i>tag</i>;
+	char <i>name[32]</i>;
+	char <i>comment[32]</i>;
+	short <i>max_ascent</i>;
+	short <i>max_descent</i>;
+	short <i>max_width</i>;
+	short <i>reserved</i>;
+	int <i>block_num</i>;
+	int <i>block_offset[0]</i>;
+}<b>scePFontInfo</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>tag</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォントタグ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>name[32]</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォント名&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>comment[32]</i>&nbsp;</td>
+<td valign="TOP">&nbsp;コメント&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>max_ascent</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォント全体の最大 ASCENT&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>max_descent</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォント全体の最大DESCENT&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>max_width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォント全体の最大 WIDTH&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>reserved</i>&nbsp;</td>
+<td valign="TOP">&nbsp;予約&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>block_num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;ブロック数&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>block_offset[0]</i>&nbsp;</td>
+<td valign="TOP">&nbsp;ブロックのオフセット&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontProportional"><font size=6>scePFontProportional<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータのメモリー内表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontProportional{
+	short <i>base_x</i>;
+	short <i>base_y</i>;
+	short <i>l_bearing</i>;
+	short <i>r_bearing</i>;
+	short <i>ascent</i>;
+	short <i>descent</i>;
+	short <i>width</i>;
+	short <i>kerning</i>;
+}<b>scePFontPropotional</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>base_x</i>&nbsp;</td>
+<td valign="TOP">&nbsp;BASE POINT X値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>base_y</i>&nbsp;</td>
+<td valign="TOP">&nbsp;BASE POINT Y値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>l_bearing</i>&nbsp;</td>
+<td valign="TOP">&nbsp;L BEARING値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>r_bearing</i>&nbsp;</td>
+<td valign="TOP">&nbsp;R BEARING値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>ascent</i>&nbsp;</td>
+<td valign="TOP">&nbsp;ASCENT値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>descent</i>&nbsp;</td>
+<td valign="TOP">&nbsp;DESCENT値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;WIDTH値&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>kerning</i>&nbsp;</td>
+<td valign="TOP">&nbsp;予約&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontRect"><font size=6>scePFontRect<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォント用の矩形領域表現<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontFRect{
+	float <i>top</i>;
+	float <i>bottom</i>;
+	float <i>left</i>;
+	float <i>right</i>;
+}<b>scePFontFRect</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>top</i>&nbsp;</td>
+<td valign="TOP">&nbsp;上辺&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>bottom</i>&nbsp;</td>
+<td valign="TOP">&nbsp;下辺&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>left</i>&nbsp;</td>
+<td valign="TOP">&nbsp;左辺&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>right</i>&nbsp;</td>
+<td valign="TOP">&nbsp;右辺&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォント用の矩形領域表現<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontTag"><font size=6>scePFontTag<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントタグ<br></div>
+
+<!-- 構造 -->
+<div style="margin-left:10px;"><b>構造</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>typedef struct _scePFontTag{
+	u_int <i>id</i>;
+	u_int <i>version</i>;
+	int <i>size</i>;
+	int <i>reserved</i>;
+}<b>scePFontTag</b>;
+
+</font></pre></div>
+
+<!-- メンバ -->
+<div style="margin-left:10px;"><b>メンバ</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>id</i>&nbsp;</td>
+<td valign="TOP">&nbsp;ID(0x00000000U)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>version</i>&nbsp;</td>
+<td valign="TOP">&nbsp;バージョン(0x00000000U)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>size</i>&nbsp;</td>
+<td valign="TOP">&nbsp;サイズ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>reserved</i>&nbsp;</td>
+<td valign="TOP">&nbsp;予約&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータのメモリー内表現<br>「フォントファイルフォーマット」を参照して下さい。<br><br></div>
+
+<!-- 見出し　２，章見出し -->
+<hr border=1 width=100%><br>
+<center><h2>関数</h2></center>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontAttachData"><font size=6>scePFontAttachData<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントデータと関連づけ<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontAttachData</b>(
+	int <i>fd</i>,
+	u_long128 const* <i>pData</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pData</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォントデータ（qword境界にあること）&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">成功の場合、0を返す。<br>失敗の場合、-1を返す。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントデータとの関連づけを行います。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontCalcCacheSize"><font size=6>scePFontCalcCacheSize<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォント初期化に必要なメインメモリーのサイズを計算<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>size_t <b>scePFontCalcCacheSize</b>(
+	int <i>num</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;キャッシュする文字数&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">文字数分をキャッシュするのに必要なメモリーサイズ（バイト単位）<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォント初期化に必要なメインメモリーのサイズを計算します。<br>(固定サイズのワーク+文字数*文字ワーク)<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontCalcRect"><font size=6>scePFontCalcRect<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォント出力範囲計算<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontCalcRect</b>(
+	int <i>fd</i>,
+	char const* <i>str</i>,
+	scePFontFRect* <i>pRect_i</i>,
+	scePFontFRect* <i>pRect_o</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>str</i>&nbsp;</td>
+<td valign="TOP">&nbsp;出力テストする文字列&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pRect_i</i>&nbsp;</td>
+<td valign="TOP">&nbsp;内側の矩形を受けとる変数へのポインタ&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pRect_o</i>&nbsp;</td>
+<td valign="TOP">&nbsp;外側の矩形を受けとる変数へのポインタ&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォント出力範囲をローカル座標系で計算します。<br>（現在のステータスは保存されます）<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontFlush"><font size=6>scePFontFlush<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>出力途中の文字列を破棄<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontFlush</b>(
+	int <i>fd</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">出力途中の文字列を破棄し、キャッシュをクリアします。<br>変形マトリクスを単位行列に、LOCATEを(0,0,0,0)に設定します。<br>colorをデフォルト(1.0,1.0,1.0,1.0)に設定します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetBlock"><font size=6>scePFontGetBlock<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントブロック情報の取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>scePFontBlock const* <b>scePFontGetBlock</b>(
+	int <i>fd</i>, 
+	int <i>idx</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>idx</i>&nbsp;</td>
+<td valign="TOP">&nbsp;ブロック番号&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントブロック情報への参照を返す。<br>エラーの場合、NULLを返す。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">関連づけられているフォントから指定ブロックへの参照を取り出します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetColor"><font size=6>scePFontGetColor<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>描画色取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontGetColor</b>(
+	int <i>fd</i>,
+	sceVu0FVECTOR* <i>pColor</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pColor</i>&nbsp;</td>
+<td valign="TOP">&nbsp;色を受けとる変数へのポインタ&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">現在の描画色を取得します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetErxEntries"><font size=6>scePFontGetErxEntries<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>ライブラリのエントリの取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void *<b>scePFontGetErxEntries</b>(
+	void
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">libpfontのエントリライブラリ<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">libpfontをliberxに登録するために必要なSceErxLibraryHeader構造体へのポインタを取得します。<br>この関数により返されSceErxLibraryHeader構造体をliberxのsceErxRegisterLibraryEntries()関数に渡すことにより、スタティックリンクされたlibpfontをERXモジュールから呼び出し可能（ダイナミックリンク可能）な状態になります。また、この関数をリンクするとliberxのライブラリエントリテーブル経由でlibpfontの実装全体がリンクされることになります。場合によってプログラムサイズが大きくなる可能性があります。<br><br></div>
+
+<!-- 関連項目 -->
+<div style="margin-left:10px;"><b>関連項目</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">sceErxInit()<br><br><br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetFontInfo"><font size=6>scePFontGetFontInfo<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォント情報の取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>scePFontInfo const* <b>scePFontGetFontInfo</b>(
+	int <i>fd</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォント情報への参照を返す。<br>エラーの場合、NULLを返す。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">関連づけられているフォント情報への参照を返します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetFontMatrix"><font size=6>scePFontGetFontMatrix<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>変形マトリクスを取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontGetFontMatrix</b>(
+	int <i>fd</i>,
+	sceVu0FMATRIX* <i>pMatrix</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pMatrix</i>&nbsp;</td>
+<td valign="TOP">&nbsp;変形マトリクスを受けとる変数へのアドレス&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">現在の変形マトリクスを取得します。<br>（中心は base_x+width/2,base_y）<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetGlyph"><font size=6>scePFontGetGlyph<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>指定文字コードのグリフを取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontGetGlyph</b>(
+	int <i>fd</i>,
+	int <i>chr</i>,
+	scePFontGlyph* <i>pGlyph</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>chr</i>&nbsp;</td>
+<td valign="TOP">&nbsp;文字コード&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pGlyph</i>&nbsp;</td>
+<td valign="TOP">&nbsp;glyphデータを受けとるための変数へのポインタ。&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">成功の場合、0を返す。<br>失敗の場合、-1を返す。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">関連づけられているフォントから指定文字コードに対応するグリフを取得します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetLocate"><font size=6>scePFontGetLocate<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>描画位置取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontGetLocate</b>(
+	int <i>fd</i>, 
+	sceVu0FVECTOR* <i>pLocate</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pLocate</i>&nbsp;</td>
+<td valign="TOP">&nbsp;位置を受けとる変数へのポインタ&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">現在の描画位置を取得します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetPitch"><font size=6>scePFontGetPitch<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>字間（ピッチ）の取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>float <b>scePFontGetPitch</b>(
+	int <i>fd</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;0=デフォルト 1&lt;=固定文字幅&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">字間（ピッチ）を返す。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">現在の字間（ピッチ）を取得します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetScreenMatrix"><font size=6>scePFontGetScreenMatrix<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>座標変換マトリクスを取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontGetScreenMatrix</b>(
+	int <i>fd</i>, 
+	sceVu0FMATRIX* <i>pMatrix</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pMatrix</i>&nbsp;</td>
+<td valign="TOP">&nbsp;座標変換マトリクスを受けとる変数へのアドレス&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">現在の座標変換マトリクスを取得します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontGetWidth"><font size=6>scePFontGetWidth<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>計算上の文字幅を取得<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>short <b>scePFontGetWidth</b>(
+	int <i>fd</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;0=デフォルト 1&lt;=固定文字幅&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">文字幅を返す。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">現在の計算上の文字幅を取得します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontInit"><font size=6>scePFontInit<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォント初期化<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontInit</b>(
+	int <i>num</i>,
+	u_long128* <i>pWork</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>num</i>&nbsp;</td>
+<td valign="TOP">&nbsp;キャッシュする文字数（最低１文字以上必要）&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>work</i>&nbsp;</td>
+<td valign="TOP">&nbsp;キャッシュ用ワークメモリー（128bitアラインメント)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォント識別子(0&gt;エラー)<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントを初期化します。<br>scePFontCalcCacheSizeにより計算した十分なメモリーを確保して渡して下さい。<br>scePFontRelease()をするまで内部で保持し続けます。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontPutc"><font size=6>scePFontPutc<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>１文字出力<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontPutc</b>(
+	int <i>fd</i>, 
+	sceVif1Packet* <i>pPacket</i>,
+	int <i>size</i>,
+	int <i>chr</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>packet</i>&nbsp;</td>
+<td valign="TOP">&nbsp;初期化済みパケット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>size</i>&nbsp;</td>
+<td valign="TOP">&nbsp;最大パケットサイズ(qwc)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>chr</i>&nbsp;</td>
+<td valign="TOP">&nbsp;出力文字（UCS2）&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">成功の場合、0を返す。<br>失敗の場合、-1を返す。（パケットに空きがない）<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">１文字出力します。<br>パケットはcntで付けられ閉じられます。<br>アルファはonで描画されます。<br>コンテキスト１が使用されます。<br>ALPHA_0とTEST_0は外部で設定してください。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontPuts"><font size=6>scePFontPuts<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>文字列出力<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontPuts</b>(
+	int <i>fd</i>,
+	sceVif1Packet* <i>pPacket</i>,
+	int <i>size</i>,
+	char const* <i>str</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>packet</i>&nbsp;</td>
+<td valign="TOP">&nbsp;初期化済みパケット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>size</i>&nbsp;</td>
+<td valign="TOP">&nbsp;最大パケットサイズ(qwc)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>str</i>&nbsp;</td>
+<td valign="TOP">&nbsp;文字列&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>値</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>結果</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;0&nbsp;</td>
+<td valign="TOP">&nbsp;終了&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;1&nbsp;</td>
+<td valign="TOP">&nbsp;続きがある&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;-1&nbsp;</td>
+<td valign="TOP">&nbsp;パケットが小さすぎる&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">文字列をパケット化して出力します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontPutsContinue"><font size=6>scePFontPutsContinue<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>文字列の続きを出力<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontPutsContinue</b>(
+	int <i>fd</i>,
+	sceVif1Packet* <i>pPacket</i>,
+	int <i>size</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>packet</i>&nbsp;</td>
+<td valign="TOP">&nbsp;初期化済みパケット&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>size</i>&nbsp;</td>
+<td valign="TOP">&nbsp;最大パケットサイズ(qwc)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>値</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>結果</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;0&nbsp;</td>
+<td valign="TOP">&nbsp;終了&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;1&nbsp;</td>
+<td valign="TOP">&nbsp;続きがある&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;-1&nbsp;</td>
+<td valign="TOP">&nbsp;パケットが小さすぎる&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">scePFontPuts()で出力できなかった文字列の続きを出力します。<br>scePFontPuts() の戻り値が１だった場合、パケットが一杯になって表示しきれなかったことを表しているので、この関数をコールしてください。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontRelease"><font size=6>scePFontRelease<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フォントリソース解放<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontRelease</b>(
+	int <i>fd</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フォントリソースを解放し、関連づけを破棄します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetColor"><font size=6>scePFontSetColor<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>描画色設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetColor</b>(
+	int <i>fd</i>, 
+	sceVu0FVECTOR const* <i>pColor</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pColor</i>&nbsp;</td>
+<td valign="TOP">&nbsp;色&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">描画色を設定します。（元の文字の色に乗算される）<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetFilter"><font size=6>scePFontSetFilter<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>フィルター関数設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetFilter</b>(
+	int <i>fd</i>,
+	int (*<i>filter</i>)(int <i>fd</i>, scePFontControl* <i>pCtrl</i>));
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>filter</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フィルター関数へのポインタ。&nbsp;<br>&nbsp;NULLを渡すとデフォルト実装。&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">フィルター関数設定を設定します。<br>scePFontPuts, scePFontPutsContinue, scePFontCalcRectから呼ばれます。<br><br>デフォルトフィルター関数<br><br></div>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pCtrl</i>&nbsp;</td>
+<td valign="TOP">&nbsp;フォント制御用構造体&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>return</i>&nbsp;</td>
+<td valign="TOP">&nbsp;0=終了, 1=続きがある, -1=パケットが小さすぎる&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+        <div style="margin-left:93px;"><pre><font size=3>int default_filter(int fd, scePFontControl* pCtrl){
+	int stat = -1;
+	int c;
+	while(0 &lt; (c = pCtrl-&gt;Getc(fd))){
+		if(-1 == pCtrl-&gt;Putc(fd, c)){
+			pCtrl-&gt;Ungetc(fd);
+			return stat;
+		}
+		stat = 1;
+	};
+	return 0;
+}
+[eof]
+
+</font></pre></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetFontMatrix"><font size=6>scePFontSetFontMatrix<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>変形マトリクスの設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetFontMatrix</b>(
+	int <i>fd</i>,
+	sceVu0FMATRIX const* <i>pMatrix</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pMatrix</i>&nbsp;</td>
+<td valign="TOP">&nbsp;変形マトリクスへのポインタ&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">変形マトリクスを設定します。文字単位のスケーリング・回転・移動に使用します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetGsCtxt"><font size=6>scePFontSetGsCtxt<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>GSパケットのコンテキストを指定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>int <b>scePFontSetGsCtxt</b>(
+	int <i>fd</i>,
+	int <i>ctxt</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>ctxt</i>&nbsp;</td>
+<td valign="TOP">&nbsp;GSコンテキスト 0or1（デフォルトは０）&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">以前の値を返します。<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">GSパケットのコンテキストを指定します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetLocate"><font size=6>scePFontSetLocate<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>描画開始位置設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetLocate</b>(
+	int <i>fd</i>, 
+	sceVu0FVECTOR const* <i>pLocate</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pLocate</i>&nbsp;</td>
+<td valign="TOP">&nbsp;描画位置&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">描画開始位置を設定します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetPitch"><font size=6>scePFontSetPitch<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>字間（ピッチ）を設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetPitch</b>(
+	int <i>fd</i>,
+	float <i>pitch</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pitch</i>&nbsp;</td>
+<td valign="TOP">&nbsp;pitch&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">字間（ピッチ）を設定します。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetScreenMatrix"><font size=6>scePFontSetScreenMatrix<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>座標変換マトリクスの設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetScreenMatrix</b>(
+	int <i>fd</i>,
+	sceVu0FMATRIX const* <i>pMatrix</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>pMatrix</i>&nbsp;</td>
+<td valign="TOP">&nbsp;座標変換マトリクスへのポインタ&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">座標変換マトリクスを設定します。(ローカル座標→スクリーン座標）<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetTexMem"><font size=6>scePFontSetTexMem<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>テクスチャ転送用のGSメモリー設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetTexMem</b>(
+	int <i>fd</i>,
+	u_int <i>tbp</i>,
+	u_int <i>size</i>,
+	u_int <i>cbp</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>tbp</i>&nbsp;</td>
+<td valign="TOP">&nbsp;GSのワードアドレス&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>size</i>&nbsp;</td>
+<td valign="TOP">&nbsp;GSメモリーのワード数(2048ワードの倍数)&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>cbp</i>&nbsp;</td>
+<td valign="TOP">&nbsp;32bitCLUT用ワードアドレス(256エントリ分必要)&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">テクスチャ転送用のGSメモリーを設定します。<br>１文字の転送に満たない場合の動作は保証しません。<br>このメモリーの情報を破壊した場合scePFontFlush()で無効化して下さい。<br><br></div>
+<!-- 関数名 -->
+<hr noshade Size=6 >
+<a name="scePFontSetWidth"><font size=6>scePFontSetWidth<br></font></a>
+<hr noshade Size=4 >
+<!-- 関数説明 -->
+<!-- hp -->
+<div align=right>計算上の文字幅を設定<br></div>
+
+<!-- 形式 -->
+<div style="margin-left:10px;"><b>形式</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;"><pre><font size=3>void <b>scePFontSetWidth</b>(
+	int <i>fd</i>,
+	short <i>width</i>
+);
+
+</font></pre></div>
+
+<!-- 引数 -->
+<div style="margin-left:10px;"><b>引数</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;<i>fd</i>&nbsp;</td>
+<td valign="TOP">&nbsp;識別子&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;<i>width</i>&nbsp;</td>
+<td valign="TOP">&nbsp;0=デフォルト 1&lt;=固定文字幅&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+
+<!-- 返り値 -->
+<div style="margin-left:10px;"><b>返り値</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">なし<br><br></div>
+
+<!-- 解説 -->
+<div style="margin-left:10px;"><b>解説</b></div>
+<hr noshade align="left" size=2 width=20%>
+<br>
+<div style="margin-left:50px;">計算上の文字幅を設定します。1文字の表示幅は変わりません。<br>たとえばこの値を1文字の幅よりも小さくすると、次の文字が前の文字に重なって表示されることになります<br></div>
+<p><p><hr>
+<div ALIGN="right">
+    Copyright (c) 2003 Sony Computer Entertainment Inc.  All Rights Reserved.<br>
+    SCE CONFIDENTIAL
+</div>
+</body>
+</html>

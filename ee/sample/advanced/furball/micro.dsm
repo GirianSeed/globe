@@ -1,0 +1,18 @@
+.align 4
+.global vu0pstart
+vu0pstart:
+DMAcnt *
+MPG 0, *
+.vu
+.include "hairsim.vsm"
+.EndMPG
+.EndDmaData
+DMAend
+
+.global hairshading_micro
+hairshading_micro:
+DMAret *
+MPG 0,*
+.include "hairshading.vsm"
+.EndMPG
+.EndDmaData 

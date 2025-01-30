@@ -1,0 +1,22 @@
+#
+# inet.rc - INET start up sample for dsidb
+#
+# $Id: inet.rc.hdd.pppoe,v 1.1 2002/07/10 08:32:16 tetsu Exp $
+#
+
+reset 0 0
+
+mstart /usr/local/sce/iop/modules/inet.irx
+
+mstart /usr/local/sce/iop/modules/netcnf.irx icon=host1:./SYS_NET.ICO iconsys=host1:./icon.sys
+
+mstart /usr/local/sce/iop/modules/inetctl.irx -no_decode host1:/usr/local/sce/conf/net/net006.cnf
+
+mstart /usr/local/sce/iop/modules/dev9.irx
+
+mstart /usr/local/sce/iop/modules/smap.irx
+
+mstart /usr/local/sce/iop/modules/ppp.irx
+
+mstart /usr/local/sce/iop/modules/pppoe.irx
+

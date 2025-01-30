@@ -1,0 +1,970 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library Release 3.0
+      Copyright (C) 2001 Sony Computer Entertainment Inc.
+                                      All Rights Reserved
+
+Overview
+========
+This macro library combines frequently used functions (such as vertex-rotation-translation-perspective(RTP) calculation and lighting calculation), reusing them to create Vu1 microcode for framework samples and the Hig library. The VCL (VU Command Line) is used for microcode optimization. (Refer to the VCL documentation for details on VCL extensions.)
+
+Include files
+-------------
+Macros are distributed in separate include files (*.i). Available include files are shown below.
+
+utils.i ... utility macros
+math.i ...  mathematic macros (matrix*vector,transpose matrix, 
+	    inverse matrix etc.)
+fw.i ... basic macros (RTP,ST-calculation,BackFaceCulling etc.)
+fwLights.i ... macros used for lighting calculations 
+	       (directional/point/spot-light)
+fwFog.i ... macros used for fogging
+fwAnti ... macros used for AA1-anti-aliasing
+
+Constructing macros for HiG and framework 
+-----------------------------------------
+HiG/framework-macros basically consist of four parts.
+
+1. Micro instruction block
+Calculations in this block are only called when starting new VU1 double buffering.
+Examples: Loading local_screen matrix, light_color.
+
+2. Buffer initialization block
+Sets pointers for input data and output data.
+
+3. GifTag initialization block
+Performs calculations necessary for all GifTags.
+
+4. Calculations for each vertex (loop)
+Performs required calculations in each vertex.
+Examples: light source calculations, FOG calculations, aa1 calculations
+
+If two or more loops are required in case calculations are different for each vertex because of different GS primitives (e.g. back-face-culling for triangles and no back-face-culling for lines/points), there will be a branch to another loop using the GifTag Init-Block.
+
+Vu1 memory map
+--------------
+Refer to the framework document "over.txt" for details related to the memory map.
+
+Basically, there are three different areas in Vu1-mem.
+
+Address 0 - 68 fixed area: for local_world matrix, world_screen matrix, 
+light_colors etc.
+
+Address 68 - 120 user area: can be used as a stack to store and (re)-load
+information.
+
+Address 120 - 1024 double buffer area: for input and output data
+
+One portion of the memory address is assigned to constant names. (refer to fwLights.i)
+
+DIR_LIGHT_COLOR(0 - 2) address 40 - 42
+DIR_LIGHT_VECT(0 - 2) address 32 - 34
+POINT_LIGHT_COLOR(0 - 2) address 52 - 54
+POINT_LIGHT_POS(0 - 2) address 48 - 50
+SPOT_LIGHT_COLOR(0 - 2) address 64 - 66
+SPOT_LIGHT_POS(0 - 2) address 60 - 62
+SPOT_LIGHT_VECT(0 - 2) address 56  - 58
+AMBIENT_LIGHT_COLOR address 43
+MATERIAL_DIFFUSE   address 24
+MATERIAL_SPECULAR  address 25
+MATERIAL_EMISSION  address 26
+MATERIAL_AMBIENT   address 27
+
+These constants can use the "\&" prefix assist in place of an address value. 
+(Example: \&AMBIENT_LIGHT_COLOR represents number 43.)
+
+In order to represent the I/O buffer structure, useful constants are defined in fw.i and fwAnti.i.
+
+struct _sce_fwVertex:
+function: defines the input_buffer-structure per vertex
+_sce_vert_XYZ  .. vertex coordinate,value=0
+_sce_vert_nXYZ .. vertex-normal coordinate,value=1
+_sce_vert_ST   .. vertex-texture coordinate,value=2
+_sce_vert_RGBA .. vertex-color coordinate,value=3
+_sce_vert_sizeof .. number of quad_words per vertex,value=4
+
+struct _sce_prim:
+function: defines the output_buffer-structure per vertex
+_sce_prim_ST   .. vertex-texture coordinate,value=0
+_sce_prim_RGBA .. vertex-color coordinate,value=1
+_sce_prim_XYZF2 .. vertex xyz- and fog-value,value=2 
+_sce_prim_sizeof .. number of quad_words per vertex,value=3
+
+struct _sce_aa_prim 
+function: defines the output_buffer-structure per vertex for 
+	  aa1-anti-aliasing
+_sce_aprim_PRMOD .. PRMOD setting,value=0  
+_sce_aprim_ST   .. aa1_vertex-texture coordinate,value=1
+_sce_aprim_RGBA .. aa1_vertex-color coordinate,value=2
+_sce_aprim_XYZF2 .. aa1_vertex xyz- and fog-value,value=3 
+_sce_aprim_sizeof .. number of quad_words per aa1_vertex,value=4
+
+As an example of using these structures, the following example loads vertex colors to variable _sce_vColor and increments the _sce_in_p pointer to indicate the next vertex.
+
+lq 		_sce_vColor,_sce_vert_RGBA(_sce_in_p)
+iaddiu		_sce_in_p,_sce_in_p,_sce_vert_sizeof
+
+Tips for creating new microcode and notes
+-----------------------------------------
+1. Consequentially faster microcode will be obtained even if some parameters (e.g. light_color) are fixed through all calculations. Sometimes these parameters are loaded for each vertex.
+VCL does not need to make the registers constant through the entire execution, so more registers can be used to optimize the loop.
+
+2. When parameters are assumed to be constant in a vertex loop, those which change during double buffering will be stored in free areas (e.g. local_world matrix, aa1-parameter).
+
+3. Test newly created microcode in this sequence: unoptimized (vcl -d option), linear-optimized (vcl -L option) and loop-optimized. An unoptimized version is easy to debug and linear-optimization can already optimize well. (linear-optimization might not be able to be improved with loop-optimization and loop-optimization will fail).
+
+4. When SCE_PHONG lighting is used:  The lightVector of the directional light and spot light must be stored in a free area within a Micro-Init block, then loaded in a vertex-loop. This is because lightVector is changed internally in the macro. (See fwLights.i and VCL-sample.)
+
+5. Do not use _sce_ as the prefix of a variable.
+
+6. Using variables defined within macros in the main microcode is sometimes useful. As an example, there is the use of _sce_cameraDist and _sce_oneOverCdist calculated in the fwAntiand fwAntiBFC macros for calculations (example: PHONG Lighting) which depend on other camera_vector(eye_vector).  Use these internal variables with caution and also check to be sure that expected values are included (check the macro source code).
+
+7. Check whether macros have mutual dependencies (see sample). Example: In order to correctly execute a texture ST calculation, the Q register must not be changed between the fwRTP macro and the fwST macro.
+
+GS_primitive and BFC
+--------------------
+All VCL samples that have been included (excluding vu1combiS.vcl) support all GS primitives (3d primitives, non-SPRITE support). In order to obtain these they consist of two loops. One loop is intended for primitives (triangle, triangle_strip, triangle_fan) for which a back-face-culling (BFC) test should be executed. The other loop is intended for primitives (point, line, line_strip) which do not require a back-face-culling test. In order to create a BFC (used in fw.i and fwAnti.i for the supplied BFC macro) for triangle, triangle_strip and triangle_fan within the same loop, the _sce_bfcSwitch, _sce_bfcMask and _sce_fanSwitch variables must be set in accordance with the primitives. 
+
+_sce_fanSwitch: Set this variable for triangle/triangle_strip and fan using fwInitTriangleTriangleStrip, fwInitFan. 
+
+
+_sce_bfcSwitch/_sce_bfcMask: setting   0/0		triangle
+			            0/0x20	triangle_strip
+			            0/0		triangle_fan
+Refer to the sample for details on how to set these values in the GifTag-Init block.
+
+See vu1combiS.vcl for an example of how to create microcode that supports only triangle and triangle_strip.
+
+Supported primitives 
+--------------------
+Currently, three shading types (SCE_VERTEXC, SCE_LAMBERT, SCE_PHONG) are supported.
+
+For a single light source in a scene, the color calculations are as follows.
+
+SCE_VERTEXC: (global_light_ambient+A*Innerproduct(normal,light_direction))*
+	     vertex_color
+
+SCE_LAMBERT: global_light_ambient*material_ambient+
+	     A*Innerproduct(normal,light_direction))*diffuse_color
+
+SCE_PHONG: global_light_ambient*material_ambient + 
+	   A*(Innerproduct(normal,light_direction))*diffuse_color+
+	     (Innerproduct(reflectionVect,eyeVect))^(material_shininess)*
+	     specular_color)+material_emission
+
+A ... Attenuation elements: 
+	Intensity*1/|r| is used for spot-light samples and
+	Intensity*1/|r|^2r is used for point-light samples.
+	r is the distance between the vertex and light source.
+
+The following approximation is used to calculate the (t)^(material_shininess) for SCE_PHONG.
+
+
+	     t/(material_shininess-t*material_shininess+t)
+
+The intensity of the spot-light is applied as follows.
+ 
+        Intensity = (cos(p)^2 - a) * b ;
+             : cos(p) = (vertex-light_pos).light_dir / |vertex-light_pos| 
+	     |light_dir| = 1
+             a and b must be constants which satisfy (1 - a) * b = 1.  
+
+Lighting is always executed in three groups (3 directional lights, 3 point lights and 3 spot lights). If you want to combine lighting calculations, confirm that the surrounding portions are not calculated multiple times (because it is necessary only for SCE_VERTEXC, use the SCE_NOAMBIENT switch in the macro).  If you want to use a color clamp function different from the one provided, use SCE_NOCLAMP in the fwCalculateColorSum macro, then add one function to your own code after calling the macro. See vu1combiS.vcl for an example showing how to combine three directional-lights and three point-lights for SCE_PHONG shading.
+
+Notes for the samples
+---------------------
+*V.vcl .... vertex_color shading samples
+*L.vcl .... lambert shading samples
+*S.vcl .... phong shading samples
+
+Except for vu1basic*.vcl, all samples use BFC (BFC is normally executed in screen_space although only vu1anti*.vcl is executed in world_space). All samples other than vu1combiS.vcl support all 3d-GS-primitives.
+
+***************************************************************
+Macro descriptions / parameters / precautions / usage 
+***************************************************************
+
+fw.i:
+*************************************
+
+macros:
+--------------
+--------------
+
+fwLocalScreen
+-------------
+Description:
+	Calculates local_screen matrix.
+Parameters:
+	None
+Precautions:
+	_sce_local_world and _sce_world_screen matrixes are loaded and _sce_local_screen is calculated.
+Usage example:
+	fwLocalScreen
+
+fwRTP prim type 
+---------------
+Description:
+	Calculates RTP of vertex coordinates (rotation, translation, transparency).
+Parameters:
+	prim ...  Stores address of vertex_position after RTP (rotation, translation, transparency) for actual _sce_out_p pointer.
+
+	type ... For type = "basic", the xyzw component of the vertex position is stored. For almost all others, only xyz is written. 
+
+	Default value is "default" (only xyz are stored).
+Precautions:
+	If back_face_culling is required, use type="basic".
+Use "sub.w  _sce_storeVer,vf00,vf00" at the beginning of the loop so that the ADC bit is always set to 0. (See the vu1basic*.vcl VCL-samples.)
+Usage example:
+	fwRTP "_sce_prim_XYZF2"	
+
+fwST prim
+---------
+Description:
+	Calculates texture coordinates (perspective correction).
+Parameters:
+	prim ... Stores address of texture coordinates for actual _sce_out_p pointer.
+Precautions:
+	Q register requires values after fwRTP to be held. Use this macro immediately after fwRTP.
+Usage example:
+	fwST "_sce_prim_ST"
+
+fwInitClip 
+-----------
+Description:
+	Initializes parameters for volume clipping.
+Parameters:
+	none
+Precautions:
+	This macro requests calculations for the micro-init stage only (see over_j.txt). If called every vertex, there is a possibility that VCL-code will become faster.
+Usage example:
+	fwInitClip
+
+fwClip
+-------
+Description:
+	Saves vertices outside the clipping volume and tests whether the vi01 register is set (0 .. no clipping, 1 .. clipping).
+Parameters:
+	None
+Precautions:
+	When not used in combination with fwBFC, use 
+iaddiu	_sce_adcFlag,vi01,0x7fff, set adcFlag and fwWriteADC "_sce_prim_XYZF2"  and set the ADC bit of the XYZF2 register.
+Usage example: 
+	fwClip
+
+fwBFC param
+-----------
+Description:
+	Tests whether a primitive set _sce_adcFlag in back-face for a viewer.
+Parameters:
+	param..  When param="local" is used, BFC is executed in a local coordinate system. If "local" is not specified, (default) BFC is executed in world coordinates. Further, when param="local" is used, localCamera must use fwLocalCamera, fwStoreLocalCamera, fwLoadLocalCamera, then calculate, store and load.
+Precautions:
+	Operates in combination with fwClip. If clipping has not completely occurred, VO1 will be considered to be 0 and when clipping occurs, VO1 will be considered to be 1. If fwClip is not used, set VO1 to 0.
+Usage example: 
+	fwBFC
+
+fwWriteADC prim
+---------------
+Description:
+	Writes the ADC bit.
+Parameters:
+	prim ... Stores address of ADC bit for actual _sce_out_p pointer.
+Precautions:
+	The _sce_adcFlag must be used in fwBFC or set manually (see fwClip).
+Usage example: 
+	fwWriteADC "_sce_prim_XYZF2"
+
+fwInitFan
+----------
+Description:
+	Initializes parameters for triangle_fan primitive.
+Parameters:
+	None
+Precautions:
+	Only required when support for a triangle_fan primitive is desired. Should not be called within a vertex_loop. Must be called within a GifTag-init block.
+Usage example:
+	fwInitFan      
+
+fwInitTriangleTriangleStrip
+---------------------------
+Description:
+	Initializes parameters for triangle, triangle_strip primitives.
+Parameters:
+	None
+Precautions:	
+	Only required when support for triangle or triangle_strip primitives is desired. Should not be called within a vertex_loop. Must be called within a GifTag-init block.
+Usage example:
+	fwInitTriangleTriangleStrip
+
+fwStoreFirstPoint address
+-------------------------
+Description:
+	Stores _sce_firstPoint in address.
+Parameters:
+	address .. store_address
+Precautions:
+	Only required when support for a triangle_fan primitive + fwBFC is desired. _sce_firstPoint is required to perform back_face_culling for a triangle_fan. Use a free address area to store _sce_firstPoint.
+Usage example:
+	fwStoreFirstPoint 100
+
+fwLoadFirstPoint address
+------------------------
+Description:
+	Loads the value stored in address into variable _sce_firstPoint.
+Parameters:
+	address .. load_address
+Precautions:
+	Only required when support for a triangle_fan primitive + fwBFC is desired. _sce_firstPoint is required to perform back_face_culling for a triangle_fan.
+Usage example:
+	fwLoadFirstPoint 100
+
+fwStoreFanSwitch address
+------------------------
+Description:
+	Loads the value stored in address into variable _sce_fanSwitch.
+Parameters:
+	address .. store_address
+Precautions:
+	Only required when support for fwBFC is desired. Use a free address area to store _sce_fanSwitch.
+Usage example:
+	fwStoreFanSwitch 101
+
+fwLoadFanSwitch address
+------------------------
+Description:
+	Loads the value stored in address into variable _sce_fanSwitch.
+Parameters:
+	address .. load_address
+Precautions:
+	Only required when support for fwBFC is desired.
+Usage example:
+	fwStoreLoadSwitch 101
+		    
+fwSwitchOldPointFirstPoint param
+---------------------------------
+Description:
+	Switches _sce_oldPoint to _sce_firstPoint for back-face culling calculations depending on whether the primitive is triangle/triangle_strip or triangle_fan.
+In _sce_oldPoint=A*_sce_oldPoint + B*_sce_firstPoint, A=1,B=0 is a triangle and triangle_strip and A=0,B=1 is a triangle_fan.
+Parameters:
+	param ... When param="local" is used, BFC is executed in a local coordinate system. If "local" is not specified, (default) the switch is executed in world coordinates. 
+Precautions:
+	Only required when support for triangle_fan is desired. param="local" is only required when fwBFC "local" or fwAntiBFC are used.
+Usage example:
+	fwSwitchOldPointFirstPoint "local"
+
+fwInitGifTag
+--------------
+Description:
+	Initializes gif_tag for output-buffer.
+Parameters:
+	None
+Precautions:
+	Only needed once when using a GifTag-init block.
+Usage example:
+	fwInitGifTag
+
+fwSetVertexCounter
+-------------------
+Description:
+	Sets vertex counter variable _sce_nVerts.
+Parameters:
+	None
+Precautions:
+	Only needed once when using a GifTag-init block.
+Usage example:
+	fwInitSetVertexCounter
+
+fwLocalCamera
+---------------
+Description:
+	Calculates camera_position using local coordinates and stores this data in _sce_localCamera.
+Parameters:
+	None
+Precautions:
+	_sce_worldLocal must be calculated before this macro is used. After fwLocalScreen, use "mInvertRT _sce_worldLocal,_sce_localWorld" to calculate _sce_worldLocal.
+Usage example:
+	fwLocalCamera
+
+fwStoreLocalCamera address
+--------------------------
+Description:
+	Stores _sce_localCamera in address.
+Parameters:
+	address .. store_address
+Precautions: Use a free address area to store _sce_localCamera. fwLocalCamera must be called before this macro is used.
+Usage example:
+	fwStoreLocalCamera 103
+
+fwLoadLocalCamera address
+-------------------------
+Description:
+	Loads the value stored in address into _sce_localCamera.
+Parameters:
+	address .. load_address
+Precautions:
+	_sce_localCamera is required before the address is stored. 
+Usage example:
+	fwLoadLocalCamera 103
+
+fwLights.i
+***************
+
+fwCalcNLightVect l1,l2,l3,light_type
+----------------------------------------
+Description:
+	Calculates light_directional_vector using local coordinates and stores the replaced vector in light_type[0], light_type[1], light_type[3].
+Parameters:
+	l1,l2,l3 ... Load address of light_directional_vectors.  
+	light_type ... Supported light_types are _sce_dirNLightVect and _sce_spotNLightVect.
+Precautions:
+	Only needs to be called in a micro-init block.
+Usage example:
+	fwCalcNLightVect \&DIR_LIGHT_VECT0,\&DIR_LIGHT_VECT1,
+		       \&DIR_LIGHT_VECT2,_sce_dirNLightVect
+
+fwLoadNLightVect l1,l2,l3,light_type
+-------------------------------------
+Description:
+	Loads values stored in l1,l2,l3 into variables light_type[0], light_type[1] light_type[3].
+Parameters:
+	l1,l2,l3 .. Load address.
+	light_type ... Supported light_types are _sce_dirNLightVect and _sce_spotNLightVect.
+Precautions:
+	fwCalcNLightVect and fwStoreNLocal must be called before using this macro. When SCE_PHONG lighting is used, this macro must be used to reload lightVector into vertex-loop (see sample). This is due to the fact that _sce_dirNLightVect, _sce_spotNLightVect are changed in the macro from lighting calculations.
+Usage example:
+	fwLoadNLightVect 103,104,105,_sce_dirNLightVect
+
+fwStoreNLightVect l1,l2,l3,light_type
+-------------------------------------
+Description:
+	Stores values of variables light_type[0], light_type[1], light_type[3] in addresses l1,l2,l3.
+Parameters:
+	l1,l2,l3 .. Store addresses.
+	light_type ... Supported light_types are _sce_dirNLightVect and _sce_spotNLightVect.
+Precautions:
+	Uses address of free area to store _sce_dirNLightVect or _sce_spotNLightVect. fwCalcNLightVect must be called before using this macro. Must be called in a micro-init block for SCE_PHONG lighting. Please use in combination with fwLoadNLightVect.
+Usage example:
+	fwStoreNLightVect 103,104,105,_sce_dirNLightVect	
+
+fwCalcLocalLightPos l1,l2,l3,light_type,source
+----------------------------------------------
+Description:
+	Loads the light positions from l1,l2,l3 to "source" (light_pos. in world coordinates) and calculates the light position for local coordinates. The result is stored in light_type[0], light_type[1], light_type[2].
+Parameters:
+	l1,l2,l3 ...  Load address of light position.
+	source ... Variable name for storing light position in world coordinates. Supported names: _sce_pointLightPos, _sce_spotLightPos
+	light_type .. Variable name for storing light position in local coordinates. Supported names: _sce_pointLocalLightPos, _sce_spotLocalLightPos
+Precautions:
+	Must be executed only in a micro-init block. 
+Usage example:
+	fwCalcLocalLightPos \&POINT_LIGHT_POS0,\&POINT_LIGHT_POS1,
+	\&POINT_LIGHT_POS2,_sce_pointLocalLightPos,_sce_pointLightPos
+
+fwStoreLightPos l1,l2,l3,light_type
+------------------------------------
+Description:
+	Stores values of variables light_type[0], light_type[1], light_type[3] in addresses l1,l2,l3.
+Parameters:
+	l1,l2,l3 ..  Store addresses.
+	light_type ... Supported light _types are as follows:
+			   _sce_pointLocalLightPos,
+			   _sce_spotLocalLightPos, _sce_pointLightPos, 
+			   _sce_spotLightPos
+Precautions:
+	Uses address of free area to store variables. fwCalcLocalLightPos must be called before storing _sce_pointLocalLightPos or _sce_spotLocalLightPos.
+Usage example:
+	fwStoreNLightVect 106,107,108,_sce_pointLocalLightPos
+
+fwLoadLightPos l1,l2,l3,light_type
+------------------------------------
+Description:
+	Loads values of variables light_type[0], light_type[1], light_type[3] in addresses l1,l2,l3.
+Parameters:
+	l1,l2,l3 .. Load addresses.
+	light_type ... Supported light _types are as follows: 
+			   _sce_pointLocalLightPos,
+			   _sce_spotLocalLightPos,_sce_pointLightPos, 
+			   _sce_spotLightPos.
+Precautions:
+	fwStoreLightPos must be called before loading _sce_pointLocalLightPos or _sce_spotLocalLightPos.
+Usage example:
+	fwLoadNLightVect 106,107,108,_sce_pointLocalLightPos
+
+fwLoadLightColor l1,l2,l3,light_type
+-------------------------------------
+Description:
+	Loads values of variables light_type[0], light_type[1], light_type[3] in addresses l1,l2,l3.
+Parameters:
+	l1,l2,l3 .. Load addresses.
+	light_type ... Supported light _types are as follows: 
+			  _sce_dirLightColor,
+			  _sce_pointLightColor,_sce_spotLightColor.
+Precautions:
+	Used in a micro-init block. If light_color is loaded in a vertex-loop, there is a possibiity that VCL-generated code may become faster.
+Usage example:
+	fwLoadLightColor  \&DIR_LIGHT_COLOR0,\&DIR_LIGHT_COLOR1,
+       \&DIR_LIGHT_COLOR2,_sce_dirLightColor
+
+fwStoreLightColor l1,l2,l3,light_type
+-------------------------------------
+Description:
+	Stores values of variables light_type[0], light_type[1], light_type[3] in addresses l1,l2,l3.
+Parameters:
+	l1,l2,l3 .. Store addresses.
+	light_type ... Supported light _types are _sce_dirLightColor,
+_sce_pointLightColor,_sce_spotLightColor.
+Precautions:
+	Uses address of free area to store lightColor. fwLoadLightColor must be called before using this macro.
+Usage example:
+	fwStoreLightColor  106,105,104,_sce_dirLightColor
+
+fwLoadLightAmbientColor l1
+-------------------------------------
+Description:
+	Loads value stored in l1 into variable _sce_lightAmbientColor.
+Parameters:
+	l1 ..  Load address.
+Precautions:
+	Used in a micro-init block.  If color is loaded in a vertex-loop, there is a possibiity that VCL-generated code may become faster.
+Usage example:
+	fwLoadLightAmbientColor \&AMBIENT_LIGHT_COLOR
+
+fwStoreLightConst light_type,source,store
+-----------------------------------------
+Description:
+	Loads light_constant parameters from "source" into "light_type" and stores the result in address "store".
+Parameters:
+	light_type.. Supported light _types are _sce_pointLightConst and _sce_spotLightConst.
+	source ... Supported sources are _sce_pointLightColor and
+_sce_spotLightColor.
+Precautions:
+	Uses address of free area to store lightConstant. Because lightConstant is located in the w-component of _sce_pointLightColor or _sce_spotLightColor, the source must be specified. fwLoadLightColor that loads  _sce_pointLightColor or _sce_spotLightColor must be called before using this macro.
+Usage example:
+	fwStoreLightConst _sce_spotLightConst,_sce_spotLightColor,101
+
+fwStoreLightAngle source,store
+---------------------------------------
+Description:
+	Loads light_angle parameters from "source" into _sce_spotLightAngle and stores the result in address "store".
+Parameters:
+	source .. Supported source is _sce_spotLightPos.
+Precautions:
+	Uses address of free area to store lightAngle. Because lightAngle is located in the w-component of _sce_spotLightPos, the source must be specified. _sce_spotLightPos must be loaded using fwCalcLocalLightPos and fwLoadLightPos before using this macro.
+Usage example:
+	fwStoreLightAngle _sce_spotLightPos,100
+
+fwLoadLightConst load,light_type
+-----------------------------------
+Description:
+	Loads light_constant parameters from "load" into "light_type".
+Parameters:
+	load ...  Load address
+	light_type ... Supported light_types are _sce_pointLightConst and _sce_spotLightConst.
+Precautions:
+	If light_constant is reloaded into vertex loop using this macro, there is a possibility that faster VCL-micro-code will be generated.
+Usage example:
+	fwLoadLightConst 100, _sce_spotLightConst
+
+fwLoadLightAngle load,light_type
+--------------------------------
+Description:
+	Loads light_Angle parameters from "load" into "light_type".
+Parameters:
+	load ... Load address.
+	light_type ... Supported light_type is _sce_spotLightAngle.
+Precautions:
+	If light_constant is reloaded into vertex loop using this macro, there is a possibility that faster VCL-micro-code will be generated.
+Usage example:
+	fwLoadLightConst 100,_sce_spotLightAngle
+
+fwDirLight shading_type,ambient_calc,diffout,specout="def",
+	   calcEyeVect="calc"
+-------------------------------------------------------------------------
+Description:
+	Performs lighting calculations for three directional lights.
+Parameters:
+	shading_type...Supported shading_types are SCE_VERTEXC,
+		            SCE_LAMBERT and SCE_PHONG.
+	ambient_calc ...Supported parameters are SCE_NOAMBIENT and 
+			    SCE_AMBIENT (SCE_VERTEXC only).
+	diffout ... Coefficient calculated for diffuse color component 
+	specout ... Coefficient calculated for specular color component (SCE_PHONG only)  
+	calcEyeVect ... Supported parameters are "calc" and "nocalc" .
+Precautions:
+	Performs a selection as to whether global light ambient color should be taken into consideration by the ambient_calc parameter (meaningful only for SCE_VERTEXC). This is useful when a combination of different lighting macros are used (e.g. point-lights + directional lights + spot lights). For these cases, use SCE_AMBIENT and SCE_NOAMBIENT only once for other lighting calculations.
+	Specout is only calculated for SCE_PHONG.
+	A selection is performed by calcEyeVect in this macro as to whether or not eyeVector should be calculated (yes = calc, no = nocalc). When no calculation is performed, before using this macro _sce_eyeVect must be supplied from another macro (fwPointLight,fwSpotLight), or it must be calculated using internal macro variables (when the previous fwAntiBFC is called):
+	"MULx.xyz _sce_eyeVect,_sce_cameraDist,_sce_oneOverCdis"
+or it must be calculated by the user.
+	If SCE_PHONG is used, _sce_dirNLightVect will be modified. Be sure to use fwLoadLightVect to return the value of the vertex loop to its original value either before or after this macro.
+Usage example:
+	fwDirLight "SCE_PHONG","SCE_NOAMBIENT",_sce_diffpaColor,
+		 _sce_specpaColor,"nocalc"
+
+fwPointLight  shading_type,ambient_calc,diffout,specout="def",
+	      calcEyeVect="calc"
+------------------------------------------------------------------
+Description:
+	Performs lighting calculations for three point lights.
+Parameters:
+	shading_type...Supported shading_types are SCE_VERTEXC, SCE_LAMBERT and SCE_PHONG.
+	ambient_calc ...Supported parameters are SCE_NOAMBIENT and SCE_AMBIENT (SCE_VERTEXC only).
+	diffout ... Coefficient calculated for diffuse color component.
+	specout ... Coefficient calculated for specular color component (SCE_PHONG only).  
+	calcEyeVect ... Supported parameters are "calc" and "nocalc".
+Precautions:
+	Performs a selection as to whether global light ambient color should be taken into consideration by the ambient_calc parameter (meaningful only for SCE_VERTEXC). This is useful when a combination of different lighting macros are used (e.g. point-lights + directional lights + spot lights). For these cases, use SCE_AMBIENT and SCE_NOAMBIENT only once for other lighting calculations.
+	Specout is only calculated for SCE_PHONG.
+	A selection is performed by calcEyeVect in this macro as to whether or not eyeVector should be calculated (yes = calc, no = nocalc). When no calculation is performed, before using this macro _sce_eyeVect must be supplied from another macro (fwDirLight,fwSpotLight), or it must be calculated using internal macro variables (when the previous fwAntiBFC is called):
+	"MULx.xyz _sce_eyeVect,_sce_cameraDist,_sce_oneOverCdis"
+or it must be calculated by the user.
+Usage example:
+	fwPointLight "SCE_PHONG","SCE_NOAMBIENT",_sce_diffpaColor,
+		 _sce_specpaColor,"nocalc"
+
+fwSpotLight shading_type,ambient_calc,diffout,specout="def",
+	    calcEyeVect="calc"
+------------------------------------------------------------------
+Description:
+	Performs lighting calculations for three spotlights.
+Parameters:
+	shading_type...Supported shading_types are SCE_VERTEXC,
+SCE_LAMBERT and SCE_PHONG.
+	ambient_calc ...Supported parameters are SCE_NOAMBIENT and 
+SCE_AMBIENT (SCE_VERTEXC only).
+	diffout ... Coefficient calculated for diffuse color component.
+	specout ... Coefficient calculated for specular color component (SCE_PHONG only). 
+	calcEyeVect ... Supported parameters are "calc" and "nocalc".
+Precautions:
+	Performs a selection as to whether global light ambient color should be taken into consideration by the ambient_calc parameter (meaningful only for SCE_VERTEXC). This is useful when a combination of different lighting macros are used (e.g. point-lights + directional lights + spot lights). For these cases, use SCE_AMBIENT and SCE_NOAMBIENT only once for other lighting calculations.
+	Specout is only calculated for SCE_PHONG.
+	A selection is performed by calcEyeVect in this macro as to whether or not eyeVector should be calculated (yes = calc, no = nocalc). When no calculation is performed, before using this macro _sce_eyeVect must be supplied from another macro (fwPointLight,fwDirLight), or it must be calculated using internal macro variables (when the previous fwAntiBFC is called):
+	"MULx.xyz _sce_eyeVect,_sce_cameraDist,_sce_oneOverCdis"
+or it must be calculated by the user.
+	If SCE_PHONG is used, _sce_dirNLightVect will be modified. Be sure to use fwLoadLightVect to return the value of the vertex loop to its original value either before or after this macro.
+Usage example:
+	fwSpotLight "SCE_PHONG","SCE_NOAMBIENT",_sce_diffpaColor,
+		 _sce_specpaColor,"nocalc"
+
+fwSpecularBF bf,coef
+---------------------------------
+Description:
+	Calculates coefficients. When the surface is facing a direction opposite to the light, the value is 0. For other cases, the value is almost always 1.
+Parameters:
+	bf ... result
+	coef ... innerProduct vertex_normal*light_vector
+Precautions:
+	The internal macro used in SCE_PHONG calculations is changed only when a fast macro/algorithm can be used.
+Usage example:
+	(only used internally in fwDirLight,fwSpotLight,fwPointLight for SCE_PHONG)
+       fwSpecularBF 	_sce_bfCheck,_sce_refVectCoef 
+
+fwGetEyeVectorP  eye,camera,vertex
+-------------------------------------
+Description:
+	Calculates _sce_eyeVect using P register.
+Parameters:
+	eye ... result: _sce_eyeVector
+	camera ... camera position
+	vertex ... vertex coordinates
+Precautions:
+	Uses the P register which is used as an internal macro but if the camera position and vertex position are specified, the macro can be used externally (both must exist in the same coordinate system). If this internal macro is changed to fwGetEyeVectQ, there is a possibility that the code may become faster if the P register is already busy.
+Usage example:
+	fwGetEyeVectP _sce_eyeVect,_sce_cameraPos,_sce_vrt
+
+fwGetEyeVectorQ  eye,camera,vertex
+-------------------------------------
+Description:
+	Calculates _sce_eyeVect using Q register.
+Parameters:
+	eye ... result: _sce_eyeVector
+	camera ... camera position
+	vertex ... vertex coordinates
+Precautions:
+	Uses the Q register which is used as an internal macro but if the camera position and vertex position are specified, the macro can be used externally (both must exist in the same coordinate system). If this internal macro is changed to fwGetEyeVectP, there is a possibility that the code may become faster if the Q register is already busy.
+Usage example:
+	fwGetEyeVectQ _sce_eyeVect,_sce_cameraPos,_sce_vrt
+
+fwGetSpecularCosine specFact,eye,ref1,ref2,ref3
+------------------------------------------------
+Description:
+	Uses eyeVector to find the inner product of three reflection vectors.
+Parameters:
+	specFact..  Inner product result
+	eye .. eyeVector
+	ref1-3 ... reflection vectors
+Precautions:
+	The internal macro used in SCE_PHONG calculations is changed only when a fast macro/algorithm can be used.
+Usage example:
+	(only used internally in fwDirLight,fwSpotLight,fwPointLight for SCE_PHONG)
+       fwGetSpecularCosine _sce_specFact,_sce_eyeVect,
+		_sce_refVect1,_sce_refVect2,_sce_refVect3
+   
+fwRemoveSpecularBF spec,bf
+----------------------------
+Description:
+	When the surface is facing in a direction opposite to the light, sets "spec" to 0.
+Parameters:
+	spec ... I/O coefficient
+	bf ... with fwSpecularBF calculated factor
+Precautions:
+	The internal macro used in SCE_PHONG calculations is changed only when a fast macro/algorithm can be used.
+Usage example:
+	(only used internally in fwDirLight,fwSpotLight,fwPointLight for SCE_PHONG)
+       fwRemoveSpecularBF _sce_specFact,_sce_bfCheck 
+
+fwShininess spec
+-------------------
+Description:
+	Performs shininess calculations for SCE_PHONG.
+	lighting (eyeVect*reflectionVect)^shininess
+Parameters:
+	spec input/output coefficient
+Precautions:
+	The internal macro used in SCE_PHONG calculations is changed only when a fast macro/algorithm can be used.
+Usage example:
+	(only used internally in fwDirLight,fwSpotLight,fwPointLight for SCE_PHONG)
+        fwShininess _sce_specFact
+
+fwLoadMaterialColor diffColor,specColor,emissionColor,
+		    ambientColor,l1,l2,l3,l4
+----------------------------------------------------------------
+Description:
+	Loads material_colors from l1-4 into diffColor, specColor, emissionColor and AmbientColor.
+Parameters:
+	diffColor ... diffuse color variable name
+	l1 ... diffuse color load address
+	specColor ... specular color variable name
+	l2 ... specular color load address
+	emissionColor ... emission color variable name
+	l3 ... emission color load address
+	ambientColor ... ambient color variable name
+	l4 ... ambient color load address
+Precautions:
+	Only required when SCE_PHONG lighting is used.
+Usage example:
+		fwLoadMaterialColor _sce_dColor,_sce_sColor,_sce_aColor,
+	    _sce_eColor,\&MATERIAL_DIFFUSE,\&MATERIAL_SPECULAR,
+	    \&MATERIAL_AMBIENT,\&MATERIAL_EMISSION      
+
+fwCalcColorSum shading_type,color_clamp,out,df,dColor,aColor="defa",
+	       sp="defd",sColor="defs",eColor="defe"
+---------------------------------------------------------------------
+Description:
+	Calculates final vertex color after lighting calculations.
+Parameters:
+	shading_type ... Supported shading_type are SCE_VERTEXC, and SCE_LAMBERT,SCE_PHONG.
+	color_clamp ... Supported values are SCE_CLAMP and SCE_NOCLAMP.
+	df... diffuse color coefficient (form lighting calc)
+	dColor ... material diffuse color
+	sp ... specular color coefficient (from lighting calc.)
+	sColor ... material specular color
+	aColor ... material ambient color
+	eColor ... material emission color
+Precautions:
+	sp,sColor,aColor,eColor are only valid for SCE_PHONG lighting. If SCE_CLAMP is specified, a simple color will be executed and yield a final color in the range 0 ~ 255. If SCE_NOCLAMP is used, the user can create an original color_clamp function.
+Usage example:
+	fwCalcColorSum "SCE_PHONG","SCE_CLAMP",_sce_dColor,_sce_diffFact,
+		     _sce_dColor,_sce_specFact,_sce_sColor,_sce_aColor,
+		     _sce_eColor
+
+fwWriteColor prim, color
+------------------------
+Description:
+	Writes the final vertex color to be output.
+Parameters:
+	prim ...  Stores address for _sce_out_p.
+	color ... Color to be written.
+Precautions:
+	None
+Usage example:
+	fwWriteColor "_sce_prim_RGBAQ",_sce_dColor
+
+fog.i
+******
+
+fwInitFog
+-----------
+Description:
+	Initializes parameters for fog calculations.
+Parameters:
+	None
+Precautions:
+	Only needs to be called once, but if called in a vertex-loop, there is a possibiity that VCL-generated code may become faster.
+Usage example:
+	fwInitFog
+
+fwFog 
+-----------
+Description:
+	Executes fog calculations.
+Parameters:
+	None
+Precautions:
+	Uses z in screen coordinates to calculate fogging (linear is not supported). fwInitFog  must be called before using this macro.
+Usage example:
+	fwFog
+
+fwWriteADC_Fog prim
+----------------------
+Description:
+	Writes ADC bit and Fog bit to outbuffer.
+Parameters:
+	prim ... Stores address for _sce_out_p.
+Precautions:
+	_sce_adcFlag must be set (fwBFC is set manually, refer to fwClip) and _sce_fogFlag must be calculated in fwFog.
+Usage example:
+	fwWriteADC_Fog "_sce_prim_XYZF2" 
+
+fwAnti.i
+***********
+
+fwInitAnti
+-----------
+Description:
+	Initializes parameters for AA1 calculations. 
+Parameters:
+	None
+Precautions:
+	Only needs to be called once, but if called in a vertex-loop, there is a possibiity that VCL-generated code may become faster.
+Usage example:
+	fwInitAnti
+
+fwAnti prim
+------------------
+Description:
+	Performs AA1 calculations and writes the values into the PRMOD register.
+Parameters:
+	prim ... Write address for _sce_out_p.
+Precautions:
+	fwInitAnti must be called before using this macro. In addition, before using this macro, load the threshold of the AA1 algorithm into the w-component of variable _sce_antiParamload, then load the camera position of the local coordinates into the xyz-component of this variable. (see vu1antiV.vcl, vu1antiL.vcl, vu1combi.vcl samples)
+Usage example:
+	fwAnti  "_sce_aprim_PRMOD"
+
+fwAntiBFC prmod
+-----------------
+Description:
+	Performs AA1 calculations, writes the values into the PRMOD register, then performs BFC calculations using local coordinates.
+Parameters:
+	prmod ... Store address for _sce_out_p.
+Precautions:
+	fwInitAnti  must be called before using this macro. localCamera must use fwLocalCamera,fwStoreLocalCamera,fwLoadLocalCamera for calculations, storing and loading data.  In addition, before using this macro, load the threshold of the AA1 algorithm into the w-component of variable _sce_antiParamload, then load the camera position of the local coordinates into the xyz-component of this variable. (see vu1antiV.vcl, vu1antiL.vcl, vu1combi.vcl samples)
+  Usage example:
+	fwAntiBFC  "_sce_aprim_PRMOD"
+
+math.i
+*******
+
+mMulVecByMat output, vector, matBaseName
+-----------------------------------------
+Description:
+	Calculates output=matrix*vector.
+Parameters:
+	output ... Calculation result vector
+	vector ... Input vector
+	matBasName ... Matrix name
+Precautions:
+	The matrix must consist of 4 rows of vectors.
+      matBaseName[0], matBaseName[1], matBaseName[2], 
+      matBaseName[3]
+Usage example:
+	mMulVecByMat _sce_localScreen[0],_sce_localWorld[0],_sce_worldScreen
+
+mTransposeXYZMatrix output
+---------------------------
+Description:
+	Transposes matrix "output".
+Parameters:
+	output ... I/O matrix
+Precautions:
+	The matrix must consist of 3 rows of vectors output[0],output[1],output[2]. Only the xyz components are transposed.
+Usage example:
+	mTransposeXYZMatrix _sce_lightVect
+
+mInvertRT output, matRT
+-------------------------
+Description: Inverts rotation translation matrix.
+Parameters:
+	output ... Inverted matrix.
+	matRT ... rotation-translation-matrix
+Precautions:
+	Only RT (rotation translation) matrix can be used.
+	REMARK:the translation vector output[3]=-trans!!!
+	Use mMakeLocal to calculate local_vect=output*world_vector.
+Usage example:
+	mInvertRT _sce_worldLocal,_sce_localWorld
+
+mMakeLocal localVect, worldVect, matWorldLocal
+-------------------------------------------------
+Description:
+	Translates vectors from world coordinates to local coordinates.
+Parameters:
+	localVect ... Translated vectors.
+	worldVect ... Input vector
+	matWorldLocal ... worldLocal matrix
+Precautions:
+	matWorldLocal must be in the form of "matWorldLocal[3]=-trans". Be sure to use mInvertRT to create this type of matrix.
+Usage example:
+	mMakeLocal _sce_localCamera,_sce_worldCamera,_sce_worldLocal
+
+mLocalLightPos output, worldLightPos, matWorldLocal
+----------------------------------------------------
+Description:
+	Calculates three light positions using local coordinates.
+Parameters:
+	output.. Light positions 0-3 of local coordinates.
+		    output[0],output[1],output[2]
+	worldLightPos .. Light positions 0-3 of world coordinates.
+		    worldLightPos[0],worldLight[1],worldLightPos[2]
+	matWorldLocal ... worldLocal matrix
+Precautions:
+	Because this macro uses mMakeLocal, matWorldLocal must be in the form of "matWorldLocal[3]=-trans". Be sure to use mInvertRT to create this type of matrix.
+Usage example:
+	mLocalLightPos sce_pointLocalLightPos,_sce_pointLightPos,
+		     _sce_worldLocal
+
+getRcpLengQ_x 	vec,out
+getRcpLengQ_y 	vec,out
+getRcpLengQ_z 	vec,out
+getRcpLengP_x 	vec,out
+getRcpLengP_x 	vec,out
+getRcpLengP_y 	vec,out
+getRcpLengP_z 	vec,out
+------------------------
+Description:
+	Calculates 1/length of a vector.
+Parameters:
+	vec ... input vector
+	out ... 1/length
+Precautions:
+	getRcpLengA_B uses the A register to store the result in the B component of out. 
+Usage example:
+	getRcpLengP_z  _sce_lightVect3,_sce_oneOverNorm 
+
+getSaddQ_x 	vec,out
+getSaddQ_y 	vec,out
+getSaddQ_z 	vec,out
+getSaddP_x 	vec,out
+getSaddP_y 	vec,out
+getSaddP_z 	vec,out
+---------------------------------------
+Description:
+	Calculates 1/(length)^2 of a vector.
+Parameters:
+	vec ... input vector
+	out ... 1/(length)^2
+Precautions:
+	getSaddA_B uses the A register to store the result in the B component of out.
+Usage example:
+	getSaddP_z  _sce_lightVect3,_sce_oneOverNormSq 
+
+util.i
+*********
+
+.macro	struct	name
+.macro	vud	name
+.macro	endst	name
+--------------------------------------
+Description:
+	Used to define the structure of a vertex.
+Precautions:
+	See fw.i, fwAnti.i for contents of the macro.
+

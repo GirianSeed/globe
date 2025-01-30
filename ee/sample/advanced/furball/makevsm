@@ -1,0 +1,2 @@
+vcl  -g -I../../graphics/hig/micro/ -t3 -A -ohairshading.vsm hairshading.vcl
+vcl  -g -I../../graphics/hig/micro/ -t3 -A -ohairsim.vsm hairsim.vcl

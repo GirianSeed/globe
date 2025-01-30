@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIent_ppp 3020]
+L ent_ppp
+V 0x0101
+F 0x0000
+E 005 sceEENetDevicePPPReg
+E 006 sceEENetDevicePPPUnreg

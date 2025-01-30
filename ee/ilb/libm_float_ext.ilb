@@ -1,0 +1,36 @@
+#EE-ILB# [PsIIfloat_ex3000]
+L LibmFloatExt
+V 0x0101
+F 0x0000
+E 017 coshf
+E 018 sinhf
+E 021 logf
+E 026 infinityf
+E 027 nanf
+E 028 isnanf
+E 029 isinff
+E 030 finitef
+E 031 copysignf
+E 032 ilogbf
+E 033 asinhf
+E 034 cbrtf
+E 035 nextafterf
+E 036 rintf
+E 037 scalbnf
+E 039 expm1f
+E 040 acoshf
+E 041 atanhf
+E 042 remainderf
+E 043 gammaf
+E 045 lgammaf
+E 047 erff
+E 048 erfcf
+E 049 y0f
+E 050 y1f
+E 051 ynf
+E 052 j0f
+E 053 j1f
+E 054 jnf
+E 055 hypotf
+E 056 cabsf
+E 057 dremf

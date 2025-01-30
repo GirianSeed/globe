@@ -1,0 +1,24 @@
+#EE-ILB# [PsIIdouble  3000]
+L LibmDouble
+V 0x0101
+F 0x0000
+E 004 atan
+E 005 cos
+E 006 sin
+E 007 tan
+E 008 tanh
+E 009 frexp
+E 010 modf
+E 011 ceil
+E 012 fabs
+E 013 floor
+E 014 acos
+E 015 asin
+E 016 atan2
+E 019 exp
+E 020 ldexp
+E 021 log
+E 022 log10
+E 023 pow
+E 024 sqrt
+E 025 fmod

@@ -1,0 +1,18 @@
+#EE-ILB# [PsIIlibusbkb3020]
+L libusbkb
+V 0x0101
+F 0x0000
+E 004 sceUsbKbInit
+E 005 sceUsbKbEnd
+E 006 sceUsbKbGetInfo
+E 007 sceUsbKbRead
+E 008 sceUsbKbGetLocation
+E 009 sceUsbKbSetLEDStatus
+E 010 sceUsbKbSetLEDMode
+E 011 sceUsbKbSetRepeat
+E 012 sceUsbKbSetCodeType
+E 013 sceUsbKbSetArrangement
+E 014 sceUsbKbSync
+E 015 sceUsbKbCnvRawCode
+E 016 sceUsbKbSetReadMode
+E 017 sceUsbKbClearRbuf

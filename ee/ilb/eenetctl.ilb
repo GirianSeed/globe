@@ -1,0 +1,13 @@
+#EE-ILB# [PsIIeenetctl3020]
+L eenetctl
+V 0x0101
+F 0x0000
+E 004 sceEENetCtlInit
+E 005 sceEENetCtlTerm
+E 007 sceEENetCtlUpInterface
+E 008 sceEENetCtlDownInterface
+E 009 sceEENetCtlGetErrorCode
+E 010 sceEENetCtlGetIfStat
+E 012 sceEENetCtlSetAutoMode
+E 014 sceEENetCtlRegisterEventHandler
+E 015 sceEENetCtlUnregisterEventHandler

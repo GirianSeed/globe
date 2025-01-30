@@ -1,0 +1,279 @@
+#EE-ILB# [PsIIlibkernl3000]
+L eekernel
+V 0x0101
+F 0x0000
+E 014 AddSbusIntcHandler
+E 015 RemoveSbusIntcHandler
+E 016 Interrupt2Iop
+E 020 AddIntcHandler
+E 021 AddIntcHandler2
+E 022 RemoveIntcHandler
+E 023 AddDmacHandler
+E 024 AddDmacHandler2
+E 025 RemoveDmacHandler
+E 030 SetAlarm
+E 031 ReleaseAlarm
+E 036 iSetAlarm
+E 037 iReleaseAlarm
+E 038 CreateThread
+E 039 DeleteThread
+E 040 _StartThread
+E 041 ExitThread
+E 042 ExitDeleteThread
+E 043 TerminateThread
+E 044 iTerminateThread
+E 047 ChangeThreadPriority
+E 048 iChangeThreadPriority
+E 049 RotateThreadReadyQueue
+E 051 ReleaseWaitThread
+E 052 iReleaseWaitThread
+E 053 GetThreadId
+E 054 ReferThreadStatus
+E 055 iReferThreadStatus
+E 056 SleepThread
+E 057 WakeupThread
+E 059 CancelWakeupThread
+E 060 iCancelWakeupThread
+E 061 SuspendThread
+E 063 ResumeThread
+E 064 iResumeThread
+E 070 CreateSema
+E 071 DeleteSema
+E 072 SignalSema
+E 073 iSignalSema
+E 074 WaitSema
+E 075 PollSema
+E 076 iPollSema
+E 077 ReferSemaStatus
+E 078 iReferSemaStatus
+E 109 GetCop0
+E 110 FlushCache
+E 113 iGetCop0
+E 114 iFlushCache
+E 122 GsGetIMR
+E 123 iGsGetIMR
+E 124 GsPutIMR
+E 125 iGsPutIMR
+E 130 sceSifDmaStat
+E 131 isceSifDmaStat
+E 132 sceSifSetDma
+E 133 isceSifSetDma
+E 134 sceSifSetDChain
+E 135 isceSifSetDChain
+E 136 sceSifSetReg
+E 137 sceSifGetReg
+#EE-ILB# [PsIIlibkernl3000]
+L eepatch
+V 0x0102
+F 0x0000
+E 004 DIntr
+E 005 EIntr
+E 006 QueryIntrContext
+E 007 InvalidDCache
+E 008 SyncDCache
+E 009 iInvalidDCache
+E 010 iSyncDCache
+E 011 DisableDmac
+E 012 DisableIntc
+E 013 EnableDmac
+E 014 EnableIntc
+E 015 iDisableDmac
+E 016 iDisableIntc
+E 017 iEnableDmac
+E 018 iEnableIntc
+E 019 iRotateThreadReadyQueue
+E 020 iSuspendThread
+E 021 iWakeupThread
+E 031 LoadExecPS2
+E 032 DelayThread
+E 033 __sceKernlGetEhSemaId
+E 034 StartThread
+#EE-ILB# [PsIIlibkernl3000]
+L eetlb
+V 0x0101
+F 0x0000
+E 004 InitTLB
+E 005 InitTLBFunctions
+E 006 ExpandScratchPad
+E 007 SetDebugHandler
+E 008 SetTLBHandler
+E 009 GetTLBEntry
+E 010 ProbeTLBEntry
+E 011 PutTLBEntry
+E 012 SetTLBEntry
+E 013 iGetTLBEntry
+E 014 iProbeTLBEntry
+E 015 iPutTLBEntry
+E 016 iSetTLBEntry
+#EE-ILB# [PsIIlibkernl3000]
+L eetty
+V 0x0102
+F 0x0000
+E 004 kprintf
+E 005 scePrintf
+E 010 sceVprintf
+E 011 sceSnprintf
+E 012 sceVsnprintf
+#EE-ILB# [PsIIlibkernl3000]
+L sifcmd
+V 0x0101
+F 0x0000
+E 004 sceSifInitCmd
+E 005 sceSifExitCmd
+E 006 sceSifGetSreg
+E 007 sceSifSetSreg
+E 008 sceSifSetCmdBuffer
+E 010 sceSifAddCmdHandler
+E 011 sceSifRemoveCmdHandler
+E 012 sceSifSendCmd
+E 013 isceSifSendCmd
+E 014 sceSifInitRpc
+E 015 sceSifBindRpc
+E 016 sceSifCallRpc
+E 017 sceSifRegisterRpc
+E 018 sceSifCheckStatRpc
+E 019 sceSifSetRpcQueue
+E 020 sceSifGetNextRequest
+E 021 sceSifExecRequest
+E 022 sceSifRpcLoop
+E 023 sceSifGetOtherData
+E 024 sceSifRemoveRpc
+E 025 sceSifRemoveRpcQueue
+E 029 sceSifWriteBackDCache
+E 030 sceSifExitRpc
+#EE-ILB# [PsIIlibkernl3000]
+L fileio
+V 0x0102
+F 0x0000
+E 004 sceOpen
+E 005 sceClose
+E 006 sceRead
+E 007 sceWrite
+E 008 sceLseek
+E 009 sceIoctl
+E 010 sceRemove
+E 011 sceMkdir
+E 012 sceRmdir
+E 013 sceDopen
+E 014 sceDclose
+E 015 sceDread
+E 016 sceGetstat
+E 017 sceFormat
+E 018 sceChstat
+E 024 sceRename
+E 025 sceChdir
+E 026 sceSync
+E 027 sceMount
+E 028 sceUmount
+E 029 sceLseek64
+E 030 sceDevctl
+E 031 sceSymlink
+E 032 sceReadlink
+E 033 sceIoctl2
+E 034 sceFsInit
+E 035 sceFsReset
+E 036 scePowerOffHandler
+E 037 sceStdioConvertError
+#EE-ILB# [PsIIlibkernl3000]
+L iopldfl
+V 0x0101
+F 0x0000
+E 004 sceSifLoadModule
+E 005 sceSifLoadModuleBuffer
+E 006 sceSifLoadStartModule
+E 007 sceSifLoadStartModuleBuffer
+E 008 sceSifStopModule
+E 009 sceSifUnloadModule
+E 010 sceSifSearchModuleByAddress
+E 011 sceSifSearchModuleByName
+E 014 sceSifLoadFileReset
+E 015 sceSifLoadElf
+E 016 sceSifLoadElfPart
+#EE-ILB# [PsIIlibkernl3000]
+L iopreset
+V 0x0101
+F 0x0000
+E 005 sceSifRebootIop
+E 006 sceSifSyncIop
+E 009 sceSifSetRebootNotifyBuffer
+E 010 sceSifAddRebootNotifyHandler
+E 011 sceSifRemoveRebootNotifyHandler
+#EE-ILB# [PsIIlibkernl3000]
+L iopsmem
+V 0x0101
+F 0x0000
+E 004 sceSifInitIopHeap
+E 005 sceSifAllocSysMemory
+E 006 sceSifFreeSysMemory
+E 007 sceSifQueryMemSize
+E 008 sceSifQueryMaxFreeMemSize
+E 009 sceSifQueryTotalFreeMemSize
+E 010 sceSifQueryBlockSize
+E 011 sceSifQueryBlockTopAddress
+E 013 sceSifAllocIopHeap
+E 014 sceSifFreeIopHeap
+#EE-ILB# [PsIIlibkernl3000]
+L deci2api
+V 0x0101
+F 0x0000
+E 004 sceDeci2Open
+E 005 sceDeci2Close
+E 006 sceDeci2ExRecv
+E 007 sceDeci2ExSend
+E 008 sceDeci2ReqSend
+E 009 sceDeci2ExReqSend
+E 010 sceDeci2ExLock
+E 011 sceDeci2ExUnLock
+E 013 sceDeci2Poll
+#EE-ILB# [PsIIlibkernl3000]
+L eetimer
+V 0x0101
+F 0x0000
+E 004 SetT2_COUNT
+E 005 SetT2_MODE
+E 006 SetT2_COMP
+E 011 GetTimerPreScaleFactor
+E 019 TimerUSec2BusClock
+E 020 TimerBusClock2USec
+E 021 TimerFreq2BusClock
+E 022 TimerBusClock2Freq
+E 023 StartTimerSystemTime
+E 024 StopTimerSystemTime
+E 025 GetTimerSystemTime
+E 026 iGetTimerSystemTime
+E 027 AllocTimerCounter
+E 028 iAllocTimerCounter
+E 029 FreeTimerCounter
+E 030 iFreeTimerCounter
+E 031 GetTimerUsedUnusedCounters
+E 032 iGetTimerUsedUnusedCounters
+E 035 StartTimerCounter
+E 036 iStartTimerCounter
+E 037 StopTimerCounter
+E 038 iStopTimerCounter
+E 039 GetTimerCount
+E 040 iGetTimerCount
+E 041 SetTimerCount
+E 043 SetTimerHandler
+E 044 iSetTimerHandler
+E 047 SetTimerAlarm
+E 048 iSetTimerAlarm
+E 049 ReleaseTimerAlarm
+E 050 iReleaseTimerAlarm
+#EE-ILB# [PsIIlibkernl3000]
+L glue
+V 0x0101
+F 0x0000
+E 004 close
+E 005 fstat
+E 006 getpid
+E 007 ioctl
+E 008 isatty
+E 009 kill
+E 010 lseek
+E 011 open
+E 012 read
+E 013 sbrk
+E 014 stat
+E 015 unlink
+E 016 write

@@ -1,0 +1,10 @@
+#EE-ILB# [PsIIlibmrpc 3000]
+L libmrpc
+V 0x0101
+F 0x0000
+E 004 sceSifMBindRpc
+E 005 sceSifMBindRpcParam
+E 006 sceSifMCallRpc
+E 007 sceSifMExitRpc
+E 008 sceSifMInitRpc
+E 009 sceSifMUnBindRpc

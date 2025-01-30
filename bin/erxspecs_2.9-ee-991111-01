@@ -1,0 +1,90 @@
+*libgcc:
+
+
+*startfile:
+
+
+*erx_ignore_ld_option:
+--ignore-option=-Map:n \
+--ignore-option=-T:n \
+--ignore-option=--check-sections \
+--ignore-option=--error-to-file:n \
+--ignore-option=--fatal-warnings \
+--ignore-option=--gc-sections \
+--ignore-option=--no-define-common \
+--ignore-option=--no-gc-sections \
+--ignore-option=--no-keep-memory \
+--ignore-option=--print-map \
+--ignore-option=--script:n \
+--ignore-option=--sort-common \
+--ignore-option=--stats \
+--ignore-option=--trace-symbol:c \
+--ignore-option=--warn-common \
+--ignore-option=--warn-constructors \
+--ignore-option=--warn-multiple-gp \
+--ignore-option=--warn-once \
+--ignore-option=--warn-section-align
+
+*erx_makestub:
+         eelibld %(erx_ignore_ld_option) \
+                         --ignore-option=-l:c \
+                         %{t:-v} %{v2:-v2} %{zd:-d} --ignore-undef -s %{o*:%*} \
+                         %{!A:%{!nostdlib:%{startfiles:%S}}} \
+                         %{static:} %{L*} %D %o \
+                         %{!nostdlib:%{!nodefaultlibs:%G}} \
+                         %{!A:%{!nostdlib:%{startfiles:%E}}} \
+                         : %{ilb=*:%*} \
+                         %{!noeeilb:%{!nostdlib:}} \
+                         %{nostartfiles:}
+
+*erx_link_autostub:
+         eelibld %(erx_ignore_ld_option) \
+                         %{t:-v} %{v2:-v2} %{zd:-d} --ignore-undef -s %g.ilb.stub.s \
+                         %{!A:%{!nostdlib:%{startfiles:%S}}} \
+                         %{static:} %{L*} %D %o \
+                         %{!nostdlib:%{!nodefaultlibs:%G}} \
+                         %{!A:%{!nostdlib:%{startfiles:%E}}} \
+                         : %{ilb=*:%*} \
+                         %{!noeeilb:%{!nostdlib:}} \
+                         %{nostartfiles:}
+         as %g.ilb.stub.s -o %g.ilb.stub.o
+         ld %l %{Map=*:-Map %*} -dc -r %X -o %g.ee.rel.o %{t} %{u*} %{x} \
+                         %{!A:%{!nostdlib:%{startfiles:%S}}} \
+                         %{static:} %{L*} %D %g.ilb.stub.o %o %{slb=*:%*} \
+                         %{!nostdlib:%{!nodefaultlibs:%G}} \
+                         %{!A:%{!nostdlib:%{startfiles:%E}}}
+         eefixup  %{!Ttext*:%{e*} %{s:%{o*}} %{!s:%{o*:-r %*}}} \
+                  %{Ttext*:%{e*} %{o*:-f %*} -t %*} \
+                  %{rb:--relative-branch} \
+                  %{relative-branch:--relative-branch}  \
+                  %{!mno-crt0:-e ENTRYPOINT} %{mno-crt0:%{e}} \
+                  %g.ee.rel.o
+
+*erx_link_nostub:
+         ld %l %{Map=*:-Map %*} -dc -r %X -o %g.ee.rel.o %{t} %{u*} %{x} \
+                         %{!A:%{!nostdlib:%{startfiles:%S}}} \
+                         %{static:} %{L*} %D %o %{slb=*:%*} \
+                         %{!nostdlib:%{!nodefaultlibs:%G}} \
+                         %{!A:%{!nostdlib:%{startfiles:%E}}}
+         eefixup  %{!Ttext*:%{e*} %{s:%{o*}} %{!s:%{o*:-r %*}}} \
+                  %{Ttext*:%{e*} %{o*:-f %*} -t %*} \
+                  %{!mno-crt0:-e ENTRYPOINT} %{mno-crt0:%{e}} \
+                  %{rb:--relative-branch} \
+                  %{relative-branch:--relative-branch}  \
+                  %g.ee.rel.o
+
+*link_command:
+%{!fsyntax-only:\
+  %{!c:%{!M:%{!MM:%{!E:%{!S:\
+    %{makestub:\
+        %(erx_makestub)\
+    } %{!makestub:\
+        %{autostub:\
+            %(erx_link_autostub)\
+        } %{!autostub:\
+            %(erx_link_nostub)\
+        }
+    }
+  }}}}}
+}
+

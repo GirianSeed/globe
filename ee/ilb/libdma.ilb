@@ -1,0 +1,41 @@
+#EE-ILB# [PsIIlibdma  3000]
+L libdma
+V 0x0101
+F 0x0000
+E 004 sceDmaGetNextTag
+E 005 sceDmaAddExpress
+E 006 sceDmaAddRef
+E 007 sceDmaAddRefe
+E 008 sceDmaAddRefs
+E 009 sceDmaAddCont
+E 010 sceDmaGetChan
+E 011 sceDmaAddNext
+E 012 sceDmaReset
+E 013 sceDmaAddCall
+E 014 sceDmaAddRet
+E 015 sceDmaAddEnd
+E 016 sceDmaAddDest
+E 017 sceDmaAddDests
+E 018 sceDmaPutEnv
+E 019 sceDmaAddIRef
+E 020 sceDmaAddIRefe
+E 021 sceDmaAddIRefs
+E 022 sceDmaAddICont
+E 023 sceDmaAddINext
+E 024 sceDmaAddICall
+E 025 sceDmaAddIRet
+E 026 sceDmaAddIEnd
+E 027 sceDmaAddIDest
+E 028 sceDmaAddIDests
+E 029 sceDmaGetEnv
+E 030 sceDmaPutStallAddr
+E 031 sceDmaSend
+E 032 sceDmaSendN
+E 033 sceDmaSendI
+E 034 sceDmaRecv
+E 035 sceDmaRecvN
+E 036 sceDmaRecvI
+E 037 sceDmaSync
+E 038 sceDmaWatch
+E 039 sceDmaPause
+E 040 sceDmaRestart

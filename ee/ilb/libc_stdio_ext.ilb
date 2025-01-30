@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIstdio_ex3000]
+L LibcStdioExt
+V 0x0101
+F 0x0000
+E 049 iprintf
+E 051 siprintf

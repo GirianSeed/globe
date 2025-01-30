@@ -1,0 +1,54 @@
+#EE-ILB# [PsIIliberx  3020]
+L sysmem
+V 0x0101
+F 0x0000
+E 008 sceErxAllocSysMemory
+E 009 sceErxFreeSysMemory
+E 010 sceErxQueryMemSize
+E 011 sceErxQueryFreeMemSize
+E 012 sceErxRecordMemConsumption
+E 013 sceErxQueryFreeMemSticky
+E 014 sceErxQueryBlockInfo
+E 016 sceErxQueryRegionType
+#EE-ILB# [PsIIliberx  3020]
+L loadcore
+V 0x0102
+F 0x0000
+E 004 sceErxVersion
+E 012 sceErxGetModuleIdList
+E 013 sceErxGetModuleIdListByName
+E 014 sceErxReferModuleStatus
+E 015 sceErxSetModuleFlags
+E 016 sceErxSearchModuleByName
+E 017 sceErxSearchModuleByAddress
+E 020 sceErxQueryGp
+E 021 sceErxSetGp
+E 022 sceErxGetModuleGp
+E 023 sceErxSetModuleGp
+E 024 sceErxExecModuleFunction
+E 025 sceErxExecGpFunction
+E 046 sceErxSearchLibraryEntries
+E 049 sceErxGetLibraryClients
+#EE-ILB# [PsIIliberx  3020]
+L modload
+V 0x0103
+F 0x0000
+E 008 sceErxLoadModuleFile
+E 009 sceErxLoadModuleFileAsync
+E 010 sceErxLoadModuleBuffer
+E 011 sceErxLoadModuleBufferAsync
+E 012 sceErxLoadStartModuleFile
+E 013 sceErxLoadStartModuleFileAsync
+E 014 sceErxLoadStartModuleBuffer
+E 015 sceErxLoadStartModuleBufferAsync
+E 016 sceErxStartModule
+E 017 sceErxStartModuleAsync
+E 018 sceErxStopModule
+E 019 sceErxStopModuleAsync
+E 020 sceErxUnloadModule
+E 021 sceErxUnloadModuleAsync
+E 022 sceErxStopUnloadModule
+E 023 sceErxStopUnloadModuleAsync
+E 024 sceErxSelfStopUnloadModule
+E 025 sceErxSelfStopUnloadLoadStartModuleFile
+E 028 sceErxSync

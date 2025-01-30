@@ -1,0 +1,18 @@
+#EE-ILB# [PsIImalloc  3000]
+L LibcMalloc
+V 0x0101
+F 0x0000
+E 004 malloc
+E 006 free
+E 008 realloc
+E 010 calloc
+E 012 memalign
+E 014 mallinfo
+E 016 malloc_stats
+E 018 mallopt
+E 020 malloc_usable_size
+E 022 valloc
+E 024 pvalloc
+E 026 malloc_trim
+E 028 mstats
+E 030 cfree

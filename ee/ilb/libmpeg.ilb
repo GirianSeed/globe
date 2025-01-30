@@ -1,0 +1,22 @@
+#EE-ILB# [PsIIlibmpeg 3000]
+L libmpeg
+V 0x0102
+F 0x0000
+E 004 sceMpegAddBs
+E 005 sceMpegAddCallback
+E 006 sceMpegAddStrCallback
+E 007 sceMpegCreate
+E 008 sceMpegDelete
+E 009 sceMpegDemuxPss
+E 010 sceMpegDemuxPssRing
+E 011 sceMpegGetDecodeMode
+E 012 sceMpegGetPictureAbort
+E 013 sceMpegGetPicture
+E 014 sceMpegGetPictureRAW8
+E 015 sceMpegInit
+E 016 sceMpegIsEnd
+E 017 sceMpegIsRefBuffEmpty
+E 018 sceMpegReset
+E 019 sceMpegSetDecodeMode
+E 020 sceMpegSetBuffType
+E 021 sceMpegGetBuffType

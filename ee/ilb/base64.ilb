@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIbase64  3020]
+L base64
+V 0x0101
+F 0x0000
+E 004 sceBASE64Encoder
+E 005 sceBASE64LineDecoder

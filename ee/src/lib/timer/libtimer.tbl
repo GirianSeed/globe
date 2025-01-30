@@ -1,0 +1,68 @@
+Libname timer	_sceTimer_entry
+Version 1.1
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry/8	-
+
+Entry	sceTimerInit
+Entry	sceTimerEnd
+Entry	-
+Entry	-
+
+Entry	sceTimerGetPreScaleFactor
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceTimerUSec2BusClock
+Entry	sceTimerBusClock2USec
+Entry	sceTimerFreq2BusClock
+Entry	sceTimerBusClock2Freq
+
+Entry	sceTimerStartSystemTime
+Entry	sceTimerStopSystemTime
+Entry	sceTimerGetSystemTime
+Entry	isceTimerGetSystemTime
+
+Entry	sceTimerAllocCounter
+Entry	isceTimerAllocCounter
+Entry	sceTimerFreeCounter
+Entry	isceTimerFreeCounter
+Entry	sceTimerGetUsedUnusedCounters
+Entry	isceTimerGetUsedUnusedCounters
+Entry	-
+Entry	-
+
+Entry	sceTimerStartCounter
+Entry	isceTimerStartCounter
+Entry	sceTimerStopCounter
+Entry	isceTimerStopCounter
+Entry	sceTimerGetCount
+Entry	isceTimerGetCount
+Entry	sceTimerSetCount
+Entry	-
+Entry	sceTimerGetBaseTime
+Entry	isceTimerGetBaseTime
+Entry	sceTimerSetHandler
+Entry	isceTimerSetHandler
+
+Entry	sceTimerSetAlarm
+Entry	isceTimerSetAlarm
+Entry	sceTimerReleaseAlarm
+Entry	isceTimerReleaseAlarm
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceTimerDelayThread
+Entry	-
+Entry	-
+Entry	-
+
+

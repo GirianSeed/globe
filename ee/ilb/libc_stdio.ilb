@@ -1,0 +1,28 @@
+#EE-ILB# [PsIIstdio   3000]
+L LibcStdio
+V 0x0101
+F 0x0000
+E 009 fclose
+E 010 fflush
+E 014 fprintf
+E 016 printf
+E 018 sscanf
+E 019 vfprintf
+E 020 vprintf
+E 021 vsprintf
+E 022 vsnprintf
+E 025 fputc
+E 026 fputs
+E 031 putchar
+E 032 puts
+E 034 fread
+E 035 fwrite
+E 037 fseek
+E 044 perror
+E 045 fopen
+E 046 sprintf
+E 047 snprintf
+E 083 __srget
+E 086 __sceErxGetStdin
+E 087 __sceErxGetStdout
+E 088 __sceErxGetStderr

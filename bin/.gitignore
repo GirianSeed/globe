@@ -1,0 +1,4 @@
+# -*- mode: gitignore; -*-
+*
+!.gitignore
+!iop-path-setup

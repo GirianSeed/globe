@@ -1,0 +1,7 @@
+#EE-ILB# [PsIIent_dump3000]
+L ent_dump
+V 0x0101
+F 0x0000
+E 005 sceEENetTcpdump
+E 006 sceEENetTcpdump2
+E 007 sceEENetTcpdumpTerm

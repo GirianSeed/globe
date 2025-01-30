@@ -1,0 +1,19 @@
+#EE-ILB# [PsIIlibmcx  3000]
+L libmcx
+V 0x0101
+F 0x0000
+E 004 sceMcxInit
+E 005 sceMcxGetInfo
+E 006 sceMcxSetInfo
+E 007 sceMcxGetMem
+E 008 sceMcxSetMem
+E 009 sceMcxShowTrans
+E 010 sceMcxHideTrans
+E 011 sceMcxReadDev
+E 012 sceMcxWriteDev
+E 013 sceMcxGetUifs
+E 014 sceMcxSetUifs
+E 015 sceMcxSetLed
+E 016 sceMcxChangeThreadPriority
+E 017 sceMcxSync
+E 018 sceMcxEnd

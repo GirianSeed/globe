@@ -1,0 +1,9 @@
+Libname netifmc2  _sceNetifmc2_entry
+Version 1.1
+Entry/8 -
+Entry/8 -
+Entry/8 -
+Entry/8 -
+Entry	sceNetcnfifCreateMc2Thread
+Entry	sceNetcnfifDeleteMc2Thread
+

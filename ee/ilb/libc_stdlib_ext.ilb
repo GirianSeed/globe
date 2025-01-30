@@ -1,0 +1,15 @@
+#EE-ILB# [PsIIstdlibex3000]
+L LibcStdlibExt
+V 0x0101
+F 0x0000
+E 008 atoff
+E 038 strtodf
+E 046 gcvt
+E 047 gcvtf
+E 048 fcvt
+E 049 fcvtf
+E 050 ecvt
+E 051 ecvtbuf
+E 052 fcvtbuf
+E 053 ecvtf
+E 055 rand_r

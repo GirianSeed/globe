@@ -1,0 +1,35 @@
+#EE-ILB# [PsIIlibgraph3000]
+L libgraph
+V 0x0101
+F 0x0000
+E 004 sceGsResetGraph
+E 005 sceGsGetGParam
+E 006 sceGsResetPath
+E 007 sceGsSetDefDispEnv
+E 008 sceGsPutDispEnv
+E 009 sceGsSetDefDrawEnv
+E 010 sceGsPutDrawEnv
+E 011 sceGsSetDefDBuff
+E 012 sceGsSwapDBuff
+E 013 sceGsSyncV
+E 014 sceGsSyncPath
+E 015 sceGsSetDefTexEnv
+E 016 sceGsSetDefAlphaEnv
+E 017 sceGsSetDefClear
+E 018 sceGsSetDefLoadImage
+E 019 sceGsSetDefStoreImage
+E 020 sceGsExecLoadImage
+E 021 sceGsExecStoreImage
+E 022 sceGsSyncVCallback
+E 023 sceGsPutIMR
+E 024 sceGsGetIMR
+E 025 isceGsPutIMR
+E 026 isceGsGetIMR
+E 027 sceGsSetHalfOffset
+E 028 sceGsSetDefDrawEnv2
+E 029 sceGsSetDefClear2
+E 030 sceGsSetDefTexEnv2
+E 031 sceGsSetDefAlphaEnv2
+E 032 sceGsSetHalfOffset2
+E 033 sceGsSetDefDBuffDc
+E 034 sceGsSwapDBuffDc

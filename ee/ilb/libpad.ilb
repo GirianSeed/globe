@@ -1,0 +1,24 @@
+#EE-ILB# [PsIIlibpad  3000]
+L libpad
+V 0x0101
+F 0x0000
+E 004 scePadInit
+E 005 scePadPortOpen
+E 006 scePadRead
+E 007 scePadInfoAct
+E 008 scePadInfoComb
+E 009 scePadInfoMode
+E 010 scePadSetActDirect
+E 011 scePadSetActAlign
+E 012 scePadGetState
+E 013 scePadGetReqState
+E 014 scePadSetMainMode
+E 015 scePadInfoPressMode
+E 016 scePadEnterPressMode
+E 017 scePadExitPressMode
+E 018 scePadReqIntToStr
+E 019 scePadStateIntToStr
+E 020 scePadEnd
+E 021 scePadPortClose
+E 022 scePadGetSlotMax
+E 023 scePadSetWarningLevel

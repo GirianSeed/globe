@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIent_smap3000]
+L ent_smap
+V 0x0101
+F 0x0000
+E 005 sceEENetDeviceSMAPReg
+E 006 sceEENetDeviceSMAPUnreg

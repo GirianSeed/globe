@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIlibqp   3000]
+L libqp
+V 0x0101
+F 0x0000
+E 004 sceQPrintableEncoder
+E 005 sceQPrintableLineDecoder

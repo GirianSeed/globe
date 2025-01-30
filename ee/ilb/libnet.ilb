@@ -1,0 +1,36 @@
+#EE-ILB# [PsIIlibnet  3000]
+L libnet
+V 0x0101
+F 0x0000
+E 004 sceInetAbort
+E 005 sceInetAbortLog
+E 006 sceInetAddress2Name
+E 007 sceInetAddress2String
+E 008 sceInetChangeThreadPriority
+E 009 sceInetClose
+E 010 sceInetControl
+E 011 sceInetCreate
+E 012 sceInetCtlDownInterface
+E 013 sceInetCtlGetState
+E 014 sceInetCtlSetAutoMode
+E 015 sceInetCtlUpInterface
+E 016 sceInetGetInterfaceList
+E 017 sceInetGetLog
+E 018 sceInetGetNameServers
+E 019 sceInetGetRoutingTable
+E 020 sceInetInterfaceControl
+E 021 sceInetName2Address
+E 022 sceInetOpen
+E 023 sceInetPoll
+E 024 sceInetRecv
+E 025 sceInetRecvFrom
+E 026 sceInetSend
+E 027 sceInetSendTo
+E 028 sceLibnetInitialize
+E 029 sceLibnetRegisterHandler
+E 030 sceLibnetSetConfiguration
+E 031 sceLibnetTerminate
+E 032 sceLibnetUnregisterHandler
+E 033 sceLibnetWaitGetAddress
+E 034 sceLibnetWaitGetInterfaceEvent
+E 035 sceLibnetWaitGetInterfaceID

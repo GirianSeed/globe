@@ -1,0 +1,35 @@
+#EE-ILB# [PsIIlibatok 3000]
+L libatok
+V 0x0104
+F 0x0000
+E 004 sceAtokInit
+E 005 sceAtokReset
+E 006 sceAtokExit
+E 007 sceAtokGetConfig
+E 008 sceAtokSetConfig
+E 009 sceAtokEditConv
+E 010 sceAtokKanjiOff
+E 011 sceAtokKanjiOn
+E 012 sceAtokUndoClear
+E 013 sceAtokConvAll
+E 014 sceAtokGetKanjiState
+E 015 sceAtokGetInputState
+E 016 sceAtokGetFocusClauseTop
+E 017 sceAtokGetFocusClauseLen
+E 018 sceAtokGetFocusClauseIndex
+E 019 sceAtokGetCurrentCandidateIndex
+E 020 sceAtokGetCandidateCount
+E 021 sceAtokGetCandidateListSize
+E 022 sceAtokGetCandidateList
+E 023 sceAtokFlushConverted
+E 024 sceAtokGetConvertedStr
+E 025 sceAtokGetConvertedReadStr
+E 026 sceAtokGetConvertingStr
+E 027 sceAtokGetConvertingReadStr
+E 028 sceAtokGetConvertingClauseCount
+E 029 sceAtokGetConvertingClause
+E 030 sceAtokFlushDic
+E 031 sceAtokDicRegWord
+E 032 sceAtokDicExpand
+E 033 sceAtokDicRegWordAndExpand
+E 034 sceAtokDicDelWord

@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIlibvib  3000]
+L libvib
+V 0x0101
+F 0x0000
+E 004 sceVibGetProfile
+E 005 sceVibSetActParam

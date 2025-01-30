@@ -1,0 +1,6 @@
+#EE-ILB# [PsIInetifmc23000]
+L netifmc2
+V 0x0101
+F 0x0000
+E 004 sceNetcnfifCreateMc2Thread
+E 005 sceNetcnfifDeleteMc2Thread

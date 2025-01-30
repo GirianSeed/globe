@@ -1,0 +1,36 @@
+#EE-ILB# [PsIIdouble_e3000]
+L LibmDoubleExt
+V 0x0101
+F 0x0000
+E 017 cosh
+E 018 sinh
+E 026 infinity
+E 027 nan
+E 028 isnan
+E 029 isinf
+E 030 finite
+E 031 copysign
+E 032 ilogb
+E 033 asinh
+E 034 cbrt
+E 035 nextafter
+E 036 rint
+E 037 scalbn
+E 038 log1p
+E 039 expm1
+E 040 acosh
+E 041 atanh
+E 042 remainder
+E 043 gamma
+E 045 lgamma
+E 047 erf
+E 048 erfc
+E 049 y0
+E 050 y1
+E 051 yn
+E 052 j0
+E 053 j1
+E 054 jn
+E 055 hypot
+E 056 cabs
+E 057 drem

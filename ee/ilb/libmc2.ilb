@@ -1,0 +1,39 @@
+#EE-ILB# [PsIIlibmc2  3000]
+L libmc2
+V 0x0101
+F 0x0000
+E 004 sceMc2Init
+E 005 sceMc2End
+E 006 sceMc2CreateSocket
+E 007 sceMc2DeleteSocket
+E 008 sceMc2GetInfoAsync
+E 009 sceMc2FormatAsync
+E 010 sceMc2UnformatAsync
+E 011 sceMc2ReadFileAsync
+E 012 sceMc2WriteFileAsync
+E 013 sceMc2CreateFileAsync
+E 014 sceMc2DeleteAsync
+E 015 sceMc2RenameAsync
+E 016 sceMc2MkdirAsync
+E 017 sceMc2ChdirAsync
+E 018 sceMc2GetDirAsync
+E 019 sceMc2ChmodAsync
+E 020 sceMc2SearchFileAsync
+E 021 sceMc2GetEntSpaceAsync
+E 022 sceMc2CheckAsync
+E 023 sceMc2Sync
+E 024 sceMc2GetInfo
+E 025 sceMc2Format
+E 026 sceMc2Unformat
+E 027 sceMc2ReadFile
+E 028 sceMc2WriteFile
+E 029 sceMc2CreateFile
+E 030 sceMc2Delete
+E 031 sceMc2Rename
+E 032 sceMc2Mkdir
+E 033 sceMc2Chdir
+E 034 sceMc2GetDir
+E 035 sceMc2Chmod
+E 036 sceMc2SearchFile
+E 037 sceMc2GetEntSpace
+E 038 sceMc2SearchSocket

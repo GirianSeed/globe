@@ -1,0 +1,49 @@
+#EE-ILB# [PsIIlibinsck3000]
+L insock
+V 0x0101
+F 0x0000
+E 004 __sceInsockErrnoLoc
+E 005 __sceInsockHErrnoLoc
+E 006 sceInsockAbort
+E 007 sceInsockAbortGethostbyaddr
+E 008 sceInsockAbortGethostbyname
+E 009 sceInsockAccept
+E 010 sceInsockBind
+E 011 sceInsockConnect
+E 012 sceInsockGethostbyaddr
+E 013 sceInsockGethostbyname
+E 014 sceInsockGetpeername
+E 015 sceInsockGetsockname
+E 016 sceInsockGetsockopt
+E 017 sceInsockHtonl
+E 018 sceInsockHtons
+E 019 sceInsockInetAddr
+E 020 sceInsockInetAton
+E 021 sceInsockInetLnaof
+E 022 sceInsockInetMakeaddr
+E 023 sceInsockInetNetof
+E 024 sceInsockInetNetwork
+E 025 sceInsockInetNtoa
+E 026 sceInsockInetNtop
+E 027 sceInsockInitMemory
+E 028 sceInsockListen
+E 029 sceInsockNtohl
+E 030 sceInsockNtohs
+E 031 sceInsockPoll
+E 032 sceInsockRecv
+E 033 sceInsockRecvfrom
+E 034 sceInsockSend
+E 035 sceInsockSendFin
+E 036 sceInsockSendto
+E 037 sceInsockSetFreeFunction
+E 038 sceInsockSetMallocFunction
+E 039 sceInsockSetRecvTimeout
+E 040 sceInsockSetSendTimeout
+E 041 sceInsockSetShutdownTimeout
+E 042 sceInsockSetSifMBindRpcValue
+E 043 sceInsockSetsockopt
+E 044 sceInsockShutdown
+E 045 sceInsockSocket
+E 046 sceInsockTerminate
+E 047 sceInsockGetErrnoMode
+E 048 sceInsockSetErrnoMode

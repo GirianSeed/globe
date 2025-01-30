@@ -1,0 +1,37 @@
+#EE-ILB# [PsIIlibtimer3000]
+L timer
+V 0x0101
+F 0x0000
+E 004 sceTimerInit
+E 005 sceTimerEnd
+E 008 sceTimerGetPreScaleFactor
+E 016 sceTimerUSec2BusClock
+E 017 sceTimerBusClock2USec
+E 018 sceTimerFreq2BusClock
+E 019 sceTimerBusClock2Freq
+E 020 sceTimerStartSystemTime
+E 021 sceTimerStopSystemTime
+E 022 sceTimerGetSystemTime
+E 023 isceTimerGetSystemTime
+E 024 sceTimerAllocCounter
+E 025 isceTimerAllocCounter
+E 026 sceTimerFreeCounter
+E 027 isceTimerFreeCounter
+E 028 sceTimerGetUsedUnusedCounters
+E 029 isceTimerGetUsedUnusedCounters
+E 032 sceTimerStartCounter
+E 033 isceTimerStartCounter
+E 034 sceTimerStopCounter
+E 035 isceTimerStopCounter
+E 036 sceTimerGetCount
+E 037 isceTimerGetCount
+E 038 sceTimerSetCount
+E 040 sceTimerGetBaseTime
+E 041 isceTimerGetBaseTime
+E 042 sceTimerSetHandler
+E 043 isceTimerSetHandler
+E 044 sceTimerSetAlarm
+E 045 isceTimerSetAlarm
+E 046 sceTimerReleaseAlarm
+E 047 isceTimerReleaseAlarm
+E 052 sceTimerDelayThread

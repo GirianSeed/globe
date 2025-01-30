@@ -1,0 +1,34 @@
+#EE-ILB# [PsIInetcnfif3000]
+L netcnfif
+V 0x0101
+F 0x0000
+E 004 sceNetcnfifAddEntry
+E 005 sceNetcnfifAllocWorkarea
+E 006 sceNetcnfifCheck
+E 007 sceNetcnfifCheckAdditionalAT
+E 008 sceNetcnfifCheckCapacity
+E 009 sceNetcnfifCheckSpecialProvider
+E 010 sceNetcnfifConvAuthname
+E 011 sceNetcnfifCreateCallbackThread
+E 012 sceNetcnfifDataDump
+E 013 sceNetcnfifDataInit
+E 014 sceNetcnfifDeleteAll
+E 015 sceNetcnfifDeleteCallbackThread
+E 016 sceNetcnfifDeleteEntry
+E 017 sceNetcnfifDmaCheck
+E 018 sceNetcnfifEditEntry
+E 019 sceNetcnfifFreeWorkarea
+E 020 sceNetcnfifGetAddr
+E 021 sceNetcnfifGetCount
+E 022 sceNetcnfifGetList
+E 023 sceNetcnfifGetResult
+E 024 sceNetcnfifInit
+E 025 sceNetcnfifLoadEntry
+E 026 sceNetcnfifLoadEntryAuto
+E 027 sceNetcnfifSendIOP
+E 028 sceNetcnfifSetEnv
+E 029 sceNetcnfifSetFNoDecode
+E 030 sceNetcnfifSetLatestEntry
+E 031 sceNetcnfifSetup
+E 032 sceNetcnfifSync
+E 033 sceNetcnfifTerm

@@ -1,0 +1,25 @@
+#			Copyright (C) 2001 Sony Computer Entertainment
+#			All Right Reserved
+#
+#
+
+VER	= $(shell cat $(TOPDIR)VERSION)
+
+NAME	= netglue_libeenet-$(VER)
+DSTDIR	= $(TOPDIR)dist/$(NAME)
+
+TOP = ../../../..
+#TOP = /usr/local/sce/ee
+EE_INCDIR	= $(TOP)/include
+
+INCDIRS	= -I$(TOPDIR)common -I$(EE_INCDIR)
+CFLAGS	= -O2 -Wall -Wa,-al -fno-common -fno-strict-aliasing $(INCDIRS)
+#CFLAGS	= -g -Wall -fno-common $(INCDIRS)
+ASFLAGS	= -c -xassembler-with-cpp
+
+AS	= ee-gcc
+CC	= ee-gcc
+AR	= ee-ar
+RANLIB	= ee-ranlib
+
+.PHONY:	all clean dist taz bin binpkg

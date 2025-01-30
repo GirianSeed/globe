@@ -1,0 +1,48 @@
+#
+# $Id: iopspecs-2,v 1.9 2003/01/23 06:28:52 tei Exp $
+#
+# iopspecs for iop-gcc 2.x.x (based gcc 3.0.x)
+#
+# This file copy to
+#    $distdir/lib/gcc-lib/mipsel-scei-elfl/specs
+#   and
+#    $distdir/lib/gcc-lib/mipsel-scei-ecoffl/specs
+#
+# Supprt options
+#    -irx1
+#    -rb/-relative-branch
+#    -mno-split-addresses
+#    -startfiles		use crt0.o
+#    no -Ttext option		genarate IOP relocatable object
+#    -ilb=<IOPlib>		IOP external module lib
+#    -Map=<MapFileName>		link map output
+#
+#    -Ttext <addr>		genarate IOP fixed addrss object (no support)
+#
+#
+*subtarget_cpp_spec:
+%{<ilb=*} %{<irx1}
+
+*link_command:
+%{!fsyntax-only:\
+  %{!c:%{!M:%{!MM:%{!E:%{!S:\
+ 	ioplibld %{t:-v} %{zd:-d} %{zi:--ignore-undef} -s %g.ilb.stub.s \
+			%{!A:%{!nostdlib:%{startfiles:%S}}} \
+			%{static:} %{L*} %D %o \
+			%{!nostdlib:%{!nodefaultlibs:%G}} \
+			%{!A:%{!nostdlib:%{startfiles:%E}}} \
+			: %{>ilb=*} %{ilb=*:%*} %{>irx1} \
+			%{!noiopilb:%{!nostdlib:%{!nodefaultlibs:iop.ilb%s}}}
+	as %g.ilb.stub.s -o %g.ilb.stub.o
+	ld %l %{Map=*:-Map %*} -dc -r %X -o %g.iop.rel.o %{t} %{u*} %{x} \
+			%{!A:%{!nostdlib:%{startfiles:%S}}} \
+			%{static:} %{L*} %D %o %g.ilb.stub.o \
+			%{!nostdlib:%{!nodefaultlibs:%G}} \
+			%{!A:%{!nostdlib:%{startfiles:%E}}
+	iopfixup %{!Ttext*:%{e*} %{s:%{o*}} %{!s:%{o*:-r %*}}} \
+		 %{rb:--relative-branch} \
+		 %{relative-branch:--relative-branch}  \
+		 %{Ttext*:%{e*} %{o*:-f %*} -t %*} \
+		 %{irx1:--irx1} %{mno-split-addresses:--irx1} %g.iop.rel.o}
+ }}}}}}
+

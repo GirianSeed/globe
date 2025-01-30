@@ -1,0 +1,14 @@
+#EE-ILB# [PsIIlibscf  3000]
+L libscf
+V 0x0101
+F 0x0000
+E 004 sceScfGetAspect
+E 005 sceScfGetDateNotation
+E 006 sceScfGetGMTfromRTC
+E 007 sceScfGetLanguage
+E 008 sceScfGetLocalTimefromRTC
+E 009 sceScfGetSpdif
+E 010 sceScfGetSummerTime
+E 011 sceScfGetTimeNotation
+E 012 sceScfGetTimeZone
+E 013 sceScfSetT10kConfig

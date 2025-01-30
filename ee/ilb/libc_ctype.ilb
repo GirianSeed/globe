@@ -1,0 +1,18 @@
+#EE-ILB# [PsIIctyp    3000]
+L LibcCtype
+V 0x0101
+F 0x0000
+E 004 isalnum
+E 005 isalpha
+E 006 iscntrl
+E 007 isdigit
+E 008 isgraph
+E 009 islower
+E 010 isprint
+E 011 ispunct
+E 012 isspace
+E 013 isupper
+E 014 isxdigit
+E 015 tolower
+E 016 toupper
+E 021 __sceErxGetCtype

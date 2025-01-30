@@ -1,0 +1,85 @@
+
+SHELL       = /bin/sh
+
+TOP         = ../../../..
+INCDIR      = -I$(TOP)/ee/include -I$(TOP)/common/include
+LIBDIR      = $(TOP)/ee/lib
+ILBDIR      = $(TOP)/ee/ilb
+ERXDIR      = $(TOP)/ee/modules
+
+TARGET      = netcnfif
+OBJS        = $(TARGET).o \
+              callback.o \
+              convauth.o \
+              dma.o \
+              netcnfif_data.o \
+              rpc.o
+
+LIB_OBJS    = $(OBJS) $(TARGET)_entry.o erxexport.o
+ERX_OBJS    = $(OBJS) $(TARGET)_entry.o modname.o
+
+ILIBS       = $(ILBDIR)/libkernl.ilb \
+              $(ILBDIR)/libc_string.ilb \
+              $(ILBDIR)/libc_malloc.ilb \
+
+PREFIX      = ee
+AS          = $(PREFIX)-gcc
+CC          = $(PREFIX)-gcc
+AR          = $(PREFIX)-ar
+RANLIB      = $(PREFIX)-ranlib
+DVPASM      = $(PREFIX)-dvp-as
+RM          = /bin/rm -f
+
+LD          = erx-gcc
+LIBGEN      = $(PREFIX)libgen
+LIBLD       = $(PREFIX)libld
+FIXUP       = $(PREFIX)fixup
+
+CFLAGS      = -c -W -Wall -Werror -Wa,-al -fno-common -O2 -G0 
+LDFLAGS     = -Wl,-Map,$(TARGET).map,--check-sections,--stats,--warn-common,--warn-constructors,--warn-multiple-gp,--warn-section-align,--cref -mno-crt0
+
+ASFLAGS     = -c -xassembler-with-cpp -Wa,-al 
+DVPASMFLAGS = -g 
+
+.SUFFIXES: .c .s .cc .dsm
+
+all: $(TARGET).a $(TARGET).erx $(TARGET).ilb
+
+$(TARGET).a: $(LIB_OBJS)
+	$(RM) $@
+	$(AR) r $@ $(LIB_OBJS)
+	$(RANLIB) $@
+
+$(TARGET)_entry.s: $(TARGET).tbl
+	$(LIBGEN) -e $@ $<
+
+$(TARGET).ilb: $(TARGET).tbl
+	$(LIBGEN) -c "PsIInetcnfif...." -d $@ $<
+
+stub.s: $(ERX_OBJS) $(ILBS)
+	$(LD) $(LDFLAGS) -makestub -o $@ $(ERX_OBJS) $(ILIBS:%=-ilb=%)
+
+$(TARGET).erx: stub.s $(ERX_OBJS)
+	$(LD) $(LDFLAGS) -o $(@:.erx=.sym) stub.s $(ERX_OBJS) $(ILIBS:%=-ilb=%)
+	$(FIXUP) -o $(TARGET).erx $(@:.erx=.sym)
+
+.s.o:
+	$(AS) $(ASFLAGS) $(INCDIR) -o $@ $< > $*.lst
+
+.c.o:
+	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $*.o > $*.lst
+
+.dsm.o:
+	$(DVPASM) $(DVPASMFLAGS) $(INCDIR) -o $@ $< > $*.lst
+
+clean:
+	$(RM) *.o *.lst core *.map
+	$(RM) $(TARGET).elf $(TARGET).a $(TARGET).erx $(TARGET).ilb $(TARGET).sym
+	$(RM) $(TARGET)_entry.s stub.s
+
+install: all
+	cp $(TARGET).a $(LIBDIR)
+	cp $(TARGET).ilb $(ILBDIR)
+	cp $(TARGET).erx $(ERXDIR)
+	cp $(TARGET).sym $(ERXDIR)
+

@@ -1,0 +1,22 @@
+#EE-ILB# [PsIIlibsein 3000]
+L libsein
+V 0x0101
+F 0x0000
+E 004 sceSEIn_Init
+E 005 sceSEIn_ATick
+E 006 sceSEIn_Load
+E 007 sceSEIn_PutSEMsg
+E 008 sceSEIn_PutMsg
+E 009 sceSEIn_PutSEMsg
+E 010 sceSEIn_MakeNoteOn
+E 011 sceSEIn_MakePitchOn
+E 012 sceSEIn_MakeTimeVolume
+E 013 sceSEIn_MakeTimePanpot
+E 014 sceSEIn_MakeTimePitch
+E 015 sceSEIn_MakePitchLFO
+E 016 sceSEIn_MakeAmpLFO
+E 017 sceSEIn_MakeAllNoteOff
+E 018 sceSEIn_MakeAllNoteOffMask
+E 019 sceSEIn_MakeNoteOnZero
+E 020 sceSEIn_MakePitchOnZero
+E 021 sceSEIn_MakeTimeLfoCycle

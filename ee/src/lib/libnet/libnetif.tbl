@@ -1,0 +1,8 @@
+Libname	libnetif	_sceLibnetif_entry
+Version 1.1
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry	load_set_conf_extra
+

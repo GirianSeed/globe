@@ -1,0 +1,24 @@
+#EE-ILB# [PsIIfloat   3000]
+L LibmFloat
+V 0x0101
+F 0x0000
+E 004 atanf
+E 005 cosf
+E 006 sinf
+E 007 tanf
+E 008 tanhf
+E 009 frexpf
+E 010 modff
+E 011 ceilf
+E 012 fabsf
+E 013 floorf
+E 014 acosf
+E 015 asinf
+E 016 atan2f
+E 019 expf
+E 020 ldexpf
+E 022 log10f
+E 023 powf
+E 024 sqrtf
+E 025 fmodf
+E 038 log1pf

@@ -1,0 +1,176 @@
+; flowMon::Emit() vcl 1.28 produced this code:
+		.align 4
+		.global	vu0CheckSegments_CodeStart
+		.global	vu0CheckSegments_CodeEnd
+vu0CheckSegments_CodeStart:
+__vcl__MMvu0coll_vcl_3:
+; [0,12) size=12 nU=5 nL=12 ic=17 [lin=12 lp=0]
+              sub.yzw         VF29,VF00,VF00                                loi             3.40282347e+38                  
+              addi.x          VF29,VF00,I                                   rinit           R,VF00x                         
+              sub             VF05,VF00,VF00                                iaddiu          VI15,VI00,0                     
+              sub.w           VF30,VF00,VF00                                iaddiu          VI04,VI00,0x88                  
+              sub.zw          VF31,VF00,VF00                                iaddiu          VI03,VI00,0x80                  
+              nop                                                           iaddiu          VI02,VI00,1                     
+              nop                                                           rget.x          VF06,R                          
+              nop                                                           sq.xyz          VF04,0+3(VI00)                  
+              nop                                                           sq.xyz          VF03,0+2(VI00)                  
+              nop                                                           sq.xyz          VF02,0+1(VI00)                  
+              nop                                                           sq.xyz          VF01,0+0(VI00)                  
+              nop                                                           iadd            VI05,VI00,VI00                  
+k_loop:
+; [0,5) size=5 nU=1 nL=2 ic=3 [lin=5 lp=0]
+              nop                                                           lq.xyz          VF01,0(VI05)                    
+              nop                                                           iaddiu          VI06,VI05,1                     
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xyz         VF02,VF00,VF01                                nop                                             
+l_loop:
+; [0,33) size=33 nU=9 nL=7 ic=16 [lin=32 lp=0]
+              add.x           VF03,VF00,VF00                                lq.xyz          VF30,0(VI06)                    
+              nop                                                           mfir.y          VF31,VI05                       
+              nop                                                           mfir.x          VF31,VI02                       
+              nop                                                           move.xyz        VF08,VF01                       
+              sub.xyz         VF04,VF30,VF01                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF07,VF04,VF04                                nop                                             
+              mul.xyz         VF09,VF02,VF04                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              adday.x         ACC,VF07,VF07y                                nop                                             
+              maddz.x         VF07,VF06,VF07z                               nop                                             
+              adday.x         ACC,VF09,VF09y                                nop                                             
+              maddz.x         VF09,VF06,VF09z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF09x,VF07x                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              addq.x          VF07,VF00,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fmand           VI07,VI04                       
+              nop                                                           ibne            VI07,VI00,t_end                 
+              nop                                                           nop                                             
+; [0,7) size=7 nU=2 nL=4 ic=6 [lin=8 lp=0]
+              sub.x           VF00,VF07,VF06                                mfir.y          VF31,VI06                       
+              addw.x          VF03,VF00,VF00w                               move.xyz        VF08,VF30                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fmand           VI07,VI03                       
+              nop                                                           ibeq            VI07,VI00,t_end                 
+              nop                                                           nop                                             
+; [0,7) size=7 nU=5 nL=4 ic=9 [lin=7 lp=0]
+              opmula.xyz      ACCxyz,VF01xyz,VF04xyz                        iaddiu          VI07,VI00,2                     
+              opmsub.xyz      VF30xyz,VF04xyz,VF01xyz                       mfir.y          VF31,VI05                       
+              add.x           VF03,VF00,VF07                                mfir.x          VF31,VI07                       
+              nop                                                           mfir.z          VF31,VI06                       
+              nop                                                           nop                                             
+              opmula.xyz      ACCxyz,VF04xyz,VF30xyz                        nop                                             
+              opmsub.xyz      VF08xyz,VF30xyz,VF04xyz                       nop                                             
+t_end:
+; [0,10) size=10 nU=3 nL=3 ic=6 [lin=10 lp=0]
+              nop                                                           lq.xyz          VF30,0(VI00)                    
+              nop                                                           iaddiu          VI07,VI00,1                     
+              nop                                                           iadd            VI08,VI00,VI00                  
+              nop                                                           nop                                             
+              mul.xyz         VF30,VF08,VF30                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              adday.x         ACC,VF30,VF30y                                nop                                             
+              maddz.x         VF07,VF06,VF30z                               nop                                             
+m_loop:
+; [0,20) size=20 nU=4 nL=3 ic=7 [lin=21 lp=0]
+              nop                                                           lq.xyz          VF30,0(VI07)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF30,VF08,VF30                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              adday.x         ACC,VF30,VF30y                                nop                                             
+              maddz.x         VF30,VF06,VF30z                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.x           VF00,VF07,VF30                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fmand           VI09,VI04                       
+              nop                                                           ibne            VI09,VI00,inc_m                 
+              nop                                                           nop                                             
+; [0,2) size=2 nU=0 nL=2 ic=2 [lin=2 lp=0]
+              nop                                                           move.x          VF07,VF30                       
+              nop                                                           iadd            VI08,VI07,VI00                  
+inc_m:
+; [0,4) size=4 nU=0 nL=2 ic=2 [lin=4 lp=0]
+              nop                                                           iaddiu          VI07,VI07,1                     
+              nop                                                           nop                                             
+              nop                                                           ibne            VI07,VI01,m_loop                
+              nop                                                           nop                                             
+; [0,14) size=14 nU=6 nL=2 ic=8 [lin=14 lp=0]
+              mulx.xyz        VF30,VF04,VF03x                               nop                                             
+              add.x           VF00,VF00,VF07                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              add.xyz         VF30,VF01,VF30                                nop                                             
+              nop                                                           fmand           VI07,VI04                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mul.xyz         VF07,VF30,VF30                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              adday.x         ACC,VF07,VF07y                                ibne            VI07,VI00,NextPointSegment      
+              maddz.x         VF08,VF06,VF07z                               nop                                             
+; [0,2) size=2 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           ibeq            VI08,VI05,exitP                 
+              nop                                                           nop                                             
+; [0,2) size=2 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           ibeq            VI08,VI06,exitP                 
+              nop                                                           nop                                             
+; [0,7) size=7 nU=1 nL=2 ic=3 [lin=8 lp=0]
+              sub.x           VF00,VF08,VF29                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fmand           VI07,VI03                       
+              nop                                                           ibeq            VI07,VI00,NextPointSegment      
+              nop                                                           nop                                             
+; [0,2) size=2 nU=2 nL=2 ic=4 [lin=2 lp=0]
+              add.x           VF29,VF08,VF00                                sq              VF31,8(VI00)                    
+              add             VF05,VF30,VF00                                iaddiu          VI15,VI00,2                     
+NextPointSegment:
+; [0,4) size=4 nU=0 nL=2 ic=2 [lin=4 lp=0]
+              nop                                                           iaddiu          VI06,VI06,1                     
+              nop                                                           nop                                             
+              nop                                                           ibne            VI06,VI01,l_loop                
+              nop                                                           nop                                             
+; [0,5) size=5 nU=0 nL=3 ic=3 [lin=5 lp=0]
+              nop                                                           iaddiu          VI05,VI05,1                     
+              nop                                                           iaddiu          VI06,VI05,1                     
+              nop                                                           nop                                             
+              nop                                                           ibne            VI06,VI01,k_loop                
+              nop                                                           nop                                             
+; [0,1) size=1 nU=1 nL=1 ic=2 [lin=1 lp=0]
+              add             VF30,VF05,VF00                                lq              VF31,8(VI00)                    
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+exitP:
+; [0,1) size=1 nU=1 nL=1 ic=2 [lin=1 lp=0]
+              add.x           VF29,VF08,VF00                                iaddiu          VI15,VI00,1                     
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+		.align 4
+vu0CheckSegments_CodeEnd:
+;	iCount=138

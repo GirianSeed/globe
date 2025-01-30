@@ -1,0 +1,1243 @@
+[SCE CONFIDENTIAL DOCUMENT]
+"PlayStation 2" Programmer Tool Runtime Library Release 2.5.3
+                  Copyright (C) 2001 Sony Computer Entertainment Inc.
+                                                     All Rights Reserved
+
+概要
+---------
+---------
+このマクロライブラリは頻繁に使用される関数 (vertex-rotation-translation-
+perspective(RTP) calculation、lighting calculation等)を組合せ、それらの
+関数を再利用してフレームワークサンプルやHiGライブラリ用にVu1のマイクロ
+コードを作成する機能を供給します。VCL (VU Command Line の略称）はマイクロ
+コードを最適化するために使用します。（VCLの拡張については、VCLドキュメントを
+参照して下さい。）
+
+インクルードファイル:
+--------------------
+マクロは別々のインクルードファイルに分配されます(*.i)。
+利用可能なインクルードファイルは以下のとおりです。
+
+utils.i ... utility macros
+math.i ...  mathematic macros (matrix*vector,transpose matrix, 
+	    inverse matrix etc.)
+fw.i ... basic macros (RTP,ST-calculation,BackFaceCulling etc.)
+fwLights.i ... macros used for lighting calculations 
+	       (directional/point/spot-light),emboss-bumpmapping, 
+	       reflection,refraction
+fwFog.i ... macros used for fogging
+fwAnti ... macros used for AA1-anti-aliasing
+
+HiG や framework 用に micro を構築するには
+-----------------------------------------------------
+
+HiG/framework-macro は基本的に四つの部分から構成されます。
+
+1. マイクロ命令ブロック:
+このブロックでの計算は、VU1の新しいダブルバッファリングの開始時にのみ
+呼び出されます。例: local_scree matrix、light_color のロード等
+
+2. バッファ初期化ブロック:
+入力データと出力データのためのポインタを設定します。
+
+3. GifTag初期化ブロック:
+すべてのGifTagを行なうのに必要な計算を行ないます。
+
+4. 頂点ごとの計算 (ループ):
+各頂点で必要な計算 例: 光源計算、FOG計算、aa1計算等
+
+2ループ以上が必要な場合、例えば 異なる GS プリミティブに対して"頂点
+ごとの" 計算が異なる場合 (ラインとポイントに対しては back-face-culling 
+なし、トライアングルに対しては back-face-culling あり)、GifTag 
+Init-Block を使って他のループに分岐します。.
+
+Vu1メモリマップ:
+---------------
+メモリマップに関する詳細については、フレームワークのドキュメントファイル 
+over_e.txt と over_j.txt を参照してください。
+
+Vu1-memには基本的に3つの異なる領域があります。
+
+Address 0 - 68 fixed area: for local_world matrix, world_screen matrix, 
+light_colors etc.
+
+Address 68 - 120 user area: can be used as a stack to store and (re)-load
+information.
+
+Address 120 - 1024 double buffer area: for input and output data
+
+一部のメモリアドレスは定数名に割り当てられています (fwLights.i参照):
+DIR_LIGHT_COLOR(0 - 2) address 40 - 42
+DIR_LIGHT_VECT(0 - 2) address 32 - 34
+POINT_LIGHT_COLOR(0 - 2) address 52 - 54
+POINT_LIGHT_POS(0 - 2) address 48 - 50
+SPOT_LIGHT_COLOR(0 - 2) address 64 - 66
+SPOT_LIGHT_POS(0 - 2) address 60 - 62
+SPOT_LIGHT_VECT(0 - 2) address 56  - 58
+AMBIENT_LIGHT_COLOR address 43
+MATERIAL_DIFFUSE   address 24
+MATERIAL_SPECULAR  address 25
+MATERIAL_EMISSION  address 26
+MATERIAL_AMBIENT   address 27
+
+これらの定数は"\&"プレフィックスの助けを借りてアドレス値の代わりに使用できます 
+(例: \&AMBIENT_LIGHT_COLOR は number 43 を表す)。
+
+入出力バッファ構造を表現するには、有用な定数が fw.i と fwAnti.i に定義されます。
+
+struct _sce_fwVertex:
+function: defines the input_buffer-structure per vertex
+_sce_vert_XYZ  .. vertex coordinate,value=0
+_sce_vert_nXYZ .. vertex-normal coordinate,value=1
+_sce_vert_ST   .. vertex-texture coordinate,value=2
+_sce_vert_RGBA .. vertex-color coordinate,value=3
+_sce_vert_sizeof .. number of quad_words per vertex,value=4
+
+struct _sce_prim:
+function: defines the output_buffer-structure per vertex
+_sce_prim_ST   .. vertex-texture coordinate,value=0
+_sce_prim_RGBA .. vertex-color coordinate,value=1
+_sce_prim_XYZF2 .. vertex xyz- and fog-value,value=2 
+_sce_prim_sizeof .. number of quad_words per vertex,value=3
+
+struct _sce_aa_prim 
+function: defines the output_buffer-structure per vertex for 
+	  aa1-anti-aliasing
+_sce_aprim_PRMOD .. PRMOD setting,value=0  
+_sce_aprim_ST   .. aa1_vertex-texture coordinate,value=1
+_sce_aprim_RGBA .. aa1_vertex-color coordinate,value=2
+_sce_aprim_XYZF2 .. aa1_vertex xyz- and fog-value,value=3 
+_sce_aprim_sizeof .. number of quad_words per aa1_vertex,value=4
+
+これらの構造の利用例として、頂点カラーを変数 _sce_vColor へロードし、
+_sce_in_p ポインタをインクリメントして次の頂点を指し示すというものが
+あります。
+
+lq 		_sce_vColor,_sce_vert_RGBA(_sce_in_p)
+iaddiu		_sce_in_p,_sce_in_p,_sce_vert_sizeof
+
+新しいマイクロコード作成の為のティップスと備考:
+----------------------------------------------
+----------------------------------------------
+1. 一部のパラメータ(例：light_color)が全計算を通して一定であっても、
+結果的により速いマイクロコードとなり、これらのパラメータを頂点ごとに
+ロードすることがあります。
+VCL は全実行を通してレジスタを一定にしておく必要はなく、そのため（ループを）
+最適化するのにさらに多くのレジスタを使用することができます。
+
+2. パラメータが頂点ループ内で一定であると想定される場合、ダブルバッファリング
+中に変わるパラメータを自由域に格納します(例: local_world matrix, 
+aa1-parameter等)。
+
+3. 新しく作成されたマイクロコードを、unoptimized (vcl -d オプション)、
+linear-optimized (vcl -L オプション)、loop-optimized の順でテストして
+ください。unoptimized version はデバッギングには容易で、linear-optimization 
+は既に最適化をうまく行なうことができます(linear optimization は 
+loop-optimization で改善できないことがあり、loop-optimization は失敗します)。
+
+4. SCE_PHONG/BLINN ライティング が使用された場合:  方向ライトとスポットライトの
+lightVectorをMicro-Initブロック中に自由域に格納し、vertex-loop にロード
+する必要があります。 これは lightVector がマクロ内で内部的に変更される
+ためです。 (fwLights.i と VCL-sample を参照して下さい。)
+
+5. 変数のプレフィックスとして _sce_ を使用しないでください。
+
+6. マクロ内で定義される変数を主なマイクロコードで使用するのは、時には
+役に立つこともあります。例として、他のcamera_vector(eye_vector)に依存する
+計算(例：PHONG Lighting)に対するfwAnti・fwAntiBFCマクロ内で計算された
+_sce_cameraDistと_sce_oneOverCdistの使用があります。これらの内部変数は
+よく注意して使用し、また期待値を含んでいることを確かめてください(マクロソース
+コードをチェックしてください)。
+
+7. マクロが互いに依存しているかどうかチェックしてください(サンプル参照)。
+例：正しいテクスチャST計算を実行するには、fwRTPマクロとfwSTマクロの間で
+Qレジスタを変えてはいけません。
+
+GS_primitiveとBFC
+-----------------------
+含まれているすべてのVCLサンプル(vu1combiS.vclを除く)は、すべてのGS
+プリミティブ(3dプリミティブ、 SPRITEサポートなし)をサポートしています。
+それを達成するため、2つのループが構成されています。ひとつは
+back-face-culling (BFC)テストが実行されるべきプリミティブ(triangle, 
+triangle_strip, triangle_fan)のためのループで、もうひとつは
+back-face-cullingテストを必要としないプリミティブ(point, line, line_strip)
+のためのループです。同じループ内のtriangle、triangle_strip、triangle_fan
+のためのBFCの作成（と供給されたBFCマクロの fw.iとfwAnti.iにおける使用）
+を可能にするには、変数 _sce_bfcSwitch、_sce_bfcMask、_sce_fanSwitchが
+プリミティブに従って設定されなければなりません。
+
+_sce_fanSwitch: fwInitTriangleTriangleStrip、fwInitFanを使用して 
+		この変数をtriangle/triangle_stripとfanに対して設定する。
+
+_sce_bfcSwitch/_sce_bfcMask: 設定   0/0		triangle
+			            0/0x20	triangle_strip
+			            0/0		triangle_fan
+	これらの値のGifTag-Init blockでの設定方法についてはサンプルを
+	参照してください。
+
+triangleとtriangle_stripしかサポートしないマイクロコードの作成例
+(vu1combiS.vclを参照)
+
+サポートしているライティング
+----------------------------
+現在、4つのシェーディングタイプ (SCE_VERTEXC, SCE_LAMBERT, SCE_PHONG, 
+SCE_BLINN) がサポートされています。
+
+シーンにおいて光源が一つの場合、カラー計算は以下のようになります。 
+
+SCE_VERTEXC: (global_light_ambient+A*Innerproduct(normal,light_direction))*
+	     vertex_color*light_color
+
+SCE_LAMBERT: global_light_ambient*material_ambient+
+	     A*Innerproduct(normal,light_direction))*diffuse_color*light_color
+
+SCE_PHONG/BLINN: global_light_ambient*material_ambient + 
+	   A*(Innerproduct(normal,light_direction))*diffuse_color*light_color+
+	     (Innerproduct(reflectionVect,eyeVect))^(material_shininess)*
+	     specular_color*light_color)+material_emission
+
+reflectionVect for SCE_PHONG: r = 2*Innerproduct(normal,light_dir)-light_dir 
+reflectionVect for SCE_BLINN: h = (light_dir+eye_vect)/norm(light_dir+eye_vect)
+
+A ... 減衰要素: spot-lightサンプル用Intensity*1/|r|と
+		point-lightサンプル用Intensity*1/|r|^2
+		rは頂点と光源の間の距離
+SCE_PHONG/BLINNの場合に(t)^(material_shininess)を計算するには、以下の近似が
+使用されます。
+	     t/(material_shininess-t*material_shininess+t)
+
+spot-lightの強度については以下が適用されます。
+ 
+        Intensity = (cos(p)^2 - a) * b ;
+             : cos(p) = (vertex-light_pos).light_dir / |vertex-light_pos| 
+	     |light_dir| = 1
+             aとbは(1 - a) * b = 1を満たす定数でなければなりません。  
+
+
+ライティングはいつも3のグループ(3方向のライト、3つのポイントライト、3つの
+スポットライト)で実行されます。ライティングの計算を結合したい場合は、周囲
+部分を複数回計算しないことを確認してください(SCE_VERTEXCだけに必要なので、
+マクロでは"SCE_NOAMBIENT"スイッチをご使用ください)。
+提供されているものと異なるカラークランプ関数を使用したい場合、
+fwCalculateColorSumマクロ内で"SCE_NOCLAMP"を使用し、このマクロを呼んだ後に
+自分のコードを1つを加えます。
+SCE_PHONGシェーディングに対する3つのdirectional-lightと3つのpoint-lightの
+結合方法の例としては、vu1combiS.vclを参照して下さい。
+
+リフレクション・リフラクションマッピング
+-------------------------------
+球面マッピングをサポートしています。
+1. リフレクション:
+   S,T 計算 (Texture indexing):
+   reflVect=2*InnerProduct(normal,eyeVect)-eyeVect
+   reflVect.x=reflVect.x*Zoom
+   reflVect.y=reflVect.y*Zoom
+   m=sqrt(reflVect.x^2+reflVect.y^2+(reflVect.z+zShift)
+   S= reflVect.x/(2*m)
+   T= reflVect.y/(2*m)
+
+2. リフラクション:
+   S,T 計算 (Texture indexing):
+   refrVect=-2*InnerProduct(refraction_index*normal,eyeVect)+eyeVect
+   refrVect.x=refrVect.x*Zoom
+   refrVect.y=refrVect.y*Zoom
+   m=sqrt(refrVect.x^2+refrVect.y^2+(refrVect.z+zShift)
+   S= refrVect.x/(2*m)
+   T= refrVect.y/(2*m)
+
+Zoom,zShift:
+   Zoom... このパラメータで reflection vector を短く・長くすることができ、
+　　　　　 拡大・縮小効果を与えます。
+   zShift...z 方向に reflective/refractive sphere をシフトします。
+           zShift は "静的" な reflection/refraction マッピングに固定され、	           +1 に設定されています。
+	   zShift を自由に設定して、リアルタイムでダイナミックな 
+	　 リフレクション・リフラクションマッピングを行うことができます。
+	   この場合、zShift=-1.0 で reflection/refraction vectors の問題
+           （spherical_texture が作成された半分の領域を示さない）を回避
+           します。
+
+　リフレクション・リフラクションマッピングにおいてリアルタイムのマッピングと
+　スタティックなマッピングとの違いは以下の通りです。
+  x, y, z 軸の異なる傾向を克服するマクロにおいていくつかの違いがあります。
+  例）スタティックな球面のテクスチャをデジタルカメラで作成する場合、
+　　　y vector は上の方を指しますが、現在の HiG の座標系では下の方を指します。
+  zShift は現時点では "静的"な場合に固定するよう検討しています。
+  これにより、パラメータの数が少なくなり、ユーザにとって使いやすいマイクロ
+　コードになります。
+  静的な場合の zShift は "1" で、動的な場合の "-1" へのリフレクションに対応
+　しています。
+  これは、リアルタイムでリフレクションマップを作成するとカメラはマイナスの
+　視野方向を指すという事実によるものです。
+ 
+  
+   	    
+スケーリングについての備考
+--------------------------
+殆どの頂点ごとの計算は ローカル座標系で行われます。
+local_world matrix が スケーリングマトリックスも含んでいる場合、
+light_position -vertex vector 等に関心があれば、スケーリングは
+各頂点で別々に行う必要があります。fwRTP を使用して回転/変換/透視計算を
+行う場合、スケーリングは自動的に行われます。スケーリングされていない
+頂点を再ロードしてスケーリングを二度行わないようにしなければならない
+ことがあります。(emboss samples を参照。) 
+
+
+サンプルについての備考
+----------------------
+*V.vcl .... vertex_color シェーディングサンプル
+*L.vcl .... lambert シェーディングサンプル
+*S.vcl .... phong シェーディングサンプル
+
+vu1basic*.vclを除いて、すべてのサンプルがBFCを使用します(BFCは通常
+screen_spaceで実行されるますが、vu1anti*.vclだけがworld_spaceで実行
+します)。
+vu1combiS.vcl以外のすべてのサンプルがすべての3d-GS-primitiveを
+サポートします。
+
+***************************************************************
+マクロ解説/パラメータ/注意/使用法 
+***************************************************************
+
+fw.i:
+*************************************
+
+macros:
+--------------
+--------------
+
+fwLocalScreen
+-------------
+解説: local_screen マトリックスを計算します。
+パラメータ : なし
+注意: _sce_local_world と _sce_world_screen マトリックスがロードされ
+      _sce_local_screen が計算されます。
+使用例:
+      fwLocalScreen
+
+fwRTP prim type 
+---------------
+解説: 頂点座標のRTP（回転、変換、透視）を計算します。
+パラメータ: prim ... 実際の_sce_out_p ポインタに対するRTP
+		    （回転、変換、透視）の後、vertex_positionの
+		     アドレスを格納します。
+
+
+	    type ... type="basic"の場合、頂点位置の xyzw コンポーネントが
+		     格納されます。これ以外はどんな場合でも xyz のみが
+		     書きこまれます。
+		     デフォルト値は "default" です(xyz のみ格納
+		     されます)。
+注意: back_face_culling が必要なければ、type="basic" を使用してください。
+      ADC ビットをいつも 0 に設定するには、ループの始まりで 
+      "sub.w	_sce_storeVer,vf00,vf00" を使用してください。
+      (vu1basic*.vcl VCL-samples を参照して下さい。)
+使用例:
+      fwRTP "_sce_prim_XYZF2"	
+
+fwST prim
+---------
+解説: テクスチャ座標 (perspective correction) を計算します。
+パラメータ: prim ... 実際の _sce_out_p ポインタに対するテクスチャ座標の
+		     アドレスを格納します。
+注意: Q レジスタは fwRTP 後も値を保持する必要があります。
+      fwRTP の直後にこのマクロを使用してください。.
+使用例:
+      fwST "_sce_prim_ST"
+
+fwInitClip 
+-----------
+解説: ボリュームクリッピング用のパラメータを初期化します。
+パラメータ: none
+注意: このマクロは micro-init 段階でのみ計算を要します(over_j.txt を参照) 
+      が、これを頂点ごとに呼び出すと VCL-code が速くなる可能性があります。
+使用例:
+      fwInitClip
+
+fwClip
+-------
+解説: 頂点がクリッピングボリューム外に存在して vi01 レジスタを設定 
+      (0 .. no clipping, 1 .. clipping) するかどうかをテストします。
+パラメータ: なし
+注意: fwBFC との組合せで使用しない場合、 
+      iaddiu	_sce_adcFlag,vi01,0x7fff を使って
+      adcFlag と fwWriteADC "_sce_prim_XYZF2" を設定し 
+      XYZF2 レジスタの ADC ビットを設定してください。
+使用例: 
+      fwClip
+
+fwBFC param
+-----------
+解説: プリミティブがビューワに対して back-face で _sce_adcFlag を
+      設定するかどうかをテストします。
+パラメータ: param..param="local" が使用される場合、BFC はローカル座標系で
+		   実行されます。"local" が指定されていない場合
+		  （デフォルト）、BFC は ワールド座標で実行されます。 
+		   param="local" が使用される場合、localCamera は 
+		   fwLocalCamera、fwStoreLocalCamera、fwLoadLocalCamera を
+		   利用して、計算、格納、ロードされなければなりません。
+注意: fwClip との組合せで動作します。 クリッピングが全く起こらなかった場合、
+      V01 は 0 と見なされ、クリッピングが発生した場合には 1 と見なされます。
+      fwClip を使わない場合は、V01 を 0 に設定して下さい。
+使用例: 
+      fwBFC
+
+fwWriteADC prim
+---------------
+解説: ADC ビットに書きこみをします。
+パラメータ: prim ... 実際の _sce_out_p ポインタに対する ADC ビットの
+		     アドレスを格納します。
+注意: _sce_adcFlag は fwBFCで、または手動で、設定されなければなりません
+      (fwClipを参照)。
+使用例: 
+      fwWriteADC "_sce_prim_XYZF2"
+
+fwInitFan
+----------
+解説: triangle_fan プリミティブ用のパラメータを初期化します。
+パラメータ: なし
+注意: triangle_fan プリミティブのサポートを望む場合にのみ必要です。
+      vertex_loop 内で呼び出してはいけません。
+      GifTag-init ブロック内で呼び出す必要があります。
+使用例:
+       fwInitFan      
+
+
+fwInitTriangleTriangleStrip
+---------------------------
+解説: triangle、triangle_strip プリミティブ用のパラメータを初期化します。 
+パラメータ: なし
+注意: triangle または triangle_strip プリミティブのサポートを望む場合に
+      のみ必要です。
+      vertex_loop 内で呼び出してはいけません。
+      GifTag-init ブロック内で呼び出す必要があります。
+使用例:
+      fwInitTriangleTriangleStrip
+
+fwStoreFirstPoint address
+-------------------------
+解説: アドレスに _sce_firstPoint を格納します。
+パラメータ: address .. store_address
+注意: triangle_fan プリミティブ + fwBFC サポートを望む場合にのみ必要です。
+      _sce_firstPoint は triangle_fan に back_face_culling を行なうのに
+      必要です。
+      自由域のアドレスを使って _sce_firstPoint を格納してください。
+使用例:
+      fwStoreFirstPoint 100
+
+fwLoadFirstPoint address
+------------------------
+解説: "address" に格納された値を変数 _sce_firstPoint にロードします。
+パラメータ: address .. load_address
+注意: triangle_fan プリミティブ + fwBFC サポートを望む場合にのみ必要です。
+      _sce_firstPoint は triangle_fan に back_face_culling を行なうのに
+      必要です。
+使用例:
+      fwLoadFirstPoint 100
+
+fwStoreFanSwitch address
+------------------------
+解説: 変数 _sce_fanSwitch に格納された値を "address" に格納します。
+パラメータ: address .. store_address
+注意: fwBFC サポートを望む場合にのみ必要です。
+      自由域のアドレスを使って _sce_fanSwitch を格納してください。
+使用例:
+      fwStoreFanSwitch 101
+
+fwLoadFanSwitch address
+------------------------
+解説: "address" に格納された値を変数 _sce_fanSwitch にロードします。
+パラメータ: address .. load_address
+注意: fwBFC サポートを望む場合にのみ必要です。
+使用例:
+      fwStoreLoadSwitch 101
+		    
+fwSwitchOldPointFirstPoint param
+---------------------------------
+解説: プリミティブが triangle/triangle_strip であるか triangle_fan 
+      であるかによって back-face culling 計算用に _sce_oldPoint を 
+      _sce_firstPoint に切り換えます。
+      _sce_oldPoint=A*_sce_oldPoint + B*_sce_firstPoint において
+      A=1,B=0 が triangle と triangle_strip で A=0,B=1 が  
+      triangle_fan です。
+パラメータ: param ...param="local" が使用される場合、BFC はローカル座標系で
+		     実行されます。"local" が指定されていない場合
+		    （デフォルト）、切り換えは ワールド座標で実行されます。 
+注意: triangle_fan サポートを望む場合にのみ必要です。 param="local" は 
+      fwBFC "local" または fwAntiBFC が使用される場合のみ必要です。
+使用例:
+      fwSwitchOldPointFirstPoint "local"
+
+fwInitGifTag param
+-------------------
+解説: output-buffer 用の gif_tag を初期化します。
+パラメータ: param ... param "TME_ON" が指定されると、TMB ビットが設定されます。
+		      param "TME_OFF" が指定されると、TMB ビットがクリアされます。
+
+注意: GifTag-init ブロックで 1 度だけ使用される必要があります。
+使用例:
+      fwInitGifTag
+
+fwSetVertexCounter
+-------------------
+解説: 頂点カウンタ変数 _sce_nVerts を設定します。
+パラメータ: なし
+注意: GifTag-init ブロックで 1 度だけ使用される必要があります。
+使用例:
+      fwInitSetVertexCounter
+
+fwLocalCamera
+---------------
+解説: ローカル座標で camera_position を計算し、それを _sce_localCamera に
+      格納します。
+パラメータ: なし
+注意: このマクロが使用される前に計算された _sce_worldLocal を必要とします。
+      fwLocalScreen の後に "mInvertRT _sce_worldLocal,_sce_localWorld" を
+      使用して _sce_worldLocal を計算してください。
+使用例:
+      fwLocalCamera
+
+fwStoreLocalCamera address
+-------------------------
+解説: _sce_localCamera を "address" に格納します。
+パラメータ: address .. store_address
+注意: 自由域のアドレスを使って _sce_localCamera を格納してください。
+      fwLocalCamera はこのマクロが使用される前に呼び出される必要があります。
+使用例:
+      fwStoreLocalCamera 103
+
+fwLoadLocalCamera address
+-----------------------
+解説: "address" に格納された値を _sce_localCamera にロードします。
+パラメータ: address .. load_address
+注意: _sce_localCamera はこのマクロが使用される前にアドレスに格納される
+必要があります。
+使用例:
+      fwLoadLocalCamera 103
+
+fwLoadLocalWorldRT
+-----------------------
+解説: local_world マトリックス（回転、変換）を _sce_localWorldRT[0-3] に
+　　　ロードします。
+パラメータ: -
+注意: sce_localWorldRT には scaling transformation は何も含まれていません。
+使用例:
+      fwLoadLocalWorldRT
+
+fwGetScale  scale,mat,matInv
+-----------------------
+解説: "mat" (scaling transformation のあるマトリックス) を "matInv"
+　　　("mat" の逆行列で scaling transformation がない) で 
+      乗算して scaling vector を計算し、結果を "scale" に格納します。
+パラメータ: scale ... x,y,z 方向の scaling factor 
+            mat ...   scaling transformation  のあるマトリックス
+	    matInv ... mat の逆行列で scaling transformation がない
+注意: 通常は mat= _sce_localWorld と matInv=_sce_worldLocal で 
+      _sce_localWorld に含まれている scaling factor を獲得します。
+      _sce_localWorld は最初に計算されなければなりません 
+      (mInvertRT _sce_worldLocal,_sce_localWorldRT)。
+使用例:
+      fwGetScale _sce_scale,_sce_localWorldRT,_sce_worldLocal
+
+
+fwLights.i
+***************
+
+
+fwCalcNLightVect l1,l2,l3,light_type
+----------------------------------------
+解説: light_directional_vector を ローカル座標で計算し、置き換わった
+      ベクトルを light_type[0]、light_type[1]、light_type[3] に格納します。
+パラメータ: l1,l2,l3 ... light_directional_vectors のアドレスをロードします。
+	    light_type ... サポートされる light_types は _sce_dirNLightVect 
+			   と_sce_spotNLightVect です。
+注意: micro-init ブロックでのみ呼び出す必要があります。
+      light_type="_sce_spotNLightVect" の場合、ベクトルが反転されます
+　　　(-1 で乗算）。
+      これは light-vectors (方向ライト/スポットライト) の方向が一致する
+      ために必要です。      
+
+使用例:
+      fwCalcNLightVect \&DIR_LIGHT_VECT0,\&DIR_LIGHT_VECT1,
+		       \&DIR_LIGHT_VECT2,_sce_dirNLightVect
+
+fwLoadNLightVect l1,l2,l3,light_type
+-------------------------------------
+解説: l1,l2,l3 に格納された値を変数 light_type[0]、light_type[1]、
+      light_type[3] にロードします。
+パラメータ: l1,l2,l3 .. アドレスをロードします。
+	    light_type ... サポートされる light_types は _sce_dirNLightVect
+			   と_sce_spotNLightVect です。
+注意: fwCalcNLightVect と fwStoreNLocal はこのマクロが使用される前に呼び
+      出される必要があります。SCE_PHONG/BLINN ライティングが使用される場合、
+      このマクロを使って lightVector を vertex-loop にリロードする必要が
+      あります(サンプルを参照)。この理由は、ライティング計算によってマクロ内
+      の_sce_dirNLightVect、_sce_spotNLightVect が変更されてしまうためです。
+使用例:
+      fwLoadNLightVect 103,104,105,_sce_dirNLightVect
+
+fwStoreNLightVect l1,l2,l3,light_type
+-------------------------------------
+解説:  変数 light_type[0]、light_type[1]、light_type[3] の値をアドレス 
+       l1,l2,l3 に格納します。
+パラメータ: l1,l2,l3 .. アドレスを格納します。
+	    light_type ... サポートされる light_types は _sce_dirNLightVect
+		           と_sce_spotNLightVect です。
+注意: 自由域のアドレスを使って _sce_dirNLightVect または 
+      _sce_spotNLightVectを格納します。fwCalcNLightVect はこのマクロが
+      使用される前に呼び出される必要があります。 
+      SCE_PHONG/BLINN ライティング用に micro-init ブロックで呼び出される必要が
+      あります。
+      fwLoadNLightVect との組合せで使用してください。
+使用例:
+      fwStoreNLightVect 103,104,105,_sce_dirNLightVect	
+
+fwCalcLocalLightPos l1,l2,l3,light_type,source
+----------------------------------------------
+解説: ライトポジションを l1,l2,l3 から "source" (ワールド座標で light_pos.)
+      へロードし、ローカル座標の ライトポジションを計算します。
+      結果は light_type[0]、light_type[1]、light_type[2] に格納されます。
+パラメータ: l1,l2,l3 ... ライトポジションのアドレスをロードします。
+	    source ... ライトポジションをワールド座標で格納するための変数名
+	               サポートされる名前:_sce_pointLightPos, _sce_spotLightPos
+	    light_type .. ライトポジションをローカル座標で格納するための変数名
+		          サポートされる名前: _sce_pointLocalLightPos, 
+			  _sce_spotLocalLightPos
+注意: micro-init ブロックでのみ実行する必要があります。
+使用例:
+      fwCalcLocalLightPos \&POINT_LIGHT_POS0,\&POINT_LIGHT_POS1,
+	\&POINT_LIGHT_POS2,_sce_pointLocalLightPos,_sce_pointLightPos
+      
+
+fwStoreLightPos l1,l2,l3,light_type
+------------------------------------
+解説: 変数 light_type[0]、light_type[1]、light_type[3] の値をアドレス 
+      l1,l2,l3 に格納します。
+パラメータ: l1,l2,l3 .. アドレスを格納します。
+	    light_type ... サポートされる light_types は 
+			   _sce_pointLocalLightPos,
+			   _sce_spotLocalLightPos, _sce_pointLightPos, 
+			   _sce_spotLightPos です。
+注意: 自由域のアドレスを使って変数を格納します。
+      fwCalcLocalLightPos は _sce_pointLocalLightPos または 
+      _sce_spotLocalLightPos が格納される前に呼び出す必要があります。
+使用例:
+      fwStoreNLightVect 106,107,108,_sce_pointLocalLightPos
+
+fwLoadLightPos l1,l2,l3,light_type
+------------------------------------
+解説: 変数 light_type[0]、light_type[1]、light_type[3] の値をアドレス 
+      l1,l2,l3 にロードします。
+パラメータ: l1,l2,l3 .. アドレスをロードします。
+	    light_type ... サポートされる light_types は 
+			   _sce_pointLocalLightPos,
+			   _sce_spotLocalLightPos,_sce_pointLightPos, 
+			   _sce_spotLightPos です。
+注意: fwStoreLightPos は _sce_pointLocalLightPos または 
+      _sce_spotLocalLightPos がロードされる前に呼び出す必要があります。
+使用例:
+      fwLoadNLightVect 106,107,108,_sce_pointLocalLightPos
+
+fwLoadLightColor l1,l2,l3,light_type
+-------------------------------------
+解説: l1,l2,l3 に格納された値を変数 light_type[0]、light_type[1]、
+      light_type[3] にロードします
+パラメータ: l1,l2,l3 .. アドレスをロードします。
+	    light_type ... サポートされる light_types は 
+			  _sce_dirLightColor,
+			  _sce_pointLightColor,_sce_spotLightColor です。
+注意: micro-init ブロックで使用されます。
+      light_color を vertex-loop にロードすると VCL-generated code が
+      速くなる可能性があります。
+使用例:
+      fwLoadLightColor  \&DIR_LIGHT_COLOR0,\&DIR_LIGHT_COLOR1,
+       \&DIR_LIGHT_COLOR2,_sce_dirLightColor
+
+fwStoreLightColor l1,l2,l3,light_type
+-------------------------------------
+解説: 変数 light_type[0]、light_type[1]、light_type[3] の値を
+      アドレス l1,l2,l3 に格納します。
+パラメータ: l1,l2,l3 .. アドレスを格納します
+	    light_type ... サポートされる light_typesは _sce_dirLightColor,
+			  _sce_pointLightColor,_sce_spotLightColor です。
+注意: 自由域のアドレスを使って lightColor を格納します。
+      fwLoadLightColorはこのマクロが使用される前に呼び出される必要があります。
+使用例:
+      fwStoreLightColor  106,105,104,_sce_dirLightColor
+
+fwLoadLightAmbientColor l1
+-------------------------------------
+解説: l1 に格納された値を変数 _sce_lightAmbientColor にロードします。
+パラメータ: l1 .. アドレスをロードします。
+注意: micro-init ブロックで使用されます。
+      カラーを vertex-loop にロードすると VCL-generated code が速くなる
+      可能性があります。
+使用例:
+      fwLoadLightAmbientColor \&AMBIENT_LIGHT_COLOR
+
+fwStoreLightConst light_type,source,store
+-----------------------------------------
+解説: light_constant パラメータを "source" から "light_type" へロードし
+      結果をアドレス "store" へ格納します。
+パラメータ: light_type.. サポートされる light_types は _sce_pointLightConst,
+			 _sce_spotLightConst です。
+	    source ... サポートされるソースは _sce_pointLightColor,
+		       _sce_spotLightColor です。
+注意: 自由域のアドレスを使って lightConstant を格納します。
+      lightConstant は _sce_pointLightColor または _sce_spotLightColor の
+      w-component にあるため、ソースが指定されなければなりません。
+      _sce_pointLightColor や _sce_spotLightColor をロードする 
+      fwLoadLightColor はこのマクロが使用される前に呼び出される必要が
+      あります。 
+使用例:
+      fwStoreLightConst _sce_spotLightConst,_sce_spotLightColor,101
+
+fwStoreLightAngle source,store
+---------------------------------------
+解説: light_angle パラメータを "source" から _sce_spotLightAngle へロードし
+      結果をアドレス "store" へ格納します。
+パラメータ: source .. サポートされるソースは _sce_spotLightPos です。
+注意: 自由域のアドレスを使って lightAngle を格納します。
+      lightAngle は _sce_spotLightPos の w-component にあるため、
+      ソースが指定されなければなりません。
+      fwCalcLocalLightPos や fwLoadLightPos を使用して、このマクロが使用
+      される前に _sce_spotLightPos をロードする必要があります。
+使用例:
+      fwStoreLightAngle _sce_spotLightPos,100
+
+fwLoadLightConst load,light_type
+-----------------------------------
+解説: light_constant パラメータを "load" から "light_type" へロードします。
+パラメータ: load ... アドレスをロードします。
+	    light_type ... サポートされる light_types は 
+			   _sce_pointLightConst と _sce_spotLightConst です。
+注意: このマクロを利用して light_constant を vertex loop へリロードすると
+      速い VCL-micro-code が生成される可能性があります。
+使用例:
+      fwLoadLightConst 100, _sce_spotLightConst
+
+fwLoadLightAngle load,light_type
+--------------------------------
+解説: light_Angle パラメータ を "load" から "light_type" へロードします。
+パラメータ: load ... アドレスをロードします。
+	    light_type ... サポートされる light_types は 
+			   _sce_spotLightAngle です。
+注意: このマクロを利用して light_constant を vertex loop へリロードすると
+      速い VCL-micro-code が生成される可能性があります。
+使用例:
+      fwLoadLightConst 100,_sce_spotLightAngle
+
+fwDirLight shading_type,ambient_calc,diffout,specout="def",
+	   calcEyeVect="calc"
+-------------------------------------------------------------------------
+解説: 3つの方向ライトに対しライティング計算を行ないます。
+パラメータ: shading_type...サポートされる shading_types は SCE_VERTEXC,
+		            SCE_LAMBERT, SCE_PHONG, SCE_BLINN です。
+	    ambient_calc ...サポートされるパラメータは SCE_NOAMBIENT と 
+			    SCE_AMBIENT (SCE_VERTEXC のみ) です。
+	    diffout ... diffuse color component 用に計算された係数
+	    specout ... specular color component (SCE_PHONG/BLINN のみ) 用に
+			計算された係数 
+	    calcEyeVect ... サポートされるパラメータは "calc" と "nocalc" 
+			    です。
+注意: ambient_calc パラメータで、global light ambient color を考慮に入れる
+      べきかどうかの選択が行われます(SCE_VERTEXC に対してのみ意味を持つ)。
+      これは異なるライティングマクロの組合せが使用される場合に役に立ちます
+      (例： point-lights + directional lights + spot lights)。この場合、
+      他のライティング計算に対して1度だけ "SCE_AMBIENT" と "SCE_NOAMBIENT" 
+      を使用してください。
+      specout は SCE_PHONG/BLINN に対してのみ計算されます。
+      calcEyeVect により、この macro 内で eyeVector を計算すべき(calc)か
+      すべきでない(nocalc)かの選択が行われます。 
+      計算しない場合、_sce_eyeVect は、このマクロを使用する前に、別のマクロ
+      (fwPointLight,fwSpotLight)から供給されるか、マクロの内部変数 
+      "MULx.xyz _sce_eyeVect,_sce_cameraDist,_sce_oneOverCdist" を利用して
+      計算される(以前に fwAntiBFC が呼び出される場合)か、あるいはユーザに
+      よって計算されなければなりません。
+      SCE_PHONG が使用されると、_sce_dirNLightVect は修正されることになり
+      ます。このマクロの前か後に fwLoadLightVect を 使用し頂点ループの値を
+      元に戻してください。
+使用例:
+      fwDirLight "SCE_PHONG","SCE_NOAMBIENT",_sce_diffpaColor,
+		 _sce_specpaColor,"nocalc"
+
+fwPointLight  shading_type,ambient_calc,diffout,specout="def",
+	      calcEyeVect="calc"
+------------------------------------------------------------------
+解説: 3つのポイントライトに対しライティング計算を行ないます。
+パラメータ: shading_type...サポートされる shading_types は SCE_VERTEXC, 
+		            SCE_LAMBERT, SCE_PHONG, SCE_BLINN です。
+	    ambient_calc ...サポートされるパラメータは SCE_NOAMBIENT と 
+			    SCE_AMBIENT (SCE_VERTEXC のみ) です。
+	    diffout ... diffuse color component 用に計算された係数
+	    specout ... specular color component (SCE_PHONG/BLINN のみ) 用に
+			計算された係数 
+	    calcEyeVect ... サポートされるパラメータは "calc" と "nocalc" 
+			    です。
+注意: ambient_calc パラメータで、global light ambient color を考慮に入れる
+      べきかどうかの選択が行われます(SCE_VERTEXC に対してのみ意味を持つ)。
+      これは異なるライティングマクロの組合せが使用される場合に役に立ちます
+      (例： point-lights + directional lights + spot lights)。この場合、
+      他のライティング計算に対して1度だけ "SCE_AMBIENT" と "SCE_NOAMBIENT"
+      を使用してください。
+      specout は SCE_PHONG/BLINN に対してのみ計算されます。
+      calcEyeVect により、この macro 内で eyeVector を計算すべき(calc)か
+      すべきでない(nocalc)かの選択が行われます。 
+      計算しない場合、_sce_eyeVect は、このマクロを使用する前に、別のマクロ
+      (fwDirLight,fwSpotLight)から供給されるか、マクロの内部変数 
+      "MULx.xyz _sce_eyeVect,_sce_cameraDist,_sce_oneOverCdist" を利用して
+      計算される(以前に fwAntiBFC が呼び出される場合)か、あるいはユーザに
+      よって計算されなければなりません。
+使用例:
+      fwPointLight "SCE_PHONG","SCE_NOAMBIENT",_sce_diffpaColor,
+		 _sce_specpaColor,"nocalc"
+
+fwSpotLight shading_type,ambient_calc,diffout,specout="def",
+	    calcEyeVect="calc"
+------------------------------------------------------------------
+解説: 3つのスポットライトに対しライティング計算を行ないます。
+パラメータ: shading_type...サポートされる shading_types は SCE_VERTEXC,
+		            SCE_LAMBERT, SCE_PHONG, SCE_BLINN です。
+	    ambient_calc ...サポートされるパラメータは SCE_NOAMBIENT と 
+			    SCE_AMBIENT (SCE_VERTEXC のみ) です。
+	    diffout ... diffuse color component 用に計算された係数
+	    specout ... specular color component (SCE_PHONG/BLINN のみ) 用に
+			計算された係数 
+	    calcEyeVect ... サポートされるパラメータは "calc" と "nocalc" 
+			    です。
+注意: ambient_calc パラメータで、global light ambient color を考慮に入れる
+      べきかどうかの選択が行われます(SCE_VERTEXC に対してのみ意味を持つ)。
+      これは異なるライティングマクロの組合せが使用される場合に役に立ちます
+      (例： point-lights + directional lights + spot lights)。この場合、
+      他のライティング計算に対して1度だけ "SCE_AMBIENT" と "SCE_NOAMBIENT" 
+      を使用してください。
+      specout は SCE_PHONG/BLINN に対してのみ計算されます。
+      calcEyeVect により、この macro 内で eyeVector を計算すべき(calc)か
+      すべきでない(nocalc)かの選択が行われます。 
+      計算しない場合、_sce_eyeVect は、このマクロを使用する前に、別のマクロ
+      (fwPointLight,fwDirLight)から供給されるか、マクロの内部変数 
+      "MULx.xyz _sce_eyeVect,_sce_cameraDist,_sce_oneOverCdist" を利用して
+      計算される(以前に fwAntiBFC が呼び出される場合)か、あるいはユーザに
+      よって計算されなければなりません。
+      SCE_PHONG が使用されると、_sce_dirNLightVect は修正されることになり
+      ます。このマクロの前か後に fwLoadLightVect を 使用し頂点ループの値を
+      元に戻してください。
+使用例:
+      fwSpotLight "SCE_PHONG","SCE_NOAMBIENT",_sce_diffpaColor,
+		 _sce_specpaColor,"nocalc"
+
+fwSpecularBF bf,coef
+---------------------------------
+解説: 係数を計算します。表面がライトと反対の方向を向いている場合は 0、
+その他はどんな場合でも 1 です。 
+パラメータ: bf ... result
+	   coef ... innerProduct vertex_normal*light_vector
+注意: SCE_PHONG/BLINN 計算に使われる内部のマクロは, 速い macro/algorithm が
+      利用可能な場合のみ変更になる。
+使用例: (SCE_PHONG/BLINN の場合に、単に fwDirLight,fwSpotLight,fwPointLight 
+        の内部でのみ使用されます。)
+       fwSpecularBF 	_sce_bfCheck,_sce_refVectCoef 
+
+fwGetEyeVectorP  eye,camera,vertex
+-------------------------------------
+解説: P レジスタを使って _sce_eyeVect を計算します。
+パラメータ: eye ... result: _sce_eyeVector
+	   camera ... camera position
+	   vertex ... vertex coordinates
+注意: 内部マクロとして使われる P レジスタを使用しますが、カメラポジションと
+      頂点ポジションが指定されれば外部で使用できます(両方とも同じ座標系に
+      存在する必要がある)。この内部マクロを fwGetEyeVectQ に変更すると、P 
+      レジスタがすでに busy の場合、コードが速くなる可能性があります。
+
+使用例:
+      fwGetEyeVectP _sce_eyeVect,_sce_cameraPos,_sce_vrt
+
+fwGetEyeVectorQ  eye,camera,vertex
+-------------------------------------
+解説: Q registerを使って _sce_eyeVect を計算します。
+パラメータ: eye ... result: _sce_eyeVector
+	   camera ... camera position
+	   vertex ... vertex coordinates
+注意: 内部マクロとして使われる Q レジスタを使用しますが、カメラポジションと
+      頂点ポジションが指定されれば外部で使用できます(両方とも同じ座標系に
+      存在する必要がある)。この内部マクロを fwGetEyeVectP に変更すると、Q 
+      レジスタ がすでに busy の場合、コードが速くなる可能性があります。
+使用例:
+      fwGetEyeVectQ _sce_eyeVect,_sce_cameraPos,_sce_vrt
+
+
+fwGetSpecularCosine specFact,eye,ref1,ref2,ref3
+------------------------------------------------
+解説: eyeVector を用いて 3 つの reflection vectors の内積を求めます。
+パラメータ: specFact.. 結果の内積
+	    eye .. eyeVector
+	    ref1-3 ... reflection vectors
+注意: 速い macro/algorithm が利用できる場合のみ、SCE_PHONG/BLINN 計算に
+      使われる internal macro は変更になります。
+使用例: (SCE_PHONG の場合に、単に fwDirLight,fwSpotLight,fwPointLight の内部
+        でのみ使用されます。)
+       fwGetSpecularCosine _sce_specFact,_sce_eyeVect,
+		_sce_refVect1,_sce_refVect2,_sce_refVect3
+   
+
+fwRemoveSpecularBF spec,bf
+----------------------------
+解説: 表面がライトと反対の方向を向いている場合は "spec" を 0 にします。
+パラメータ: spec ... 入出力係数
+	    bf ... with fwSpecularBF calculated factor
+注意: 速い macro/algorithm が利用できる場合のみ、SCE_PHONG/BLINN 計算に
+      使われる internal macro は変更になります。
+使用例: (SCE_PHONG/BLINN の場合に、単に fwDirLight,fwSpotLight,fwPointLight 
+        の内部でのみ使用されます。)
+       fwRemoveSpecularBF _sce_specFact,_sce_bfCheck 
+
+fwShininess spec
+-------------------
+解説: SCE_PHONG/BLINN に対して shininess 計算を行います。 
+      lighting (eyeVect*reflectionVect)^shininess
+パラメータ : spec input/output coefficient
+注意: 速い macro/algorithm が利用できる場合のみ、SCE_PHONG/BLINN 計算に
+      使われる internal macro は変更になります。
+使用例: (SCE_PHONG/BLINN の場合に、単に fwDirLight,fwSpotLight,fwPointLight 
+        の内部でのみ使用されます。)
+        fwShininess _sce_specFact
+
+
+fwLoadMaterialColor diffColor,specColor,emissionColor,
+		    ambientColor,l1,l2,l3,l4
+----------------------------------------------------------------
+解説: material_colors を l1-4 から diffColor, specColor, emissionColor, 
+      ambientColor へロードします。
+パラメータ: diffColor ... diffuse color variable name
+	   l1 ... diffuse color load address
+	   specColor ... specular color variable name
+	   l2 ... specular color load address
+	   emissionColor ... emission color variable name
+	   l3 ... emission color load address
+	   ambientColor ... ambient color variable name
+	   l4 ... ambient color load address
+注意: SCE_PHONG/BLINN ライティングが使用される場合のみ必要とされます。
+使用例:
+      	fwLoadMaterialColor _sce_dColor,_sce_sColor,_sce_aColor,
+	    _sce_eColor,\&MATERIAL_DIFFUSE,\&MATERIAL_SPECULAR,
+	    \&MATERIAL_AMBIENT,\&MATERIAL_EMISSION      
+
+fwCalcColorSum shading_type,color_clamp,out,df,dColor,aColor="defa",
+	       eColor="defe",sp="defd",sColor="defs"
+---------------------------------------------------------------------
+解説: ライティング計算の後、最後の頂点カラーを計算します。
+パラメータ: shading_type ... サポートされる shading_type は SCE_VERTEXC,
+			    SCE_LAMBERT,SCE_PHONG,SCE_BLINN です。
+	   color_clamp ... サポートされる値は SCE_CLAMP と SCE_NOCLAMPです。
+	   df... diffuse color coefficient (form lighting calc)
+	   dColor ... material diffuse color
+	   sp ... specular color coefficient (from lighting calc.)
+	   sColor ... material specular color
+	   aColor ... material ambient color
+	   eColor ... material emission color
+注意: sp,sColor,aColor,eColor は SCE_PHONG/BLINN ライティングにのみ有効です。 
+      SCE_CLAMP が指定されると、簡単なカラーが実行され、0 - 255 の範囲に
+      最終カラーをもたらします。 SCE_NOCLAMP を使用すれば、ユーザは
+      独自の color_clamp 関数を作成できます。
+      SCE_SAT_CLAMP が指定されるとカラークランプ処理が行われます。
+	 color(R,G,B)=(2.5, 1.3,0.4)*255 -> (2.5/2.5,1.3/2.5,0.4/2.5)*255 
+ 
+使用例:
+      fwCalcColorSum "SCE_PHONG","SCE_CLAMP",_sce_dColor,_sce_diffFact,
+		     _sce_dColor,_sce_specFact,_sce_sColor,_sce_aColor,
+		     _sce_eColor
+
+fwWriteColor prim, color
+------------------------
+解説: 出力する最後の頂点カラーを書き込みます。
+パラメータ: prim ... _sce_out_p に対するアドレスを格納します。
+	   color ... 書き込むカラー
+注意: なし
+使用例:
+      fwWriteColor "_sce_prim_RGBAQ",_sce_dColor
+
+
+fwBlinnCalc output,refvect1,refvect2,refvect3
+---------------------------------
+解説: "Blinn"-specular lighting 計算用マクロ
+パラメータ: refvect1-3 ..正規化されていない half-vectors (reflection vectors)
+	    output ... specular lighting 用係数
+注意: 速い macro/algorithm が利用できる場合のみ、lighting macros 内部で
+　　　SCE_BLINN 計算に使われる macro は変更になります。
+使用例: (SCE_/BLINN の場合に、単に fwDirLight,fwSpotLight,fwPointLight 
+        の内部でのみ使用されます。)
+       fwBlinnCalc _sce_specFact,_sce_refVect1,_sce_refVect2,_sce_refVect3
+
+fwLocalView
+---------------------------------
+解説: local_view matrix: _sce_localView を計算します。 
+	     
+パラメータ: 
+注意: まず最初に fwLocalScreen を呼び出して _sce_localWorld matrix を
+      VU1 MemAdrr にロードする必要があります。20 から 23 は worldView 
+　　　matrix でなければなりません (sample20.c を参照)。
+使用例: 
+       	fwLocalView 
+
+
+fwFishEye  prim,vertex
+---------------------------------
+解説: 通常 fish_eye-lens によって作成される非線形変換を行います。
+      また、z バッファリング用に頂点の z-component 値の計算/設定も
+　　　行います。　
+パラメータ:
+	    vertex ... ローカル座標系でのオブジェクトの頂点
+	    prim   ... _sce_out_p に関するアドレスを格納
+注意: 魚眼レンズ効果が必要な場合、fwRTP の代わりに使用可能です。
+      このマクロを使用する前に、fwLocalView を呼び出す必要があります。
+使用例: 
+       	fwFishEye 	"_sce_prim_XYZF2",_sce_localCamera,_sce_vrt
+
+
+fwSphereReflectST  camera,vertex,mode
+---------------------------------
+解説: 球面リフレクションテクスチャマッピング用の STQ 値を計算します。
+パラメータ: camera ... オブジェクトローカル座標系でのカメラポジション
+	    vertex ... ローカル座標系でのオブジェクトの頂点
+	    mode ... "static" を指定すると "static" reflection mapping の
+　　　　　　計算が行われます (リフレクション・リフラクションの備考を参照)。 
+注意:  STQ の格納とパースペクティブ補正を行うには、このマクロの後に 
+       fwRTP, fwST を呼び出す必要があります。
+使用例: 
+	fwSphereReflectST  _sce_localCamera,_sce_vrt 
+
+fwSphereRefractST  camera,vertex,mode
+---------------------------------
+解説: 球面リフラクションテクスチャマッピング用の STQ 値を計算します。
+parameter: camera ... オブジェクトローカル座標系でのカメラポジション
+	   vertex ... ローカル座標系でのオブジェクトの頂点
+	   mode ... "static" を指定すると "static" refraction mapping の
+　　　　　 計算が行われます (リフレクション・リフラクションの備考を参照)。 
+注意:  STQ の格納とパースペクティブ補正を行うには、このマクロのあとに 
+       fwRTP, fwST を呼び出す必要があります。
+使用例: 
+	fwSphereRefractST  _sce_localCamera,_sce_vrt 
+
+fwCalcSTSxT  local_tex
+---------------------------------
+解説: ローカル座標系のベクトルをテクスチャ座標系に変換するのに使用される
+　　　S,T,SxT local_texture matrix "_sce_local_tex" を計算します。
+パラメータ: -
+注意:   このマトリックスを計算するには、三角形の三頂点 (あるいは
+　　　　triangle-strip/fan の最初の三頂点) と、それに対応する ST 値が
+	以下の変数にロードされる必要があります。
+	_sce_vrt0,_sce_vrt1,_sce_vrt2  _sce_ST0,_sce_ST1,_sce_ST2
+使用例: 
+	fwCalcSTSxT _sce_local_tex
+
+fwCalcEmbossShift  bumpShift,local_tex,light_vect
+-------------------------------------------------
+解説: light_vector と local_tex matrix により、emboss-bump shift を
+　　　計算します。
+パラメータ: bumpShift.xy ... ST 値の emboss-bump シフト
+	    local_tex ... local_texture マトリックス
+	    light_vect ... バンプマッピングに使用するlight_vector
+注意: fwCalcSTSxT を使用して local_texture マトリックスを計算してください。
+使用例: 
+	fwCalcEmbossShift _sce_shift,_sce_local_tex,_sce_light
+
+
+fog.i
+******
+
+fwInitFog
+-----------
+解説: fog 計算の為のパラメータを初期化します。
+パラメータ: なし
+注意: １度だけ呼出す必要がありますが、頂点ループで呼出すと
+      VCL-micro code が速くなる可能性があります。
+使用例:
+      fwInitFog
+
+fwFog 
+-----------
+解説: fog 計算を実行します。
+パラメータ: なし
+注意: スクリーン座標で z を使用し、フォギング (linear は未サポート) 
+      を計算します。
+      fwInitFog はこのマクロが使用される前に呼出さなければなりません。
+使用例:
+      fwFog
+
+fwWriteADC_Fog prim
+----------------------
+解説: ADC ビットと Fog ビットを outbuffer に書き込みます。
+パラメータ: prim ... _sce_out_p に対するアドレスを格納します。
+注意: _sce_adcFlag が設定(fwBFC か手動で設定、fwClip を参照)され、 
+      _sce_fogFlagがfwFog で計算される必要があります。
+使用例:
+      fwWriteADC_Fog "_sce_prim_XYZF2" 
+
+
+fwAnti.i
+***********
+
+fwInitAnti
+-----------
+解説: AA1 計算用にパラメータを初期化します。
+パラメータ: なし
+注意: 1度だけ呼び出す必要がありますが、頂点ループの中で呼び出すと
+      VCL-micro code が速くなる可能性があります。 
+使用例:
+      fwInitAnti
+
+fwAnti prim
+------------------
+解説: AA1 計算を行ない、値を PRMOD レジスタに書きこみます。
+パラメータ: prim ... _sce_out_p に対するアドレスを格納します。
+注意: fwInitAnti はこのマクロが使用される前に呼び出される必要があります。
+      このマクロを使用する前に、変数 _sce_antiParam の w-component に
+      AA1 アルゴリズムのスレッショルドをロードし、ローカル座標のカメラ
+      ポジションをこの変数の xyz-component にロードしてください
+      (vu1antiV.vcl、vu1antiL.vcl、vu1combi.vcl サンプルを参照)。
+使用例:
+      fwAnti  "_sce_aprim_PRMOD"
+
+fwAntiBFC prmod
+-----------------
+解説: AA1 計算を行ない、値を PRMOD レジスタに書きこみ、ローカル座標系で 
+      BFC 計算を行ないます。
+パラメータ: prmod ... _sce_out_p に対するアドレスを格納します。
+注意: fwInitAnti はこのマクロが使用される前に呼び出される必要があります。
+      localCamera は fwLocalCamera,fwStoreLocalCamera,fwLoadLocalCameraを
+      利用して計算、格納、ロードされなければなりません。
+      このマクロを使用する前に、変数 _sce_antiParam の w-component に
+      AA1 アルゴリズムのスレッショルドをロードし、ローカル座標のカメラ
+      ポジションをこの変数の xyz-component にロードしてください
+      (vu1antiV.vcl、vu1antiL.vcl、vu1combi.vcl サンプルを参照)。
+使用例:
+      fwAntiBFC  "_sce_aprim_PRMOD"
+
+
+math.i
+*******
+
+
+mMulVecByMat output, vector, matBaseName
+-----------------------------------------
+解説: output=matrix*vector を計算します。
+パラメータ: output ... 演算結果ベクトル
+	    vector ... 入力ベクトル
+	    matBasName ... マトリックス名
+注意: マトリックス は 4 列のベクトルで構成されなければなりません。
+      matBaseName[0], matBaseName[1], matBaseName[2], 
+      matBaseName[3]
+使用例:
+      mMulVecByMat _sce_localScreen[0],_sce_localWorld[0],_sce_worldScreen
+
+mTransposeXYZMatrix output
+---------------------------
+解説: マトリックス "output" を入れ換えます。
+パラメータ: output ... 入出力マトリックス
+注意: マトリックスは 3 列のベクトル output[0],output[1],output[2] で
+構成されなければなりません。 xyz コンポーネントのみが入れ換えられます。
+使用例:
+      mTransposeXYZMatrix _sce_lightVect
+
+mInvertRT output, matRT
+-------------------------
+解説: 回転変換マトリックスを反転させます。
+パラメータ: output ... マトリックスを反転させます。
+	    matRT ... rotation-translation-matrix
+注意: RT (回転変換) マトリックスのみに使用可能です。
+      REMARK:the translation vector output[3]=-trans!!!
+      mMakeLocal を使って local_vect=output*world_vector を
+      計算してください。
+使用例:
+      mInvertRT _sce_worldLocal,_sce_localWorld
+
+mMakeLocal localVect, worldVect, matWorldLocal
+-------------------------------------------------
+解説: ベクトルをワールド座標からローカル座標に変換します。
+パラメータ: localVect ... 変換されたベクトル
+	    worldVect ... 入力ベクトル
+	    matWorldLocal ... worldLocal マトリックス
+注意: matWorldLocal は matWorldLocal[3]=-trans という形態になって
+      いなければなりません。
+      mInvertRT を使ってこの種のマトリックスを作成してください。
+使用例:
+      mMakeLocal _sce_localCamera,_sce_worldCamera,_sce_worldLocal
+
+mLocalLightPos output, worldLightPos, matWorldLocal
+----------------------------------------------------
+解説: ローカル座標で３つのライトポジションを計算します。
+パラメータ: output.. ローカル座標のライトポジション 0-3
+		    output[0],output[1],output[2]
+	    worldLightPos .. ワールド座標のライトポジション 0-3
+		    worldLightPos[0],worldLight[1],worldLightPos[2]
+	    matWorldLocal ... worldLocal マトリックス
+注意: マクロは mMakeLocal を使用するので、matWorldLocal は
+      matWorldLocal[3]=-trans の形態をとらなければなりません。
+      mInvertRT を使用してこの類のマトリックスを作成してください。
+使用例:
+      mLocalLightPos sce_pointLocalLightPos,_sce_pointLightPos,
+		     _sce_worldLocal
+
+
+
+getRcpLengQ_x 	vec,out
+getRcpLengQ_y 	vec,out
+getRcpLengQ_z 	vec,out
+getRcpLengP_x 	vec,out
+getRcpLengP_x 	vec,out
+getRcpLengP_y 	vec,out
+getRcpLengP_z 	vec,out
+------------------------
+解説: ベクトルの 1/length を計算します。
+パラメータ: vec ... input vector
+	    out ... 1/length
+注意: getRcpLengA_B は A register を使用し、結果を
+      out の B component に格納します。
+使用例:
+      getRcpLengP_z  _sce_lightVect3,_sce_oneOverNorm 
+
+getSaddQ_x 	vec,out
+getSaddQ_y 	vec,out
+getSaddQ_z 	vec,out
+getSaddP_x 	vec,out
+getSaddP_y 	vec,out
+getSaddP_z 	vec,out
+---------------------------------------
+解説: ベクトルの 1/(length)^2 を計算します。
+パラメータ: vec ... input vector
+	    out ... 1/(length)^2
+注意: getSaddA_B は A register を使用し、結果を
+      out の B component に格納します。
+使用例:
+      getSaddP_z  _sce_lightVect3,_sce_oneOverNormSq 
+
+
+mMulVecByMat3x3 output, vector, matBaseName
+-----------------------------------------
+解説: 3x3 matrix/vector 用に output=matrix*vector を計算します。 
+パラメータ: output ... 演算結果ベクトル
+	    vector ... 入力ベクトル
+	    matBasName ... マトリックス名
+注意: マトリックス は 3 列のベクトルで構成されなければなりません。
+      matBaseName[0], matBaseName[1], matBaseName[2]
+使用例:
+      mMulVecByMat3x3 _sce_scale[0],_sce_localWorld,_sce_worldLocal
+
+mScaleVectorXYZ out,in,scale  
+解説: ベクトルの xyz component をスケーリングします。
+パラメータ: out ... 演算結果ベクトル
+	    in  ... 入力ベクトル
+	    scale.xyz ... xyz の倍率
+注意: -
+使用例:
+      mScaleVector _scaled,_sce_vrt,_sce_scale      
+
+util.i
+*********
+
+.macro	struct	name
+.macro	vud	name
+.macro	endst	name
+--------------------------------------
+解説: 頂点の構造を定義するのに使用されます。
+注意: macroの内容についてはfw.i、fwAnti.i を参照してください。
+

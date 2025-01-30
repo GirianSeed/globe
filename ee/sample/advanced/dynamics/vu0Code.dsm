@@ -1,0 +1,11 @@
+.align 4
+.global vu0CodeStart
+vu0CodeStart:
+DMAcnt *
+MPG 8196 / 8, *
+.vu
+.include "vu0coll.vsm"
+.EndMPG
+.EndDmaData
+DMAend
+.end

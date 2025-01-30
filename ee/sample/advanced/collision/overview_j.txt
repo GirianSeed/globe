@@ -1,0 +1,207 @@
+[SCE CONFIDENTIAL DOCUMENT]
+"PlayStation 2" Programmer Tool Runtime Library Release 2.5.3
+                Copyright (C) 2001 Sony Computer Entertainment Inc.
+                                                   All Rights Reserved  
+
+衝突検出サンプル
+
+
+概要
+----
+本サンプルではナローフェイズ衝突検出技術(narrow-phase collision detection)
+（GJK）を採用しています。この技術はより精密な衝突検出が必要な場合に効率的
+に使われているものです。たとえば、剛体シミュレーションなどに使用されて
+います。
+一方、オブジェクト数が多い場合には、衝突する可能性のある候補オブジェクト
+を識別するためブロードフェイズ衝突検出(broad-phase collision detection)
+アルゴリズムを使う必要があります。これには"Sweep and Prune"などがあります。
+
+主に２つの関数が採用されています。
+
+is_collision().. ２つのオブジェクトが交差しているかをチェックする
+calc_dist()... 　２つのオブジェクト間の最短距離^2を計算する
+
+使用するアルゴリズムは convex (凸型の) オブジェクトに適用可能ですが、
+もっと複雑なオブジェクトの場合にも、それをconvexのサブオブジェクトから
+成るものとして適用することもできます。
+
+なお、レンダリング処理にはHiG/HiPが使われています。
+
+ 
+アルゴリズム
+------------
+本サンプルではGJK(Gilbert-Johnson-Keerthi)アルゴリズムを使っています。
+（詳細は[1]を参照）
+
+本サンプルの実装では、GJK アルゴリズムとは一部異なる方法を使っていますので、
+以下に説明します。
+
+このアルゴリズムではAとB、2つのボディー間の距離を定義
+するためのMinkowski-sumのコンセプトを利用しています。Minkowski-sumとは
+つまり、「差」のことです。
+   
+A-B={x-y: xはボディーAの要素、yはボディーBの要素}
+
+原点(0,0,0)がMinkowski-sum内にある場合、2つのボディーは交差していること
+になります。
+
+このアルゴリズムは、まず simplexがconvex hull内に原点があるかどうかを審査
+します。simplexは最大４点のMinkowski-sumで構成されています。
+原点がない場合、convex hull内で原点への最短点を持つsimplexの最小サブセット
+(<=3点)を計算します。これを繰り返して、Minkowski-sum内を検索し原点に最も近い
+simplex を探し出します。
+
+原点がMinkowski-sum内にある場合（オブジェクトが交差→距離は0）、または、
+原点に最も近いMinkowski-simplexが発見された場合は停止します。
+
+
+convex hull内で、原点への最短点を持つ規定のsimplexの最小サブセットを
+計算するために、GJKの論文[1]で解説されているものとは異なった方法を用
+いています。
+
+エリック・ラーセン氏（Eric Larsen(SCEA,R&D)）[2]の概念を借用し、
+Minkowski-simplexのケースで適用しています。ラーセン氏はMinkowski-sum
+ではなく、simplex-pairを使用しています。この概念では、Vu0を使って線分が
+原点に最も近い最小のサブセットであるかどうかを確認します。
+
+Vu0はマイクロモードで動作しています。そのためこの方法には、simplexが2 
+点以上で構成されている場合、Vu0が線分までの距離を確認している間、CPUが
+同時に、三角面が最小のサブセットであるかどうかを確認できるという利点が
+あります。
+
+
+使用方法
+--------
+1.採用しているGJKアルゴリズムにはマイクロモードのVu0が使用されるため、
+　関数collision_init()でコードをVu0プログラムメモリにロードする必要が
+　あります。マイクロコードのvclバージョンはvu0coll.vclにあります。
+
+2.各衝突オブジェクトのペアにひとつの"Simplex"構造体、各衝突オブジェクトに
+　ひとつの"GJKObj"構造体をそれぞれ初期化する必要があります。
+　また、これは関数gjk_init()を使ってサンプル内で実行されます。
+
+初期化が必要なsimplexメンバは以下のとおりです。
+
+- cache_valid .. 	0に設定し、アルゴリズムが前のフレームの結果を
+			最も近くにあるもの（点、線分、または面）を検索
+			する開始点として再利用しないようにします。
+			フレームのコヒーレンシが高い場合は、前のフレームの
+			simplexを開始点として再利用します。すると通常は
+			計算速度が上がります。
+			したがって、前のフレームの結果が無効である場合、
+			このパラメータを必ず0に設定しなければなりません。
+			たとえば、最初のフレームなどは0に設定します。
+
+- epsilon .. 		計算の正確さ
+
+- hintA,hintB ... 	点、線分、または面が最も近くにある可能性をもつ
+			GJKObjの頂点指数に関するヒントです。
+			このパラメータは、対応するGJKObjがGJK_MESHの
+			タイプである場合に限り有効です。
+		
+初期化が必要なGJKObjメンバは以下のとおりです。
+
+   - type .. 		GJK_BOX、GJK_SPHERE、GJK_CONE、GJK_CYLINDER、
+			またはGJK_MESH
+
+   - lw ..  		local_world マトリクスのオブジェクト
+
+   - lwrot .. 		light_rotマトリクスのオブジェクト
+	
+タイプがGJK_MESH ではない場合、以下を実行します。
+ 
+      	radius、half_lengthを使って円柱や球体、円錐形のジオメトリを定義
+	します。
+       	
+	half_boxを使ってボックス型オブジェクトを定義します。
+	
+       	GJK_SPHERE: 	radius ...　	球体の半径
+       	GJK_CONE: 	radius ... 　	円錐底面の半径
+                 	half_length ... (円錐の高さ)/2 
+       	GJK_CYLINDER: 	radius ... 	円柱底面の半径
+                     	half_length ... (円柱の高さ)/2
+       	GJK_BOX: 	half_box[0] ... (ボックスの長さ)/2 のx方向
+                	half_box[1] ... (ボックスの長さ)/2 のy方向
+                	half_box[2] ... (ボックスの長さ)/2 のz方向
+
+
+ポリゴンメッシュ(GJK_MESH)を使う場合、アルゴリズムを高速化するために
+隣接点テーブルを使います。
+
+この隣接点テーブルを取得するには、以下を使って実行します。
+
+int alloc_gjkobj_neighbors(void *gjk_data_addr,GJKObj *gjkobj);
+
+gjkobj-fileを使って隣接点を作成します。（フォーマットの説明は以下を参照）
+  
+データへのgjk_data_addr ポイントはgjkob-fileに記述されています。この
+ファイルにはメッシュのconvex hullの頂点と隣接点リストが記載されています。
+
+
+取得したテーブルを解放するには、以下を実行します。
+
+void free_gjkobj_neighbors(GJKObj *gjkobj); 
+
+
+3.次に、以下を使ってオブジェクトが交差しているかをチェック、または
+　オブジェクト間の最短距離を計算します。
+
+int  is_collision(Simplex *simplex,GJKObj *gjkobjA,GJKObj *gjkobjB);
+(返り値はno_collision/collisionに対して0/1)
+
+または、
+
+float calc_dist(Simplex *simplex,GJKObj *gjkobjA,GJKObj *gjkobjB,u_int 
+calc_points);
+(返り値は２つのオブジェクト間の距離^2)
+
+パラメータcalc_pointsは、ボディのローカル座標系で定義された最短点
+の計算が必要かどうかを選択します。
+結果は、simplex->closest_pointAとsimplex->closest_pointBにあります。
+
+calc_points=1..	最短点を計算する
+           =0.. 最短点を計算しない
+
+
+gjkobj-fileのフォーマット
+-------------------------
+.word num_of_vertices,0,0,0
+.float vertex0
+.float vertex1
+    .
+    .
+.float vertexN
+.word total_umber_of_neighbors,0,0,0
+.word num_of_neighbors_of_vertex0,neighbor0,neighbor1,....,neighborN
+  .
+  .
+.word num_of_neighbors_of_vertexN,neighbor0,....,neighborN
+
+シンプルな平面のgjkobj-fileは以下のようになります。
+
+.word 4,0,0,0
+.float -10.000000,0.000000,-10.000000,1.0
+.float 10.000000,0.000000,-10.000000,1.0
+.float 10.000000,0.000000,10.000000,1.0
+.float -10.000000,0.000000,10.000000,1.0
+.word 8,0,0,0
+.word 2,1,3,2 
+.word 0,2,2,1 
+.word 3,2,0,2
+
+ランダムな点を隣接点として隣接テーブルに追加すると、アルゴリズムの検索がさらに
+速くなる場合もあります。
+
+
+今後の作業
+----------
+1.アルゴリズムの最適化
+2.broad-phase衝突アルゴリズムの採用
+
+
+参考文献
+--------
+[1] van den Bergen,Gino "A Fast and Robust GJK Implementation for 
+　　Collision Detection of Convex Objects",Journal of Graphics Tools, 4(2):7-25, 1999 
+[2] Larsen,Eric "A Robot Soccer Simulation: A Case Study for 
+　　Rigid Body Contact",GDC,2001

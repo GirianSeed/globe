@@ -1,0 +1,28 @@
+#EE-ILB# [PsIIlibmc   3030]
+L libmc
+V 0x0103
+F 0x0000
+E 004 sceMcInit
+E 005 sceMcEnd
+E 006 sceMcGetInfo
+E 007 sceMcOpen
+E 008 sceMcClose
+E 009 sceMcSeek
+E 010 sceMcRead
+E 011 sceMcWrite
+E 012 sceMcFlush
+E 013 sceMcMkdir
+E 014 sceMcChdir
+E 015 sceMcGetDir
+E 016 sceMcSetFileInfo
+E 017 sceMcDelete
+E 018 sceMcFormat
+E 019 sceMcUnformat
+E 020 sceMcGetEntSpace
+E 021 sceMcRename
+E 022 sceMcChangeThreadPriority
+E 023 sceMcGetSlotMax
+E 024 sceMcSync
+E 025 sceMcReadFast
+E 026 sceMcWriteFast
+E 030 sceMcConvertError

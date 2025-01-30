@@ -1,0 +1,5 @@
+#EE-ILB# [PsIIerr     3000]
+L LibmErr
+V 0x0101
+F 0x0000
+E 004 matherr

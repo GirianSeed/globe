@@ -1,0 +1,8 @@
+#EE-ILB# [PsIIlibpc   3000]
+L libpc
+V 0x0101
+F 0x0000
+E 004 scePcStart
+E 005 scePcStop
+E 006 scePcGetCounter0
+E 007 scePcGetCounter1

@@ -1,0 +1,33 @@
+#EE-ILB# [PsIIlibsk   3010]
+L libsk
+V 0x0101
+F 0x0000
+E 004 sceSkInit
+E 005 sceSkSsInit
+E 006 sceSkSsSOUND_Send
+E 007 sceSkSsSOUND_Control
+E 008 sceSkSsSOUND_Status
+E 009 sceSkSsHSYNTH_Bind
+E 010 sceSkSsHSYNTH_Unbind
+E 011 sceSkSsHSYNTH_Control
+E 012 sceSkSsHSYNTH_Status
+E 013 sceSkSsMIDI_Bind
+E 014 sceSkSsMIDI_Unbind
+E 015 sceSkSsMIDI_Control
+E 016 sceSkSsMIDI_Status
+E 017 sceSkSsMSIN_Bind
+E 018 sceSkSsMSIN_Unbind
+E 019 sceSkSsMSIN_Control
+E 020 sceSkSsMSIN_Status
+E 021 sceSkSsSESQ_Bind
+E 022 sceSkSsSESQ_Unbind
+E 023 sceSkSsSESQ_Control
+E 024 sceSkSsSESQ_Status
+E 025 sceSkSsSTRADPCM_Init
+E 026 sceSkSsSTRADPCM_Quit
+E 027 sceSkSsSTRADPCM_Bind
+E 028 sceSkSsSTRADPCM_Unbind
+E 029 sceSkSsSTRADPCM_Control
+E 030 sceSkSsSTRADPCM_Status
+E 031 sceSkQuit
+E 032 sceSkSsQuit

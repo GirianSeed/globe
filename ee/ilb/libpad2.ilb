@@ -1,0 +1,13 @@
+#EE-ILB# [PsIIlibpad2 3020]
+L libpad2
+V 0x0101
+F 0x0000
+E 004 scePad2Init
+E 005 scePad2End
+E 006 scePad2CreateSocket
+E 007 scePad2DeleteSocket
+E 008 scePad2Read
+E 009 scePad2GetButtonProfile
+E 010 scePad2GetState
+E 011 scePad2GetButtonInfo
+E 012 scePad2StateIntToStr

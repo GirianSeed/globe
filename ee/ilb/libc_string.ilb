@@ -1,0 +1,37 @@
+#EE-ILB# [PsIIstring  3000]
+L LibcString
+V 0x0101
+F 0x0000
+E 004 memchr
+E 005 memcmp
+E 006 memcpy
+E 007 memmove
+E 008 memset
+E 009 strcat
+E 010 strchr
+E 011 strcmp
+E 012 strcoll
+E 013 strcpy
+E 014 strcspn
+E 015 strerror
+E 016 strlen
+E 017 strncat
+E 018 strncmp
+E 019 strncpy
+E 020 strpbrk
+E 021 strrchr
+E 022 strspn
+E 023 strstr
+E 024 strtok
+E 025 strxfrm
+E 026 strtok_r
+E 027 bcmp
+E 028 bcopy
+E 029 bzero
+E 031 index
+E 033 rindex
+E 034 strcasecmp
+E 035 strdup
+E 037 strncasecmp
+E 039 strlwr
+E 040 strupr

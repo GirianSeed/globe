@@ -1,0 +1,6 @@
+#EE-ILB# [PsIIent_eth 3000]
+L ent_eth
+V 0x0101
+F 0x0000
+E 005 sceEENetDeviceETHReg
+E 006 sceEENetDeviceETHUnreg

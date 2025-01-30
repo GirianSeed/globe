@@ -1,0 +1,8 @@
+#EE-ILB# [PsIIlibipu  3000]
+L libipu
+V 0x0101
+F 0x0000
+E 004 sceIpuInit
+E 005 sceIpuRestartDMA
+E 006 sceIpuStopDMA
+E 007 sceIpuSync

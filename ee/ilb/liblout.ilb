@@ -1,0 +1,7 @@
+#EE-ILB# [PsIIliblout 3000]
+L liblout
+V 0x0101
+F 0x0000
+E 004 sceLout_Init
+E 005 sceLout_Quit
+E 006 sceLout_ATick

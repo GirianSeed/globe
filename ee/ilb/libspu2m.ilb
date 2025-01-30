@@ -1,0 +1,8 @@
+#EE-ILB# [PsIIlibspu2m3000]
+L libspu2m
+V 0x0101
+F 0x0000
+E 004 sceSpu2MemInit
+E 005 sceSpu2MemQuit
+E 006 sceSpu2MemAllocate
+E 007 sceSpu2MemFree

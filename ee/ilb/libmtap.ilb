@@ -1,0 +1,11 @@
+#EE-ILB# [PsIIlibmtap 3000]
+L libmtap
+V 0x0103
+F 0x0000
+E 004 sceMtapInit
+E 005 sceMtapPortOpen
+E 006 sceMtapPortClose
+E 007 sceMtapGetConnection
+E 008 sceMtapChangeThreadPriority
+E 009 sceMtapGetInfo
+E 010 sceMtapEnd

@@ -1,0 +1,10 @@
+#EE-ILB# [PsIIlibsdr  3000]
+L libsdr
+V 0x0101
+F 0x0000
+E 004 sceSdRemoteInit
+E 005 sceSdRemote
+E 006 sceSdRemoteCallbackInit
+E 007 sceSdRemoteCallbackQuit
+E 008 sceSdCallBack
+E 009 sceSdTransToIOP

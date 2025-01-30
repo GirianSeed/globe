@@ -1,0 +1,45 @@
+#EE-ILB# [PsIIlibvu0  3000]
+L libvu0
+V 0x0101
+F 0x0000
+E 004 sceVu0CopyVector
+E 005 sceVu0CopyVectorXYZ
+E 006 sceVu0FTOI0Vector
+E 007 sceVu0FTOI4Vector
+E 008 sceVu0ITOF0Vector
+E 009 sceVu0ITOF4Vector
+E 010 sceVu0ScaleVector
+E 011 sceVu0ScaleVectorXYZ
+E 012 sceVu0AddVector
+E 013 sceVu0SubVector
+E 014 sceVu0MulVector
+E 015 sceVu0InterVector
+E 016 sceVu0InterVectorXYZ
+E 017 sceVu0DivVector
+E 018 sceVu0DivVectorXYZ
+E 019 sceVu0InnerProduct
+E 020 sceVu0OuterProduct
+E 021 sceVu0Normalize
+E 022 sceVu0ApplyMatrix
+E 023 sceVu0UnitMatrix
+E 024 sceVu0CopyMatrix
+E 025 sceVu0TransposeMatrix
+E 026 sceVu0MulMatrix
+E 027 sceVu0InversMatrix
+E 028 sceVu0RotMatrixX
+E 029 sceVu0RotMatrixY
+E 030 sceVu0RotMatrixZ
+E 031 sceVu0RotMatrix
+E 032 sceVu0TransMatrix
+E 033 sceVu0CameraMatrix
+E 034 sceVu0NormalLightMatrix
+E 035 sceVu0LightColorMatrix
+E 036 sceVu0ViewScreenMatrix
+E 037 sceVu0DropShadowMatrix
+E 038 sceVu0ClipAll
+E 039 sceVu0ClampVector
+E 040 sceVu0ClipScreen
+E 041 sceVu0ClipScreen3
+E 042 sceVu0RotTransPersN
+E 043 sceVu0RotTransPers
+E 044 sceVpu0Reset

@@ -1,0 +1,20 @@
+#EE-ILB# [PsIIstdlib  3000]
+L LibcStdlib
+V 0x0101
+F 0x0000
+E 004 abort
+E 005 abs
+E 006 atexit
+E 007 atof
+E 009 atoi
+E 010 atol
+E 011 bsearch
+E 014 exit
+E 020 labs
+E 033 qsort
+E 034 rand
+E 036 srand
+E 037 strtod
+E 039 strtol
+E 040 strtoul
+E 041 _strtoul_r

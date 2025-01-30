@@ -1,0 +1,38 @@
+#EE-ILB# [PsIInetglue 3000]
+L netglue
+V 0x0102
+F 0x0000
+E 004 __sceNetGlueErrnoLoc
+E 005 __sceNetGlueHErrnoLoc
+E 006 sceNetGlueAbort
+E 007 sceNetGlueAbortResolver
+E 008 sceNetGlueAccept
+E 009 sceNetGlueBind
+E 010 sceNetGlueConnect
+E 011 sceNetGlueGethostbyaddr
+E 012 sceNetGlueGethostbyname
+E 013 sceNetGlueGetpeername
+E 014 sceNetGlueGetsockname
+E 015 sceNetGlueGetsockopt
+E 016 sceNetGlueHtonl
+E 017 sceNetGlueHtons
+E 018 sceNetGlueInetAddr
+E 019 sceNetGlueInetAton
+E 020 sceNetGlueInetLnaof
+E 021 sceNetGlueInetMakeaddr
+E 022 sceNetGlueInetNetof
+E 023 sceNetGlueInetNetwork
+E 024 sceNetGlueInetNtoa
+E 025 sceNetGlueListen
+E 026 sceNetGlueNtohl
+E 027 sceNetGlueNtohs
+E 028 sceNetGlueRecv
+E 029 sceNetGlueRecvfrom
+E 030 sceNetGlueSend
+E 031 sceNetGlueSendto
+E 032 sceNetGlueSetsockopt
+E 033 sceNetGlueShutdown
+E 034 sceNetGlueSocket
+E 035 sceNetGlueThreadInit
+E 036 sceNetGlueThreadTerminate
+E 037 sceNetGlueInetNtop

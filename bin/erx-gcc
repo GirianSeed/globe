@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ -z "${SCEDIR}" ] ; then
+    # default SCE path
+    SCEDIR="/usr/local/sce"
+fi
+
+if [ -z "${EEGCCDIR}" ] ; then
+    # default ee-gcc install path
+    EEGCCDIR="${SCEDIR}/ee/gcc"
+fi
+
+# determine ee-gcc or ee-g++
+EEGCC="${EEGCCDIR}/bin/ee"`basename $0 | sed 's/^.[^-]*//'`
+
+# determine ERX specs file
+if [ -z "${ERXSPECS}" ] ; then
+    ERXSPECS="${SCEDIR}/bin/erxspecs_"`${EEGCC} -dumpversion`
+fi
+
+# dispatch gcc with ERX specs
+exec ${EEGCC} -specs=${ERXSPECS} $@

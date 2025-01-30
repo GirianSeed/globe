@@ -1,0 +1,9 @@
+#EE-ILB# [PsIItime    3000]
+L LibcTime
+V 0x0101
+F 0x0000
+E 005 difftime
+E 008 asctime
+E 009 ctime
+E 010 gmtime
+E 012 strftime

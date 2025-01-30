@@ -1,0 +1,8 @@
+#EE-ILB# [PsIIctype_ex3000]
+L LibcCtypeExt
+V 0x0101
+F 0x0000
+E 017 isascii
+E 018 toascii
+E 019 _tolower
+E 020 _toupper

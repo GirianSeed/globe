@@ -1,0 +1,86 @@
+Libname libhip  _sceHip_entry
+Version 1.1
+Entry/8 -
+Entry/8 -
+Entry/8 -
+Entry/8 -
+# Plugin Function
+Entry sceHiPlugMicro
+Entry sceHiPlugTex2D
+Entry sceHiPlugTim2
+Entry sceHiPlugShape
+Entry sceHiPlugHrchy
+Entry sceHiPlugAnime
+Entry sceHiPlugShare
+Entry sceHiPlugClutBump
+Entry sceHiPlugShadowMap
+Entry sceHiPlugShadowBox
+Entry sceHiPlugLightMap
+Entry sceHiPlugFishEye
+Entry sceHiPlugReflect
+Entry sceHiPlugRefract
+Entry sceHiPlugSkin
+Entry sceHiPlugClip
+Entry sceHiPlugCamera
+Entry sceHiPlugMatrix
+Entry sceHiPlugManime
+
+# Plugin Services
+Entry sceHiPlugTex2DSize
+Entry sceHiPlugTim2Num
+Entry sceHiPlugTim2GetName
+Entry sceHiPlugTim2SetData
+Entry sceHiPlugTim2GetNPictures
+Entry sceHiPlugTim2SetPicture
+Entry sceHiPlugShapeInvisible
+Entry sceHiPlugShapeMasterChainSetting
+
+# Accessor
+Entry sceHiPlugShapeGetHead
+Entry sceHiPlugShapeGetDataHead
+Entry sceHiPlugShapeGetMaterialHead
+Entry sceHiPlugShapeGetGeometryHead
+Entry sceHiPlugShapeGetMaterialGiftag
+Entry sceHiPlugShapeGetMaterialAttrib
+Entry sceHiPlugShapeGetGeometryVertex
+Entry sceHiPlugShapeGetGeometryNormal
+Entry sceHiPlugShapeGetGeometryST
+Entry sceHiPlugShapeGetGeometryColor
+Entry sceHiPlugShapeGetMatrix
+Entry sceHiPlugHrchyGetHead
+Entry sceHiPlugHrchyGetData
+Entry sceHiPlugHrchyGetPivot
+Entry sceHiPlugTex2DGetHead
+Entry sceHiPlugTex2DGetData
+Entry sceHiPlugTex2DGetTexel
+Entry sceHiPlugTex2DGetClut
+
+Entry sceHiPlugTex2DGetEnv
+Entry sceHiPlugMicroGetData
+Entry sceHiPlugShadowBoxGetData
+Entry sceHiPlugClutBumpGetHead
+Entry sceHiPlugClutBumpGetData
+Entry sceHiPlugClutBumpGetNormal
+
+Entry sceHiPlugTim2GetHead
+Entry sceHiPlugTim2GetData
+Entry sceHiPlugAnimeGetHead
+Entry sceHiPlugAnimeGetData
+Entry sceHiPlugAnimeGetKeyHead
+Entry sceHiPlugAnimeGetFrame
+Entry sceHiPlugAnimeGetValue
+Entry sceHiPlugShareGetHead
+Entry sceHiPlugShareGetData
+Entry sceHiPlugShareGetShare
+Entry sceHiPlugShareGetIndex
+Entry sceHiPlugShareGetSrc
+Entry sceHiPlugShareGetDst
+Entry sceHiPlugClipGetHead
+Entry sceHiPlugClipGetData
+Entry sceHiPlugSkinGetHead
+Entry sceHiPlugSkinGetData
+Entry sceHiPlugSkinGetLB
+Entry sceHiPlugSkinGetLW
+Entry sceHiPlugSkinGetBW
+Entry sceHiPlugCameraGetData
+Entry sceHiPlugHrchyGetMatrix

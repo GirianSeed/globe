@@ -1,0 +1,26 @@
+#EE-ILB# [PsIIlibssyn 3000]
+L libssyn
+V 0x0101
+F 0x0000
+E 004 sceSSyn_Init
+E 005 sceSSyn_ATick
+E 006 sceSSyn_Load
+E 007 sceSSyn_RegisterRpc
+E 008 sceSSyn_RemoveRpc
+E 009 sceSSyn_PrepareParameter
+E 010 sceSSyn_SetMasterVolume
+E 011 sceSSyn_SetOutPortVolume
+E 012 sceSSyn_SetOutputAssign
+E 013 sceSSyn_SetPortVolume
+E 014 sceSSyn_SendShortMsg
+E 015 sceSSyn_SendExcMsg
+E 016 sceSSyn_SendRpnMsg
+E 017 sceSSyn_SendNrpnMsg
+E 018 sceSSyn_SetChPriority
+E 019 sceSSyn_SetPortMaxPoly
+E 020 sceSSyn_ClearBreakAtick
+E 021 sceSSyn_BreakAtick
+E 022 sceSSyn_SetOutputMode
+E 023 sceSSyn_SetTvaEnvMode
+E 024 sceSSyn_Init2
+E 025 sceSSyn_Quit

@@ -1,0 +1,36 @@
+# SCE CONFIDENTIAL
+# $PSLibId$
+# $Id: libsdr.tbl,v 1.4 2003/04/22 12:38:50 kaol Exp $
+#
+# Emotion Engine Library
+#
+# Copyright (C) 2003 Sony Computer Entertainment Inc.
+# All Rights Reserved.
+#
+# --- ERX entry table
+
+# Libname: ライブラリ名宣言
+#	第一引数:	ライブラリ名
+#	第二引数:	エントリテーブル名 (erxexport.c にて
+#			extern SceErxLibraryHeader する)
+Libname libsdr	_sceSdr_entry
+
+# Version: バージョン番号
+Version 1.1
+
+# Entry: 関数エントリ宣言
+#	最初の 4 つはシステム予約
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry/8	-
+
+#	公開関数エントリ
+Entry	sceSdRemoteInit
+Entry	sceSdRemote
+Entry	sceSdRemoteCallbackInit
+Entry	sceSdRemoteCallbackQuit
+Entry	sceSdCallBack
+Entry	sceSdTransToIOP
+
+#

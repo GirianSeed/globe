@@ -1,0 +1,7 @@
+#IOP-ILB# [PsIIent_devm2550]
+L ent_devm
+V 0x0101
+F 0x0000
+E 004 sceEENetDevAttach
+E 005 sceEENetDevReady
+E 006 sceEENetDevDetach

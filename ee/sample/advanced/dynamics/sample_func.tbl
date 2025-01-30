@@ -1,0 +1,2 @@
+DEFFUNC(SAMPLED,rigid bodies without friction)
+DEFFUNC(SAMPLED2,rigid bodies with friction)

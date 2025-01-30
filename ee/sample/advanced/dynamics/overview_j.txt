@@ -1,0 +1,314 @@
+[SCE CONFIDENTIAL DOCUMENT]
+"PlayStation 2" Programmer Tool Runtime Library Release 2.5.3
+                       Copyright (C) 2002 Sony Computer Entertainment Inc.
+                                                    All Rights Reserved
+
+＜sample 1の概要＞
+
+	本プログラムは、オブジェクト間の摩擦や結合部を考慮しない、剛体ダイ
+	ナミクスシミュレーションです。
+	また、接触静止状態のオブジェクト間の接触は計算されません。接触静止
+	状態のオブジェクト同士を離しておくために、つまり、重力や他の外力に
+	よって相互に突入するのを避けるために、一定の距離内に位置している場
+	合（許容値補正）は、衝突法線に沿って意図的に離します。オブジェクト
+	同士が重なって休止しているように見えていても、実際には微小規模の振
+	動が起きています。
+ 	
+	運動方程式の積分に４次のルンゲ-クッタ法を用いています。	
+
+	衝突検出にはGJKアルゴリズムを使っています。
+	（advanced/collision/*.txtを参照してください）
+	オブジェクト同士が接近している場合には、さらに高速な方法
+	（ブロードフェイズ衝突検出アルゴリズム）を使ってパフォーマンスを
+	高める方法もあります。
+	
+	HiG/HiPを使って描画していますが、hierarchy-pluginは使用しません。
+	
+
+＜sample 1 制限事項＞
+
+	ここで使用している２つのオブジェクト間の距離を計算するアルゴリズム
+	は負の距離を計算しません（突入部の深さ）。オブジェクト間がある一定
+	の距離以上近づいたときには衝突が想定されます。したがって、シミュ
+	レーションプロセス中、つまりsimulation()の中の積分のステップ前には、
+	オブジェクトのすべては交差してはいけないことになります。
+	
+	２つのオブジェクトが積分のステップ前には交差しておらず、後になって
+	交差した場合、関数get_coll_time()は、補間法を使って衝突時間tc
+	（２つのオブジェクト間にわずかな距離があったとき）とそのときの状態
+	変数(x,rq,p,L :後述)を計算します。数値誤差などによりこの補間法に失
+	敗した場合、以前のステップの状態変数xとrqが、時間tcの正確な状態変
+	数の代わりに使われます。（状態変数pとLは修正されない）
+
+	許容値補正との組み合わせによるこの方法は本サンプルでは正常に動作し
+	ていますが、まれに動作しないことがあります。あるオブジェクトが他の
+	２つのオブジェクトに挟まれたとき、数値誤差の補正によりオブジェクト
+	が交差してしまい、simulation()はボディの正常な振る舞いをしません。
+	この数値エラーをなくすには、オブジェクト同士を離しておけるよう
+	さらに徹底した方法を採用する必要があります。
+	
+＜剛体シミュレーションの概略＞
+
+	0.　以下の関数を使い、ボディにどのような外力（例：重力など）が
+	　　かかるかを定義します。
+
+   	   	calc_force()
+
+	1.　gjkobjsを作成して衝突検出をする（advanced/collisionの
+　	　　readme_j.txt とoverview_j.txtを参照してください）
+
+  	   collision_init()          ： Vu0 micro-codeをVu0 program-memory
+					にロードする
+
+  	   gjk_init() 		     ： 本サンプルで使用するGJKObjと
+					Simplex構造体を初期化する
+
+	   alloc_gjkobj_neighbors()  ： 隣接点テーブル
+					(nearest-neighbor-table)用にメモリ
+					を確保する
+	       
+	2. シミュレーションシステムを初期化する
+
+	   alloc_mem()	             ： 運動方程式の積分に使われるメモリ
+					を確保する
+
+	   init_body_*()             ： 剛体オブジェクトを初期化する 
+                                       	(mass、inertial_tensor、状態変数)				       
+  	   衝突(gjk)オブジェクトを剛体に割り当てる 
+				     ： body0.gjkobj=&(my_gjkobj[OBJA]);
+
+  	   剛体リストを作成する  　　： bodylist[0]=&body0;
+
+	3. シミュレーションを実行する
+
+   	   simulation()		     ： シミュレーションを開始し、
+					local_world、 light_rot matrix 
+					を更新して画面にオブジェクトを
+					描画する
+
+	4. 確保したメモリを解放する
+
+ 	   free_gjkobj_neighbors()   ： 隣接点テーブル用に使われたメモリを
+					解放する 
+				      
+  	   free_mem()                ： 積分に使われるメモリを解放する
+
+
+＜剛体構造についての解説＞
+
+	typedef struct _body{
+
+  	  int type;
+  	  /* constants */
+ 	  float m; 		/* mass */
+  	  float invM; 		/* inverse mass */
+  	  sceVu0FMATRIX Iinv; 	/* inverse Inertia tensor */
+
+  	  /* state variables */
+  	  sceVu0FVECTOR x;	/* center of mass position */
+  	  sceVu0FVECTOR rq;	/* rotation quaternion */
+  	  sceVu0FVECTOR p;	/* linear momentum */
+  	  sceVu0FVECTOR L;	/* angular momentum */
+
+  	  /* force and torque accumulator */
+  	  sceVu0FVECTOR F;
+  	  sceVu0FVECTOR torque;
+
+  	  /* internal temp var. */
+  	  sceVu0FMATRIX Iinv_t;
+  	  sceVu0FVECTOR omega;
+
+  	  /* pointer to gjkobj */
+  	  GJKObj *gjkobj;
+
+	} rigid_body;
+
+	Iinv_t とomegaのメンバは関数simulation()の内部でしか使われません。
+	なお、simulation()が呼び出された後、正確な値が含まれる保証はありま
+	せん。
+
+	すべての状態変数(x,rq,p,L)は、simulation()が呼び出される前後に有効
+	です（正確な値が含まれている）。calc_force()のコールバックの中では
+	有効な値ではありません。
+	
+	定数m、invM、Iinvは常に有効で、simulation()によって変更されません。
+	
+	
+	typeはPASSIVEになる可能性がある･･･　ボディの位置が固定されている
+					　　ことを想定、massは無限である
+					　　ことを仮定している
+ 	
+        または、ACTIVEの可能性がある･･･	　　ボディがシミュレーション
+					　　プロセスにフルで関わっている
+
+
+＜状態ベクトル "Xn"と剛体リスト"bodylist"間の関係＞
+
+	各剛体には４つの状態ベクトルがあり、それぞれの剛体の状態を一意に決
+	定します。（x は重心の位置、rqは回転クウォータニオン、pは運動量、
+	Lは角運動量を示す）
+
+	剛体リスト"bodylist"は、simulation()の引数として渡しています。
+	
+	関数simulation()はこの剛体群を、一つの長い
+	NOBJECTS*VECTOR_DIM*STATE_DIM ベクトル"Xn"として内部で処理します。
+	（NOBJECTS･･･オブジェクト数、VECTOR_DIMベクトルサイズ
+	(sceVu0FVector)=4, STATE_DIM=4 オブジェクト当たり４状態変数による）
+	
+	simulation()の始めに、"bodylist"内のすべてのボディの状態変数を"Xn"
+	にコピーし、simulation()の終わりに、"Xn"の状態変数を"bodylist"のそ
+	れぞれの剛体にコピーします。シミュレーション中、"Xn"だけが更新され、
+	"bodylist"のボディの状態変数は更新されません。
+	
+
+＜外力を加える（calc_force()の使用方法）＞
+
+	シミュレーション中に別のオブジェクトにどのように外力が加えられ
+	るのかを定義することができます。
+
+	本サンプルでは、関数
+	void calc_force　
+	　(sceVu0FVECTOR *Xn,rigid_body **bodylist,int nbody,float t)
+	を使って、ユーザがどのように入力したのか、重力がどのように別のオブ
+	ジェクトに加えられたのかを定義することができます。
+ 
+	このcalc_force()はsimulation()の引数として渡し、simulation()の関数
+	内で複数回呼び出されています。
+	 
+	・「剛体の定数(mass etc.)」にアクセスするには、bodylist を使います。
+	・外力がボディの「状態変数」に応じて異なる場合、状態変数に"Xn"を使
+	　う必要があります。というのは、bodylistの状態変数はsimulation()呼
+	　び出し中には有効ではないためです（上記解説を参照）。
+	・「時間」に依存する力にはtを使います。
+	
+
+＜simulation()について＞
+	関数simulation()は剛体の動作をシミュレートします。また、描画する為
+	にlocal_world and light_rotマトリクスを設定します。
+	
+	パラメータは以下のとおりです。
+
+	void simulation(rigid_body **bodylist,int nbody,float tstep,
+		int nsteps,float tstart,SimMEM *mem,void (*calc_force)
+		(sceVu0FVECTOR *,rigid_body **,int ,float ))
+
+	bodylist 　... 	シミュレーションに関わっている剛体リスト
+	nbody    　... 	bodylist内のボディ数
+	tstep    　... 	時間１ステップのサイズ
+	nsteps   　... 	simulation()が実行する積分のステップ数
+	tstart   　... 	シミュレーションの開始時間
+	mem      　... 	シミュレーションのためにユーザーが確保したメモリ
+	calc_force ...	外力の計算を実行し、外力を加える関数 （例：重力）
+
+
+	関数simulation()の擬似コード:
+
+	for n-integration steps {
+
+ 	  calculate external forces 
+
+ 	  integrate equations of motion
+
+ 	  loop over all possible collision-pairs {
+
+ 	    calculate distance between object
+  
+ 	    if (distance ＜ COLL_DIST) {
+   	      if (distance ＜ SEPARATE_DIST) interpolate state vectors 
+			to get the state vectors at the collision time
+   	      
+	      if (distance ＜ WARNING_DIST) separate objects 
+			artificially along the collision normal
+
+	      analyze contact and check if objects are approaching each other
+   	      
+	      if (objects are approaching each other) apply collision response
+	    } 
+	  }  
+	}
+
+	simulation()で使われている定数の解説：
+
+ 	COLL_DIST     ：オブジェクトがこの距離よりも短い場合、衝突を仮定する
+
+ 	WARNING_DIST  ：距離がこれよりも短い場合、許容値補正を適用する
+			（衝突法線の方向にオブジェクトが分離される）
+
+ 	SEPARATE_DIST ：オブジェクト間の距離がSEPARATE_DIST よりも短い場合、
+			オブジェクトは交差していると仮定する。補間により衝
+			突時間が計算され、状態変数も衝突時に計算される
+
+＜オブジェクトの弾性について＞
+
+	摩擦のない閉鎖したシステムではエネルギーは保存し、オブジェクトが床
+	にバウンドしたままで永久に静止することはありません。
+	関数analyze_collision()には、"epsilon"というパラメータがあり、２つ
+	のオブジェクトが衝突する際、エネルギー損失が起こるよう設定できます。
+ 	
+  	epsilon = 0 	... 　100% エネルギーロス：
+				衝突時、オブジェクト同士が張り付く
+  	0 < epsilon < 1 ... 　衝突時、オブジェクトはエネルギーを失う
+  	epsilon = 1  	... 　エネルギーは保存する
+  	epsilon > 1  	... 　衝突時、オブジェクトがエネルギーを得る 
+
+	本サンプルでは、すべてのオブジェクトに対する弾性は均等です。
+
+
+＜sample 2の概要＞
+
+	本サンプルでは摩擦ありの剛体シミュレーションを行います。オブジェク
+	トの連結はサポートされていません。
+	また、接触静止状態のオブジェクト間の接触は計算されません。接触静止
+	状態のオブジェクト同士を離しておくために、つまり、重力や他の外力に
+	よって相互に突入するのを避けるために、オブジェクトは
+	micro-collisions[1] （意図的に復元力”衝突係数ε”を上げた衝突）を
+	しています。sample 1と同じく、オブジェクト同士が重なって休止してい
+	るように見えていても、実際には微小規模の振動が起きています。
+
+
+＜sample 1との違い＞
+	
+	１、sample2は摩擦があります。（摩擦モデルについては[2]を参照のこと）
+	２、sample2ではオブジェクトの接触を"micro collision"[1]で扱います。
+	３、sample2では、simulation()のかわりにsimulation_with_rollback()
+	　　を使います。simulation_with_rollbackは、内部で使用している変数
+	　　等はsimulationと同じですが、シミュレーションステップ内で最初の
+	　　衝突t=tcを探します。そして衝突を適用する前に全てのオブジェクト
+	　　をtcでの位置まで巻き戻し(rollback)ます。（sample1 では総当り方
+	　　式で衝突をチェックし、見つかった順に力積を与えます。)
+
+
+＜sample 2 制限事項＞
+
+	シミュレーションステップ内のループで、最も早い衝突を探します。しか
+	し同一ステップ内でいくつもの衝突が起こった場合に、問題が起こる場合
+	があります。シミュレーションが失敗するのは次の３つの場合です。
+	
+	A.前フレームに交差してしまっている為に、衝突時間tcを計算できない。
+	　（これはget_coll_time()内でチェックします。）この問題は強い
+	  micro-collision（EPSILON_MAXまで増加する）で解決できます。
+	B.get_coll_time()内で衝突時間tcを求める補間作業が失敗する。
+　　　　　（分割補間作業は10000回まで繰り返して、だめなら中止します。）
+	C.数値誤差のため、衝突時間tcが見つからない。
+
+	これらは全てエラーメッセージが表示されます。
+
+
+＜今後の予定＞
+
+	ポイント結合
+	接触静止状態の計算のアルゴリズムの改善
+	最適化
+
+
+＜剛体シミュレーションについての詳細＞
+
+"Physically Based Modeling", SIGGRAPH'97, Course Notes
+"Interactive Simulation of Solid Rigid Bodies", 1995, IEEE Computer 
+Graphics and Application, Vol. 15, 1995, pp. 63 - 75
+
+
+＜参考文献＞
+[1] "Impulse-based Simulation of Rigid Bodies",Mitrich,Canny,181-188,217,
+     Electronic Edition (ACM DL)
+[2] "Realistic Animation of Rigid Bodies",James K. Hahn.1988,Computer Graphics,Volume 22,Number 4

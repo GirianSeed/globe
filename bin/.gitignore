@@ -1,0 +1,7 @@
+# -*- mode: gitignore; -*-
+*
+!.gitignore
+!iop-path-setup
+!iopspecs
+!iopspecs-2
+!irxsize.c

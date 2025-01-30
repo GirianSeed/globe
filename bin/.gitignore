@@ -1,0 +1,26 @@
+# -*- mode: gitignore; -*-
+*
+!.gitignore
+!erx-g++
+!erx-gcc
+!erxsize.c
+!erxspecs_2.9-ee-991111-01
+!erxspecs_2.96-ee-001003-1
+!erxspecs_3.2-beta2-ee-030210
+!iop-addr2line
+!iop-ar
+!iop-as
+!iop-c++filt
+!iop-gasp
+!iop-gcc
+!iop-ld
+!iop-nm
+!iop-objcopy
+!iop-objdump
+!iop-path-setup
+!iop-ranlib
+!iop-size
+!iop-strings
+!iopspecs
+!iopspecs-2
+!irxsize.c

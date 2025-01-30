@@ -1,0 +1,51 @@
+root = false
+
+[*.{c,h}]
+tab_width       = 4
+indent_style    = tab
+indent_size     = tab
+
+#[callback.{c,h}]
+#tab_width       = 4
+#indent_style    = tab
+#indent_size     = tab
+#
+#[dma.{c,h}]
+#tab_width       = 4
+#indent_style    = tab
+#indent_size     = tab
+#
+#[interface.{c,h}]
+#tab_width       = 4
+#indent_style    = tab
+#indent_size     = tab
+#
+#[mem.{c,h}]
+#tab_width       = 4
+#indent_style    = tab
+#indent_size     = tab
+#
+#[netcnfif.{c,h}]
+#tab_width       = 4
+#indent_style    = tab
+#indent_size     = tab
+
+[netcnfif_data.{c,h}]
+tab_width       = 8
+indent_style    = tab
+indent_size     = tab
+
+[netcnf_env.{c,h}]
+tab_width       = 8
+indent_style    = tab
+indent_size     = tab
+
+[read_env.{c,h}]
+tab_width       = 8
+indent_style    = tab
+indent_size     = tab
+
+[write_env.{c,h}]
+tab_width       = 8
+indent_style    = tab
+indent_size     = tab

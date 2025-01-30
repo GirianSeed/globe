@@ -1,0 +1,4 @@
+root = true
+
+[libeenet.txt]
+end_of_line = crlf

@@ -1,5 +1,5 @@
 /* SCE CONFIDENTIAL
- $PSLibId$
+ "PlayStation 2" Programmer Tool Runtime Library Release 2.7
  */
 /* 
  *

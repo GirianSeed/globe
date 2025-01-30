@@ -1,0 +1,10 @@
+#
+#  IOP native kernel Common Makefile defines
+#
+#  Copyright (C) 1998 Sony Computer Entertainment Inc., All Rights Reserved.
+#
+
+include $(word 1, $(wildcard lib/PathDefs ../lib/PathDefs ../../lib/PathDefs \
+		../../../lib/PathDefs ../../../../lib/PathDefs ) )
+
+COMPILE.s = $(CC) -xassembler-with-cpp $(ASFLAGS) $(CPPFLAGS) $(TARGET_MACH) -c

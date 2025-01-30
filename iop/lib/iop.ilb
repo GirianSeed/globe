@@ -1,0 +1,253 @@
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L deci2api
+V 0x0101
+F 0x0000
+E 004 sceDeci2Open
+E 005 sceDeci2Close
+E 006 sceDeci2ExRecv
+E 007 sceDeci2ExSend
+E 008 sceDeci2ReqSend
+E 009 sceDeci2ExReqSend
+E 010 sceDeci2ExLock
+E 011 sceDeci2ExUnLock
+E 012 sceDeci2ExPanic
+E 013 sceDeci2Poll
+E 014 sceDeci2ExPoll
+E 015 sceDeci2ExRecvSuspend
+E 016 sceDeci2ExRecvUnSuspend
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L excepman
+V 0x0101
+F 0x0000
+E 004 RegisterExceptionHandler
+E 005 RegisterPriorityExceptionHandler
+E 006 RegisterDefaultExceptionHandler
+E 007 ReleaseExceptionHandler
+E 008 ReleaseDefaultExceptionHandler
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L intrman
+V 0x0102
+F 0x0000
+E 004 RegisterIntrHandler
+E 005 ReleaseIntrHandler
+E 006 EnableIntr
+E 007 DisableIntr
+E 008 CpuDisableIntr
+E 009 CpuEnableIntr
+E 017 CpuSuspendIntr
+E 018 CpuResumeIntr
+E 019 iCpuSuspendIntr
+E 020 iCpuResumeIntr
+E 023 QueryIntrContext
+E 024 QueryIntrStack
+E 025 CatchMultiIntr
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L ioman
+V 0x0101
+F 0x0000
+E 004 open
+E 005 close
+E 006 read
+E 007 write
+E 008 lseek
+E 009 ioctl
+E 016 _circgetc
+E 017 _circputc
+E 018 _nodev
+E 019 _nulldev
+E 020 AddDrv
+E 021 DelDrv
+E 022 _cdevscan
+E 023 _cdevinput
+E 024 _ioabort
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L loadcore
+V 0x0101
+F 0x0000
+E 004 FlushIcache
+E 005 FlushDcache
+E 006 RegisterLibraryEntries
+E 007 ReleaseLibraryEntries
+E 008 LinkLibraryEntries
+E 009 UnLinkLibraryEntries
+E 012 QueryBootMode
+E 013 RegisterBootMode
+E 014 LockLibraryClient
+E 015 UnLockLibraryClient
+E 016 RegisterModule
+E 017 ReleaseModule
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L sifcmd
+V 0x0101
+F 0x0000
+E 004 sceSifInitCmd
+E 005 sceSifExitCmd
+E 006 sceSifGetSreg
+E 007 sceSifSetSreg
+E 008 sceSifSetCmdBuffer
+E 009 sceSifSetSysCmdBuffer
+E 010 sceSifAddCmdHandler
+E 011 sceSifRemoveCmdHandler
+E 012 sceSifSendCmd
+E 013 isceSifSendCmd
+E 014 sceSifInitRpc
+E 015 sceSifBindRpc
+E 016 sceSifCallRpc
+E 017 sceSifRegisterRpc
+E 018 sceSifCheckStatRpc
+E 019 sceSifSetRpcQueue
+E 020 sceSifGetNextRequest
+E 021 sceSifExecRequest
+E 022 sceSifRpcLoop
+E 023 sceSifGetOtherData
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L sifman
+V 0x0101
+F 0x0000
+E 004 sceSifInitS
+E 005 sceSifInit
+E 006 sceSifSetDChain
+E 007 sceSifSetDma
+E 008 sceSifDmaStat
+E 009 sceSifSend
+E 010 sceSifSendSync
+E 011 sceSifIsSending
+E 012 sceSifSetSIF0DMA
+E 013 sceSifSendSync0
+E 014 sceSifIsSending0
+E 015 sceSifSetSIF1DMA
+E 016 sceSifSendSync1
+E 017 sceSifIsSending1
+E 018 sceSifSetSIF2DMA
+E 019 sceSifSendSync2
+E 020 sceSifIsSending2
+E 021 sceSifGetMSflg
+E 022 sceSifSetMSflg
+E 023 sceSifGetSMflg
+E 024 sceSifSetSMflg
+E 025 sceSifGetMScom
+E 026 sceSifGetSMcom
+E 027 sceSifSetSMcom
+E 028 sceSifIntrOther
+E 029 sceSifCheckInit
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L stdio
+V 0x0101
+F 0x0000
+E 004 printf
+E 005 getchar
+E 006 putchar
+E 007 puts
+E 008 gets
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L sysclib
+V 0x0101
+F 0x0000
+E 004 setjmp
+E 005 longjmp
+E 006 toupper
+E 007 tolower
+E 008 look_ctype_table
+E 009 get_ctype_table
+E 010 memchr
+E 011 memcmp
+E 012 memcpy
+E 013 memmove
+E 014 memset
+E 015 bcmp
+E 016 bcopy
+E 017 bzero
+E 018 prnt
+E 019 sprintf
+E 020 strcat
+E 021 strchr
+E 022 strcmp
+E 023 strcpy
+E 024 strcspn
+E 025 index
+E 026 rindex
+E 027 strlen
+E 028 strncat
+E 029 strncmp
+E 030 strncpy
+E 031 strpbrk
+E 032 strrchr
+E 033 strspn
+E 034 strstr
+E 035 strtok
+E 036 strtol
+E 037 atob
+E 038 strtoul
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L sysmem
+V 0x0101
+F 0x0000
+E 004 AllocSysMemory
+E 005 FreeSysMemory
+E 006 QueryMemSize
+E 007 QueryMaxFreeMemSize
+E 008 QueryTotalFreeMemSize
+E 009 QueryBlockTopAddress
+E 010 QueryBlockSize
+E 014 Kprintf
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L thrdman
+V 0x0101
+F 0x0000
+E 004 CreateThread
+E 005 DeleteThread
+E 006 StartThread
+E 007 ExitThread
+E 008 ExitDeleteThread
+E 009 TerminateThread
+E 010 iTerminateThread
+E 011 DisableDispatchThread
+E 012 EnableDispatchThread
+E 013 ChangeThreadPriority
+E 014 iChangeThreadPriority
+E 015 RotateThreadReadyQueue
+E 016 iRotateThreadReadyQueue
+E 017 ReleaseWaitThread
+E 018 iReleaseWaitThread
+E 019 GetThreadId
+E 020 ReferThreadStatus
+E 021 iReferThreadStatus
+E 022 SleepThread
+E 023 WakeupThread
+E 024 iWakeupThread
+E 025 CancelWakeupThread
+E 026 iCancelWakeupThread
+E 027 SuspendThread
+E 028 iSuspendThread
+E 029 ResumeThread
+E 030 iResumeThread
+E 031 CreateEventFlag
+E 032 DeleteEventFlag
+E 033 SetEventFlag
+E 034 iSetEventFlag
+E 035 ClearEventFlag
+E 036 iClearEventFlag
+E 037 WaitEventFlag
+E 038 PollEventFlag
+E 039 iPollEventFlag
+E 040 ReferEventFlagStatus
+E 041 iReferEventFlagStatus
+E 042 DelayThread
+E 043 StartThreadArgs
+#IOP-ILB# $Id: iop.ilb,v 1.2 1999/08/20 13:26:10 hakama Exp $
+L timrman
+V 0x0101
+F 0x0000
+E 004 AllocHardTimer
+E 005 ReferHardTimer
+E 006 FreeHardTimer
+E 007 SetTimerMode
+E 008 GetTimerStatus
+E 009 SetTimerCounter
+E 010 GetTimerCounter
+E 011 SetTimerCompare
+E 012 GetTimerCompare
+E 013 SetHoldMode
+E 014 GetHoldMode
+E 015 GetHoldReg
+E 016 GetHardTimerIntrCode

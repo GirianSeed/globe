@@ -1,0 +1,12 @@
+#
+#  Netcnf Interface Library's Entry Table
+#
+
+Libname netcnfif
+
+Version 1.1
+
+Entry	-
+Entry	-
+Entry	-
+Entry	-

@@ -1,0 +1,71 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/*
+ *               Graphics Framework Sample Program
+ *                  
+ *      Copyright (C) 2000 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                          Name : micro.dsm
+ */
+.include "vumacros.h"
+.global My_micro_base
+.global My_micro_cull
+.global My_micro_pointl
+.global My_micro_spotl
+.global My_micro_fog
+.global My_micro_anti
+
+.align 4
+My_micro_base:
+DMAret *
+MPG 0, *
+;;.include "vu1base.vsm" 
+.include "vu1baseo.vsm" 
+.EndMPG
+.EndDmaData
+
+.align 4
+My_micro_cull:
+DMAret *
+MPG 0, *
+;;.include "vu1cull.vsm" 
+.include "vu1cullo.vsm" 
+.EndMPG
+.EndDmaData
+
+
+.align 4
+My_micro_pointl:
+DMAret *
+MPG 0, * 
+.include "vu1pointl.vsm"
+.EndMPG
+.EndDmaData
+
+
+.align 4
+My_micro_spotl:
+DMAret *
+MPG 0, * 
+.include "vu1spotl.vsm"
+.EndMPG
+.EndDmaData
+
+.align 4
+My_micro_fog:
+DMAret *
+MPG 0, * 
+.include "vu1fog.vsm" 
+.EndMPG
+.EndDmaData
+
+.align 4
+My_micro_anti:
+DMAret *
+MPG 0, *
+.include "vu1anti.vsm"
+.EndMPG
+.EndDmaData
+

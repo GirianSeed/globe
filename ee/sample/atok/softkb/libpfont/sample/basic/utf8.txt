@@ -1,0 +1,9 @@
+Copyright (C) 2002
+Sony Computer Entertainment Inc.
+All Rights Reserved.
+
+This is libpfont's sample data.
+日本語も出ます。
+薔薇（バラ）
+登録されていない文字は出ません。
+--偆--

@@ -1,0 +1,12 @@
+Libname baseelf
+Version 1.1
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry	AutoReset
+Entry	AutoStep
+Entry	-
+Entry	-
+Entry	-
+

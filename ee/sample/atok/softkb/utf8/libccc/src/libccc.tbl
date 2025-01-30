@@ -1,0 +1,68 @@
+Libname libccc	_sceCcc_entry
+Version 1.1
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry/8	-
+
+Entry	sceCccSetTable
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccStrlenSJIS
+Entry	sceCccStrlenUTF8
+Entry	sceCccStrlenUTF16
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccIsValidSJIS
+Entry	sceCccIsValidUTF8
+Entry	sceCccIsValidUTF16
+Entry	sceCccIsValidUCS2
+Entry	sceCccIsValidUCS4
+Entry	sceCccIsValidJIS
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccDecodeSJIS
+Entry	sceCccDecodeUTF8
+Entry	sceCccDecodeUTF16
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccEncodeSJIS
+Entry	sceCccEncodeUTF8
+Entry	sceCccEncodeUTF16
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccUCStoJIS
+Entry	sceCccJIStoUCS
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccSJIStoUTF8
+Entry	sceCccSJIStoUTF16
+Entry	sceCccUTF8toSJIS
+Entry	sceCccUTF8toUTF16
+Entry	sceCccUTF16toSJIS
+Entry	sceCccUTF16toUTF8
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+Entry	-
+
+Entry	sceCccSetErrorCharSJIS
+Entry	sceCccSetErrorCharUTF8
+Entry	sceCccSetErrorCharUTF16
+Entry	-
+Entry	-
+Entry	-

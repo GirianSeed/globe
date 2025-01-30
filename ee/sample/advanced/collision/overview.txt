@@ -1,0 +1,150 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library Release 3.0
+        Copyright (C) 2001 Sony Computer Entertainment Inc.
+                                       All Rights Reserved
+
+Collision detection sample program
+
+<Overview>
+
+This sample program makes use of narrow-phase collision detection technology (GJK). This technology is more efficient when a higher level of precision is called for. It is used in rigid-body simulations, for example.
+
+Conversely, the broad-phase collision detection algorithm should be used when there are numerous objects, in order to identify candidate objects that may collide. This can be referred to as the "sweep and prune" approach.
+
+Two functions are mainly used.
+
+	is_collision()		Checks whether two objects overlap
+	calc_dist()		Calculates the square of the minimum distance between two objects
+
+The algorithm used here works for convex objects; it can also work for objects with more complex shapes if those objects are composed of convex sub-objects.
+
+HiG/HiP are used for rendering.
+
+<Algorithm>
+
+This sample program uses the GJK (Gilbert-Johnson-Keerthi) algorithm. For details, see {1}.
+
+This sample's implementation differs to some extent from the GJK algorithm, as described below.
+
+This algorithm uses the Minkowski-sum concept to define the distance between two bodies A and B. Minkowski-sum is basically a difference:
+
+	A-B={x-y: x is an element of body A, y is an element of body B}
+
+If the origin (0,0,0) is within the Minkowski-sum, the two bodies are overlapped. 
+
+This algorithm first determines whether the simplex is the origin within the convex hull. A simplex comprises at most four Minkowski-sum points. If it is not the origin, the minimum simplex subset (3 or fewer points) containing the point within the convex hull nearest the origin is then calculated. This is iterated to find the simplex, which is the point nearest the origin within the Minkowski-sum.
+
+If the origin is within the Minkowski-sum (when objects overlap, the distance approaches 0) or the Minkowski-simplex nearest the origin has been found, the iteration process stops.
+
+This sample uses a different technique than is described in the GJK paper {1} for calculating the minimum simplex subset that encompasses a point within the convex hull nearest the origin.
+
+The Minkowski-simplex case has been adapted using a concept borrowed from Eric Larsen (SCEA R&D) {2}. Larsen uses simplex-pairs instead of Minkowski-sums. In this approach, Vu0 is used to find whether a line segment is the smallest subset nearest the origin. 
+
+Vu0 operates in micromode. This has the advantage of allowing Vu0 to find the distance to the line segment at the same time that the CPU checks whether the triangular surface is the minimum subset, when the simplex comprises two or more points.
+
+<Usage>
+
+1. Because the GJK algorithm uses Vu0's micromode, the code called by the collision_init() function must be loaded into Vu0 program memory. The vcl version of the microcode is stored in vu0coll.vcl.
+
+2. Each pair of colliding objects must be initialized with one "Simplex" structure and each colliding object with one "GJKObj" structure. This is implemented in the sample using a gjk_init() function call.
+
+Simplex is initialized with the following requisite members:
+
+cache_valid
+	Set to 0 in the frame result before the algorithm begins, to avoid reusing the nearest element (point, line, or surface) being searched as a starting point. If the frame has a large amount of coherence, the previous frame's simplex should be reused as the starting point. Doing so will generally speed up calculations.
+	As such, if the previous frame's results are invalid, this parameter must be set to 0. For example, this must be set to 0 for the initial frame, etc.
+
+epsilon
+	Calculation accuracy
+
+hintA, hintB
+	Hints relating to the vertex index of GJKObj that may contain the nearest point, line, or surface. This parameter is only valid when the supported GJKObj is of type GJK_MESH.
+
+The following GJKObj members must be initialized:
+
+	type	GJK_BOX, GJK_SPHERE, GJK_CONE, GJK_CYLINDER, GJK_MESH
+	lw	local_world matrix object
+	lwrot	light_rot matrix object
+
+When the type is not GJK_MESH, execute the following:
+
+Define the geometry of cylinders, spheres, and cones using radius and half_length. Define box-shaped objects using half_box.
+
+	GJK_SPHERE	radius: 	radius of sphere
+	GJK_CONE	radius: 	radius of cone bottom surface
+			half_length: 	cone height/2
+	GJK_CYLINDER	radius: 	radius of cylinder bottom surface
+			half_length: 	cone height/2
+	GJK_BOX		half_box[0]: 	box length/2, x direction
+			half_box[1]: 	box length/2, y direction
+			half_box[2]: 	box length/2, z direction
+
+When using a polygon mesh (GJK_MESH), use an adjacent-point table to speed up the algorithm.
+
+To obtain this adjacent-point table, execute the following:
+
+	int alloc_gjkobj_neighbors(void *gjk_data_addr,GJKObj *gjkobj);
+
+Generate adjacent points using gjkobj_file (see below for a description of the format).
+
+The gjk_data_addr points written to data are given in gjkobj_file. This file contains a list of the mesh's convex hull vertices and adjacent points.
+
+To free the table, execute the following:
+
+	void free_gjkobj_neighbors(GJKObj *gjkobj);
+
+3. Next, use the following to check whether objects overlap, or to calculate the minimum distance between objects.
+
+	int  is_collision(Simplex *simplex,GJKObj *gjkobjA,GJKObj *gjkobjB);
+(return value will be 0 or 1 for no_collision or collision, respectively)
+
+-or-
+
+	float calc_dist(Simplex *simplex,GJKObj *gjkobjA,GJKObj *gjkobjB,u_int calc_points);
+(return value is distance between two objects, squared)
+
+The parameter calc_points is used to decide whether it is necessary to calculate the closest point as defined by the body's local coordinate system. The result is placed in simplex -> closest_pointA or simplex -> closest_pointB.
+
+	calc_points=1	calculate closest point
+	calc_points=0	do not calculate closest point
+
+<Format of gjk_obj-file>
+
+.word num_of_vertices,0,0,0
+.float vertex0
+.float vertex1
+    .
+    .
+.float vertexN
+.word total_umber_of_neighbors,0,0,0
+.word num_of_neighbors_of_vertex0,neighbor0,neighbor1,....,neighborN
+  .
+  .
+.word num_of_neighbors_of_vertexN,neighbor0,....,neighborN
+
+For a simple plane, gjkobj-file would be as follows:
+
+.word 4,0,0,0
+.float -10.000000,0.000000,-10.000000,1.0
+.float 10.000000,0.000000,-10.000000,1.0
+.float 10.000000,0.000000,10.000000,1.0
+.float -10.000000,0.000000,10.000000,1.0
+.word 8,0,0,0
+.word 2,1,3,2 
+.word 0,2,2,1 
+.word 3,2,0,2
+
+Adding random points to the adjacency table, as adjacent points, can also be used to speed up searching for the algorithm.
+
+<Future Work>
+
+1. Optimize the algorithm
+2. Use a broad-phase collision algorithm
+
+<References>
+
+{1} van den Bergen,Gino "A Fast and Robust GJK Implementation for 
+Collision Detection of Convex Objects", Journal of Graphics Tools, 4(2):7-25, 1999 
+{2} Larsen,Eric "A Robot Soccer Simulation: A Case Study for 
+Rigid Body Contact",GDC,2001
+

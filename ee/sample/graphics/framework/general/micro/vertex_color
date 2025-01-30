@@ -1,0 +1,6 @@
+vcl  -g -t3 -A -ovu1basicVo.vsm vu1basicV.vcl
+vcl  -g -t3 -A -ovu1cullVo.vsm vu1cullV.vcl
+vcl  -g -t3 -A -ovu1pointVo.vsm vu1pointV.vcl
+vcl  -g -t3 -A -L -ovu1spotVo.vsm vu1spotV.vcl
+vcl  -g -t3 -A -ovu1fogVo.vsm vu1fogV.vcl
+vcl  -g -t3 -A -ovu1antiVo.vsm vu1antiV.vcl

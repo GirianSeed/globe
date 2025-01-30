@@ -1,0 +1,29 @@
+#
+# pb ファイル結合プログラム
+#
+# 使用方法
+# > Makefile
+# > ./pb2pf pb2pf.txt output.pf
+#
+# pb2pf 設定ファイル 書式
+# '#'の文字以降はコメントとして無視される
+#
+# 以下にサンプルを示す
+
+# name="" # pfデータに名前を埋め込む
+name = "font sample ver0.1"
+
+# comment="comment" # コメントを埋め込む
+comment="font sample"
+
+# source="xxx.pb"		# 連結する pb ファイルを指定
+#source="latin.pb"		# latin
+source="iso0646_26.pb"		# ascii
+source="jis0201_26.pb"		# 半角
+source="jis0213_1_26.pb"	# 第一水準
+source="jis0213_2_26.pb"	# 第二水準
+source="jis0213_0_26.pb"	# 非漢字
+
+source="sample_k.pb"		# ユーザー定義外字サンプル
+
+#[eof]

@@ -1,0 +1,3 @@
+vcl  -g -t3 -A -L -ovu1embossDir.vsm vu1embossDir.vcl
+vcl  -g -t3 -A -L -ovu1embossPoint.vsm vu1embossPoint.vcl
+vcl  -g -t3 -A -L  -ovu1embossSpot.vsm vu1embossSpot.vcl    

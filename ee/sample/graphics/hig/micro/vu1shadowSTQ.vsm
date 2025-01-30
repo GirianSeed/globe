@@ -1,0 +1,335 @@
+; flowMon::Emit() vcl 1.28 produced this code:
+		.vu
+		.align 4
+		.global	shadowstq_CodeStart
+		.global	shadowstq_CodeEnd
+shadowstq_CodeStart:
+__vcl__MMvu1shadowSTQ_vcl_3:
+; [0,62) size=62 nU=38 nL=34 ic=72 [lin=62 lp=0]
+              nop                                                           lq.xyz          VF03,5(VI00)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           lq.xyz          VF04,6(VI00)                    
+              nop                                                           move.xyz        VF02,VF03                       
+              nop                                                           lq.xyz          VF03,4(VI00)                    
+              nop                                                           nop                                             
+              nop                                                           move.xyz        VF04,VF04                       
+              nop                                                           mr32.w          VF04,VF02                       
+              nop                                                           move.xyz        VF01,VF03                       
+              nop                                                           nop                                             
+              nop                                                           move.y          VF03,VF02                       
+              nop                                                           mr32.xzw        VF03,VF04                       
+              nop                                                           mr32.xy         VF02,VF01                       
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           mr32.yzw        VF01,VF03                       
+              nop                                                           mr32.xy         VF04,VF02                       
+              nop                                                           move.y          VF02,VF03                       
+              nop                                                           lq.xyz          VF13,32(VI00)                   
+              nop                                                           mr32.z          VF02,VF01                       
+              nop                                                           lq.xyw          VF12,20(VI00)                   
+              nop                                                           lq              VF03,2(VI00)                    
+              mulax.xyz       ACC,VF01,VF13x                                lq.xyw          VF14,21(VI00)                   
+              madday.xyz      ACC,VF02,VF13y                                lq.xyw          VF13,22(VI00)                   
+              maddz.xyz       VF01,VF04,VF13z                               lq.xyw          VF06,23(VI00)                   
+              mulax.xyw       ACC,VF12,VF03x                                lq              VF04,3(VI00)                    
+              madday.xyw      ACC,VF14,VF03y                                lq              VF02,1(VI00)                    
+              maddaz.xyw      ACC,VF13,VF03z                                lq.zw           VF10,30(VI00)                   
+              maddw.xyw       VF08,VF06,VF03w                               erleng          P,VF01                          
+              mulax.xyw       ACC,VF12,VF04x                                fcset           0                               
+              madday.xyw      ACC,VF14,VF04y                                lq.xy           VF11,30(VI00)                   
+              maddaz.xyw      ACC,VF13,VF04z                                nop                                             
+              maddw.xyw       VF09,VF06,VF04w                               nop                                             
+              mulax.xyw       ACC,VF12,VF02x                                lq              VF05,0(VI00)                    
+              madday.xyw      ACC,VF14,VF02y                                nop                                             
+              maddaz.xyw      ACC,VF13,VF02z                                nop                                             
+              maddw.xyw       VF07,VF06,VF02w                               nop                                             
+              mulax.xyw       ACC,VF12,VF05x                                lq              VF15,16(VI00)                   
+              madday.xyw      ACC,VF14,VF05y                                lq              VF14,17(VI00)                   
+              maddaz.xyw      ACC,VF13,VF05z                                lq              VF13,18(VI00)                   
+              maddw.xyw       VF06,VF06,VF05w                               lq              VF12,19(VI00)                   
+              mulax           ACC,VF15,VF04x                                nop                                             
+              madday          ACC,VF14,VF04y                                nop                                             
+              maddaz          ACC,VF13,VF04z                                nop                                             
+              maddw           VF04,VF12,VF04w                               nop                                             
+              mulax           ACC,VF15,VF03x                                nop                                             
+              madday          ACC,VF14,VF03y                                nop                                             
+              maddaz          ACC,VF13,VF03z                                nop                                             
+              maddw           VF03,VF12,VF03w                               nop                                             
+              mulax           ACC,VF15,VF02x                                nop                                             
+              madday          ACC,VF14,VF02y                                nop                                             
+              maddaz          ACC,VF13,VF02z                                nop                                             
+              maddw           VF02,VF12,VF02w                               mfp.z           VF06,P                          
+              mulax           ACC,VF15,VF05x                                nop                                             
+              madday          ACC,VF14,VF05y                                nop                                             
+              maddaz          ACC,VF13,VF05z                                nop                                             
+              mulz.xyz        VF13,VF01,VF06z                               nop                                             
+              maddw           VF01,VF12,VF05w                               loi             2048.0                          
+              addi.xy         VF10,VF00,I                                   nop                                             
+              nop                                                           loi             -1.0                            
+              muli.xyz        VF05,VF13,I                                   nop                                             
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+SHADOWSTQ_START:
+; [0,6) size=6 nU=0 nL=4 ic=4 [lin=6 lp=0]
+              nop                                                           ilw.x           VI03,10(VI00)                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           xtop            VI02                            
+              nop                                                           iadd            VI03,VI02,VI03                  
+              nop                                                           iaddiu          VI04,VI03,0                     
+SHADOWSTQ_GIFTAG:
+; [0,33) size=33 nU=0 nL=33 ic=33 [lin=33 lp=0]
+              nop                                                           ilw.x           VI11,1(VI02)                    
+              nop                                                           ilw.z           VI09,29(VI00)                   
+              nop                                                           iaddiu          VI10,VI00,0x10                  
+              nop                                                           iaddiu          VI06,VI00,0x0007                
+              nop                                                           mfir.yzw        VF12,VI00                       
+              nop                                                           ior             VI11,VI09,VI11                  
+              nop                                                           ior             VI10,VI11,VI10                  
+              nop                                                           ilw.x           VI11,0(VI02)                    
+              nop                                                           ilw.y           VI09,0(VI02)                    
+              nop                                                           iaddiu          VI12,VI00,0x1b                  
+              nop                                                           lq.yzw          VF14,9(VI00)                    
+              nop                                                           lq              VF13,8(VI00)                    
+              nop                                                           iand            VI06,VI09,VI06                  
+              nop                                                           iaddiu          VI08,VI00,0x7fff                
+              nop                                                           isw.x           VI11,3(VI04)                    
+              nop                                                           sq.yzw          VF14,3(VI04)                    
+              nop                                                           isw.x           VI10,2(VI04)                    
+              nop                                                           isw.x           VI09,1(VI04)                    
+              nop                                                           sq.yzw          VF12,2(VI04)                    
+              nop                                                           sq.yzw          VF12,1(VI04)                    
+              nop                                                           sq              VF13,0(VI04)                    
+              nop                                                           iand            VI11,VI11,VI08                  
+              nop                                                           iaddiu          VI10,VI00,0                     
+              nop                                                           iaddiu          VI09,VI00,0                     
+              nop                                                           iaddiu          VI08,VI00,0                     
+              nop                                                           iaddiu          VI07,VI00,0                     
+              nop                                                           iaddi           VI05,VI00,0x0003                
+              nop                                                           isw.z           VI12,2(VI04)                    
+              nop                                                           iaddiu          VI04,VI04,4                     
+              nop                                                           lq.x            VF12,0(VI02)                    
+              nop                                                           iaddiu          VI02,VI02,2                     
+              nop                                                           ibeq            VI06,VI00,___sce_local_lable28  
+              nop                                                           iaddiu          VI12,VI00,1                     
+; [0,4) size=4 nU=0 nL=4 ic=4 [lin=4 lp=0]
+              nop                                                           isubiu          VI07,VI06,2                     
+              nop                                                           iaddiu          VI12,VI00,0                     
+              nop                                                           iblez           VI07,___sce_local_lable28       
+              nop                                                           iaddiu          VI07,VI00,1                     
+; [0,4) size=4 nU=0 nL=4 ic=4 [lin=4 lp=0]
+              nop                                                           isubiu          VI08,VI06,4                     
+              nop                                                           iaddiu          VI07,VI00,0                     
+              nop                                                           iblez           VI08,___sce_local_lable28       
+              nop                                                           iaddiu          VI08,VI00,1                     
+; [0,36) size=36 nU=9 nL=6 ic=15 [lin=36 lp=0]
+              nop                                                           lq.xyz          VF13,0(VI02)                    
+              nop                                                           iaddiu          VI08,VI00,0                     
+              nop                                                           iaddiu          VI09,VI00,1                     
+              nop                                                           nop                                             
+              mulax.xyw       ACC,VF01,VF13x                                nop                                             
+              madday.xyw      ACC,VF02,VF13y                                nop                                             
+              maddaz.xyw      ACC,VF03,VF13z                                nop                                             
+              maddw.xyw       VF13,VF04,VF00w                               nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           div             Q,VF00w,VF13w                   
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              mulq.xy         VF13,VF13,Q                                   nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              sub.xy          VF13,VF13,VF10                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              subw.z          VF13,VF10,VF13w                               nop                                             
+              mul.xy          VF13,VF13,VF11                                nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              clipw.xyz       VF13xyz,VF10w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fcand           VI01,0x3f                       
+              nop                                                           iadd            VI10,VI01,VI00                  
+___sce_local_lable28:
+; [0,3) size=3 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           nop                                             
+              nop                                                           ibeq            VI05,VI06,EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__PRO0
+              nop                                                           nop                                             
+EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__PRO0:
+; [0,26) size=26 nU=17 nL=9 ic=26 [lin=22 lp=0]
+              nop                                                           lq.xyz          VF20,1(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           rinit           R,VF00x                         
+              nop                                                           rget.x          VF15,R                          
+              mul.xyz         VF20,VF05,VF20                                nop                                             
+              nop                                                           lq              VF17,0(VI02)                    
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              adday.x         ACC,VF20,VF20y                                nop                                             
+              maddz.x         VF15,VF15,VF20z                               nop                                             
+              mulax           ACC,VF01,VF17x                                nop                                             
+              madday          ACC,VF02,VF17y                                nop                                             
+              maddaz          ACC,VF03,VF17z                                nop                                             
+              addw.x          VF20,VF15,VF00w                               nop                                             
+              maddw           VF15,VF04,VF00w                               nop                                             
+              mulax.xyw       ACC,VF06,VF17x                                nop                                             
+              madday.xyw      ACC,VF07,VF17y                                nop                                             
+              ftoi0.x         VF17,VF20                                     nop                                             
+              maddaz.xyw      ACC,VF08,VF17z                                div             Q,VF00w,VF15w                   
+              nop                                                           iaddiu          VI02,VI02,4                     
+              maddw.xyw       VF18,VF09,VF17w                               iaddiu          VI04,VI04,3                     
+              itof0.x         VF17,VF17                                     nop                                             
+              nop                                                           iaddi           VI11,VI11,-1                    
+              addw.z          VF18,VF00,VF00w                               nop                                             
+              maxx.w          VF05,VF18,VF00x                               ibeq            VI11,VI00,EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__EPI1
+              mulq.xyz        VF19,VF15,Q                                   nop                                             
+; [0,26) size=26 nU=25 nL=12 ic=37 [lin=25 lp=0]
+              nop                                                           lq.xyz          VF20,1(VI02)                    
+              mulq.xyz        VF13,VF18,Q                                   nop                                             
+              miniw.x         VF14,VF17,VF00w                               rinit           R,VF00x                         
+              sub.xy          VF18,VF19,VF10                                rget.x          VF15,R                          
+              mul.xyz         VF20,VF05,VF20                                nop                                             
+              ftoi4.xyz       VF19,VF19                                     lq              VF17,0(VI02)                    
+              subw.z          VF18,VF10,VF15w                               nop                                             
+              mul.xy          VF18,VF18,VF11                                nop                                             
+              adday.x         ACC,VF20,VF20y                                nop                                             
+              maddz.x         VF15,VF15,VF20z                               nop                                             
+              mulax           ACC,VF01,VF17x                                nop                                             
+              madday          ACC,VF02,VF17y                                nop                                             
+              maddaz          ACC,VF03,VF17z                                nop                                             
+              addw.x          VF20,VF15,VF00w                               nop                                             
+              maddw           VF15,VF04,VF00w                               nop                                             
+              mulax.xyw       ACC,VF06,VF17x                                sq.xyz          VF19,(2)-(1*(3))(VI04)          
+              madday.xyw      ACC,VF07,VF17y                                nop                                             
+              ftoi0.x         VF17,VF20                                     nop                                             
+              maddaz.xyw      ACC,VF08,VF17z                                div             Q,VF00w,VF15w                   
+              clipw.xyz       VF18xyz,VF10w                                 iaddiu          VI02,VI02,4                     
+              maddw.xyw       VF18,VF09,VF17w                               iaddiu          VI04,VI04,3                     
+              itof0.x         VF17,VF17                                     nop                                             
+              mulw.z          VF13,VF13,VF05w                               iaddi           VI11,VI11,-1                    
+              addw.z          VF18,VF00,VF00w                               fcand           VI01,0xfff                      
+              maxx.w          VF05,VF18,VF00x                               ibeq            VI11,VI00,EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__EPI0
+              mulq.xyz        VF19,VF15,Q                                   iand            VI05,VI01,VI07                  
+EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__MAIN_LOOP:
+; [0,26) size=26 nU=26 nL=24 ic=50 [lin=26 lp=26]
+              mulx.xyz        VF16,VF13,VF14x                               lq.xyz          VF20,1(VI02)                    
+              mulq.xyz        VF13,VF18,Q                                   ior             VI06,VI01,VI10                  
+              miniw.x         VF14,VF17,VF00w                               rinit           R,VF00x                         
+              sub.xy          VF18,VF19,VF10                                rget.x          VF15,R                          
+              mul.xyz         VF20,VF05,VF20                                fcand           VI01,0x3f                       
+              ftoi4.xyz       VF19,VF19                                     lq              VF17,0(VI02)                    
+              subw.z          VF18,VF10,VF15w                               iand            VI01,VI01,VI12                  
+              mul.xy          VF18,VF18,VF11                                iadd            VI05,VI01,VI05                  
+              adday.x         ACC,VF20,VF20y                                fcand           VI01,0x3ffff                    
+              maddz.x         VF15,VF15,VF20z                               iand            VI06,VI06,VI09                  
+              mulax           ACC,VF01,VF17x                                iand            VI01,VI01,VI08                  
+              madday          ACC,VF02,VF17y                                iadd            VI05,VI05,VI01                  
+              maddaz          ACC,VF03,VF17z                                iadd            VI05,VI05,VI06                  
+              addw.x          VF20,VF15,VF00w                               iaddiu          VI05,VI05,0x7fff                
+              maddw           VF15,VF04,VF00w                               isw.w           VI05,(2)-(2*(3))(VI04)          
+              mulax.xyw       ACC,VF06,VF17x                                sq.xyz          VF19,(2)-(1*(3))(VI04)          
+              madday.xyw      ACC,VF07,VF17y                                nop                                             
+              ftoi0.x         VF17,VF20                                     sq.xyz          VF16,(0)-(2*(3))(VI04)          
+              maddaz.xyw      ACC,VF08,VF17z                                div             Q,VF00w,VF15w                   
+              clipw.xyz       VF18xyz,VF10w                                 iaddiu          VI02,VI02,4                     
+              maddw.xyw       VF18,VF09,VF17w                               iaddiu          VI04,VI04,3                     
+              itof0.x         VF17,VF17                                     nop                                             
+              mulw.z          VF13,VF13,VF05w                               iaddi           VI11,VI11,-1                    
+              addw.z          VF18,VF00,VF00w                               fcand           VI01,0xfff                      
+              maxx.w          VF05,VF18,VF00x                               ibne            VI11,VI00,EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__MAIN_LOOP
+              mulq.xyz        VF19,VF15,Q                                   iand            VI05,VI01,VI07                  
+; n>=1 .. t = 83 + 26*(n-2) cycles, so .. t=31+(26*n) : 
+EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__EPI0:
+; [0,31) size=31 nU=10 nL=28 ic=38 [lin=28 lp=0]
+              mulx.xyz        VF16,VF13,VF14x                               ior             VI06,VI01,VI10                  
+              mulq.xyz        VF13,VF18,Q                                   fcand           VI01,0x3f                       
+              miniw.x         VF14,VF17,VF00w                               iand            VI01,VI01,VI12                  
+              sub.xy          VF18,VF19,VF10                                iadd            VI05,VI01,VI05                  
+              ftoi4.xyz       VF19,VF19                                     fcand           VI01,0x3ffff                    
+              subw.z          VF18,VF10,VF15w                               iand            VI06,VI06,VI09                  
+              mulw.z          VF13,VF13,VF05w                               iand            VI01,VI01,VI08                  
+              mul.xy          VF18,VF18,VF11                                iadd            VI05,VI05,VI01                  
+              nop                                                           iadd            VI05,VI05,VI06                  
+              nop                                                           iaddiu          VI05,VI05,0x7fff                
+              nop                                                           isw.w           VI05,(2)-(2*(3))(VI04)          
+              clipw.xyz       VF18xyz,VF10w                                 sq.xyz          VF19,(2)-(1*(3))(VI04)          
+              mulx.xyz        VF16,VF13,VF14x                               sq.xyz          VF16,(0)-(2*(3))(VI04)          
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           fcand           VI01,0xfff                      
+              nop                                                           iand            VI05,VI01,VI07                  
+              nop                                                           ior             VI06,VI01,VI10                  
+              nop                                                           fcand           VI01,0x3f                       
+              nop                                                           iand            VI01,VI01,VI12                  
+              nop                                                           iadd            VI05,VI01,VI05                  
+              nop                                                           fcand           VI01,0x3ffff                    
+              nop                                                           iand            VI06,VI06,VI09                  
+              nop                                                           iand            VI01,VI01,VI08                  
+              nop                                                           iadd            VI05,VI05,VI01                  
+              nop                                                           iadd            VI05,VI05,VI06                  
+              nop                                                           iaddiu          VI05,VI05,0x7fff                
+              nop                                                           isw.w           VI05,(2)-(1*(3))(VI04)          
+              nop                                                           sq.xyz          VF16,(0)-(1*(3))(VI04)          
+              nop                                                           b               EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__EXIT_POINT
+              nop                                                           nop                                             
+; n==1 .. t = 54 cycles = 54.00 per vertex
+EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__EPI1:
+; [0,28) size=28 nU=9 nL=15 ic=24 [lin=19 lp=0]
+              miniw.x         VF14,VF17,VF00w                               nop                                             
+              mulq.xyz        VF13,VF18,Q                                   nop                                             
+              subw.z          VF18,VF10,VF15w                               nop                                             
+              sub.xy          VF18,VF19,VF10                                nop                                             
+              ftoi4.xyz       VF19,VF19                                     nop                                             
+              mulw.z          VF13,VF13,VF05w                               nop                                             
+              nop                                                           nop                                             
+              mul.xy          VF18,VF18,VF11                                nop                                             
+              nop                                                           sq.xyz          VF19,(2)-(1*(3))(VI04)          
+              mulx.xyz        VF16,VF13,VF14x                               nop                                             
+              nop                                                           nop                                             
+              clipw.xyz       VF18xyz,VF10w                                 nop                                             
+              nop                                                           nop                                             
+              nop                                                           sq.xyz          VF16,(0)-(1*(3))(VI04)          
+              nop                                                           nop                                             
+              nop                                                           fcand           VI01,0xfff                      
+              nop                                                           iand            VI05,VI01,VI07                  
+              nop                                                           ior             VI06,VI01,VI10                  
+              nop                                                           fcand           VI01,0x3f                       
+              nop                                                           iand            VI01,VI01,VI12                  
+              nop                                                           iadd            VI05,VI01,VI05                  
+              nop                                                           fcand           VI01,0x3ffff                    
+              nop                                                           iand            VI06,VI06,VI09                  
+              nop                                                           iand            VI01,VI01,VI08                  
+              nop                                                           iadd            VI05,VI05,VI01                  
+              nop                                                           iadd            VI05,VI05,VI06                  
+              nop                                                           iaddiu          VI05,VI05,0x7fff                
+              nop                                                           isw.w           VI05,(2)-(1*(3))(VI04)          
+EXPL_vu1shadowSTQ_vcl_SHADOWSTQ_vertex_loop__EXIT_POINT:
+; [0,6) size=6 nU=0 nL=2 ic=2 [lin=7 lp=0]
+              nop                                                           mtir            VI01,VF12x                      
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           nop                                             
+              nop                                                           ibgez           VI01,SHADOWSTQ_GIFTAG           
+              nop                                                           nop                                             
+; [0,1) size=1 nU=0 nL=1 ic=1 [lin=1 lp=0]
+              nop                                                           xgkick          VI03                            
+              nop[E]                                                        nop                                             
+              nop                                                           nop                                             
+; [0,2) size=2 nU=0 nL=1 ic=1 [lin=3 lp=0]
+              nop                                                           b               SHADOWSTQ_START                 
+              nop                                                           nop                                             
+		.align 4
+shadowstq_CodeEnd:
+;	iCount=294

@@ -1,0 +1,63 @@
+SHELL       = /bin/sh
+
+TOP         = /usr/local/sce/ee
+
+LIBDIR      = $(TOP)/lib
+INCOPT      = -I../../../../common/include -I../../../include \
+	      -I$(TOP)/../common/include -I$(TOP)/include 
+
+TARGET      = main
+OBJS        = crt0.o \
+              $(TARGET).o
+
+LCFILE      = $(LIBDIR)/app.cmd
+LIBS        =
+
+PREFIX      = ee
+AS          = $(PREFIX)-gcc
+CC          = $(PREFIX)-gcc 
+LD          = $(PREFIX)-gcc
+DVPASM      = $(PREFIX)-dvp-as
+OBJDUMP     = $(PREFIX)-objdump
+RUN         = dsedb -r run
+RM          = /bin/rm -f
+
+CFLAGS      = -O2 -Wall -Wa,-al -fno-common -G0
+CXXFLAGS    = -O2 -Wall -Wa,-al -fno-exceptions -fno-common
+ASFLAGS     = -c -xassembler-with-cpp -Wa,-al
+DVPASMFLAGS = -g 
+LDFLAGS     = -Wl,-Map,$(TARGET).map -mno-crt0 -L$(LIBDIR) -lsk -lspu2m -lsdr -lgraph -lpad -lm 
+TMPFLAGS    =
+
+ARGS =
+
+.SUFFIXES: .c .s .cc .dvpasm
+
+all: $(TARGET).elf
+
+$(TARGET).elf: $(OBJS) $(LIBS)
+	$(LD) -o $@ -T $(LCFILE) $(OBJS) $(LIBS) $(LDFLAGS)
+
+crt0.o: $(LIBDIR)/crt0.s
+	$(AS) $(ASFLAGS) $(TMPFLAGS) -o $@ $< > $*.lst
+
+.s.o:
+	$(AS) $(ASFLAGS) $(TMPFLAGS) $(INCOPT) -o $@ $< > $*.lst
+
+.dvpasm.o:
+	$(DVPASM) $(DVPASMFLAGS) $(INCOPT) -o $@ $< > $*.lst
+
+.c.o:
+	$(CC) $(CFLAGS) $(TMPFLAGS) $(INCOPT) -c $< -o $*.o > $*.lst
+
+.cc.o:
+	$(CC) $(CXXFLAGS) $(TMPFLAGS) $(INCOPT) -c $< -o $*.o > $*.lst
+
+run: $(TARGET).elf
+	dsifilesv -c "dsreset 0 0; $(RUN) $(TARGET).elf $(ARGS)"
+
+clean:
+	$(RM) *.o *.map *.lst core *.dis *.elf copy.c incdata
+
+clear:
+	$(RM) *~

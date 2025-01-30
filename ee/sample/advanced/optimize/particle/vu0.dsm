@@ -1,0 +1,34 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/*
+ *              Emotion Engine Library Sample Program
+ *
+ *                         - <partilcle> -
+ *
+ *                         Version <1.00>
+ *                           Shift-JIS
+ *
+ *      Copyright (C) 1998-2000 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00         Sep,26,2000      kumagae    First design
+ */
+
+
+.include "vumacros.h"
+.global My_dma_start
+
+
+My_dma_start:
+.align 0
+DMAend *
+vifnop
+vifnop
+MPG 0, *
+.include "vu0.vsm" 
+.EndMPG
+.EndDmaData

@@ -1,0 +1,11 @@
+Libname ent_cnf	_sceEENetCnf_entry
+Version 1.1
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry/8	-
+Entry	-
+Entry	ent_cnf_init
+Entry	ent_cnf_load_config
+Entry	ent_cnf_set_config
+Entry	ent_cnf_set_config_addr

@@ -1,0 +1,5 @@
+vcl  -g -t3 -A  -ovu1fisheye.vsm vu1fishEyeDir.vcl
+vcl  -g -t3 -A  -ovu1reflectS.vsm vu1reflectionS.vcl
+vcl  -g -t3 -A  -ovu1reflectR.vsm vu1reflectionR.vcl    
+vcl  -g -t3 -A  -ovu1refractS.vsm vu1refractionS.vcl   
+vcl  -g -t3 -A  -ovu1refractR.vsm vu1refractionR.vcl  

@@ -1,0 +1,31 @@
+#EE-ILB# [PsIIlibccc  1100]
+L libccc
+V 0x0101
+F 0x0000
+E 004 sceCccSetTable
+E 008 sceCccStrlenSJIS
+E 009 sceCccStrlenUTF8
+E 010 sceCccStrlenUTF16
+E 014 sceCccIsValidSJIS
+E 015 sceCccIsValidUTF8
+E 016 sceCccIsValidUTF16
+E 017 sceCccIsValidUCS2
+E 018 sceCccIsValidUCS4
+E 019 sceCccIsValidJIS
+E 023 sceCccDecodeSJIS
+E 024 sceCccDecodeUTF8
+E 025 sceCccDecodeUTF16
+E 029 sceCccEncodeSJIS
+E 030 sceCccEncodeUTF8
+E 031 sceCccEncodeUTF16
+E 035 sceCccUCStoJIS
+E 036 sceCccJIStoUCS
+E 040 sceCccSJIStoUTF8
+E 041 sceCccSJIStoUTF16
+E 042 sceCccUTF8toSJIS
+E 043 sceCccUTF8toUTF16
+E 044 sceCccUTF16toSJIS
+E 045 sceCccUTF16toUTF8
+E 052 sceCccSetErrorCharSJIS
+E 053 sceCccSetErrorCharUTF8
+E 054 sceCccSetErrorCharUTF16

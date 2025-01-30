@@ -1,0 +1,211 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library  Release 3.0
+        Copyright (C) 1999 Sony Computer Entertainment Inc.
+                                        All Rights Reserved
+
+Basic sample code basic3d
+==========================
+
+
+About basic3d
+------------------------------------------------------------
+
+This sample program is designed to serve as a guide in helping developers understand the basic operations needed to display 3D objects on next-generation systems. Separate Core, VU0, and VU1 versions are provided to show how code can be optimized once prototyping has been completed.
+
+- basic3d/ ------- core/    Uses only EE Core instructions.
+		|	    For understanding algorithms.
+		|
+		|----- vu0/ Based on Core version. Main operations
+			    are replaced with VU0 macro instructions.
+		|
+		|
+		|----- vu1/ Based on Core and VU0 versions, with
+			    use of VU1 microcode.
+
+The following topics will be covered in this document.
+
+	* Specifications of sample programs
+	* Program flow
+	* Description of coordinate systems
+	* View volume
+	* Data formats
+
+Please refer to the documentation in the sample directories for detailed descriptions of the sample programs. Note that converters for the data formats described below are not provided.
+
+
+Specifications of sample programs
+------------------------------------------------------------
+
+  Displays cube with textured triangle strips.
+  Displays torus with textured triangles.
+
+	24-bit Z-buffer
+	Three light sources
+	32-bit textures
+
+
+Program flow
+------------------------------------------------------------
+
+The steps used to display 3D objects on the screen are shown below.
+
+	Initialization:
+		Initialize devices
+			|
+		Set up drawing environment
+			|
+		Transfer texture images
+			|
+		Generate and transfer packets for setting up 
+	          texture environment
+			|
+		Initialize controller
+			|
+			V
+	Main loop:
+			+<------------------------------+
+			|				|
+		Get controller data			|
+			|				|
+		Swap double buffers			|
+			|				|
+		Generate View-Screen matrix		|
+			|				|
+		Generate Local-World matrix		|
+			|				|
+		Generate World-View matrix		|
+			|				|
+		Generate Local-Screen matrix		|
+			|				|
+		Generate local light matrix		|
+			|				|
+		Generate light color matrix		|
+			|				|
+Packet generation:	|				|
+			|				|
+		Generate DmaTag, GifTag			|
+			|				|
+			|  Loop by vertex count		|
+			+<----------------------+	|
+			|			|	|
+		Convert vertex coordinates	|	|
+			|			|	|
+		Perspective transform of vertices (XYZ) |	
+			|			|	|
+		Light-source effects		|	|
+			|			|	|
+		Light-source color effects	|	|
+			|			|	|
+		On-screen color of vertex(RGBA)	|	|
+			|			|	|
+		st->ST transform (ST)		|	|
+			|			|	|
+		Save STQ, RGBA, XYZ values	|	|
+			|			|	|
+			+-----------------------+	|
+			|				|
+			V				|
+		Transfer packets to GS			|
+			|				|
+		Set up drawing environment, V-Blank wait|
+			|				|
+			+-------------------------------+
+			|
+			V
+
+
+Description of coordinate systems
+-----------------------------------------------------------
+
+Local coordinate system: Coordinate system used to describe objects (models)
+World coordinate system: Coordinate system of world (usually constrained by ground)
+View coordinate system: Coordinate system for camera (viewpoint)
+Screen coordinate system: Coordinate system fixed by the GS
+GdPrimitive coordinate system: Coordinate system after perspective transformation
+
+
+In the View coordinate system, the viewpoint (eye) is set to be the origin (0,0,0). The viewing direction is assumed to be Z+, X+ is assumed to be to the right, Y+ is assumed to be down.
+
+
+                           Z+
+                          /
+                         /
+                        +------X+
+                       /|
+                      / |
+                     /  Y+
+                   eye
+
+
+Data formats
+------------------------------------------------------------
+
+The following data formats are used in the basic3d sample programs
+
+------------------------------------------------------------
+basic sample program binary format
+On memory format
+
+Data consists of a data header and one or more blocks.
+The data header holds data count (vertex count), data type (PRIM), and block count information.
+Each block is made up of a block header and data. The block header contains the vertex count for the data in the block. The data is stored in the following sequence: vertex, normal, texture, color.
+Padding must be added for items not in the original data.
+
+    127           95            63          31           0
+     +------------+------+-----+------------+------------+
+     |   data num |block |PRIM |  reserved  |   Magic    |   data header
+     +============+======+=====+============+============+
+     |            |            |            | vertex num |   block header
+     +------------+------------+------------+------------+
+     |    1.0     |    VZ0     |    VY0     |    VX0     |
+     +------------+------------+------------+------------+
+                              ...                            vertex
+     +------------+------------+------------+------------+
+     |    1.0     |    VZn     |    VYn     |    VXn     |
+     +------------+------------+------------+------------+
+     |    0.0     |    NZ0     |    NY0     |    NX0     |
+     +------------+------------+------------+------------+
+                              ...                            normal
+     +------------+------------+------------+------------+
+     |    0.0     |    NZn     |    NYn     |    NXn     |
+     +------------+------------+------------+------------+
+     |    0.0     |    1.0     |     T0     |     S0     |
+     +------------+------------+------------+------------+
+                              ...                            texture
+     +------------+------------+------------+------------+
+     |    0.0     |    1.0     |     Tn     |     Sn     |
+     +------------+------------+------------+------------+
+     |    A0      |     B0     |     G0     |     R0     |
+     +------------+------------+------------+------------+
+                              ...                            color
+     +------------+------------+------------+------------+
+     |    AN      |     Bn     |     Gn     |     Rn     |
+     +============+======+=====+============+============+
+     |            |            |            | vertex num |   block header
+     +------------+------------+------------+------------+
+     |    1.0     |    VZ0     |    VY0     |    VX0     |
+     +------------+------------+------------+------------+
+                              ...                            vertex
+     +------------+------------+------------+------------+
+     |    1.0     |    VZn     |    VYn     |    VXn     |
+     +------------+------------+------------+------------+
+     |    0.0     |    NZ0     |    NY0     |    NX0     |
+     +------------+------------+------------+------------+
+                              ...                            normal
+     +------------+------------+------------+------------+
+     |    0.0     |    NZn     |    NYn     |    NXn     |
+     +------------+------------+------------+------------+
+     |    0.0     |    1.0     |     T0     |     S0     |
+     +------------+------------+------------+------------+
+                              ...                            texture
+     +------------+------------+------------+------------+
+     |    0.0     |    1.0     |     Tn     |     Sn     |
+     +------------+------------+------------+------------+
+     |    A0      |     B0     |     G0     |     R0     |
+     +------------+------------+------------+------------+
+                              ...                            color
+     +------------+------------+------------+------------+
+     |    AN      |     Bn     |     Gn     |     Rn     |
+     +============+======+=====+============+============+
+
+------------------------------------------------------------

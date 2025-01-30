@@ -1,0 +1,68 @@
+[SCE CONFIDENTIAL DOCUMENT]
+PlayStation 2 Programmer Tool Runtime Library Release 2.5
+      Copyright (C) 2001 Sony Computer Entertainment Inc.
+                                     All Rights Reserved
+
+libnet Library Overview
+========================
+
+
+Library overview
+-----------------
+
+
+1 Overview
+
+libnet is a library that allows inet to be handled transparently from an EE program. Function calls from the EE are transparently invoked on the IOP using SIF. As a result, an EE application that supports the network can handle inet in a general manner, without requiring a separate IOP program to be written.
+
+The functions provided by libnet are basically the same as the functions provided by inet. For details about each function, refer to the descriptions for inet. 
+
+However, libnet functions differ from their corresponding inet functions in that the following arguments have been added to each function.
+
+	sceSifMClientData *cd;
+	u_int *net_buf;
+
+cd is used as client data for the MSIFRPC system, which is an SIFRPC system that supports multithreading. The buffer indicated by net_buf is used as the SIF send/receive buffer. This buffer must be allocated with the required size and aligned on a 16-byte boundary.
+
+The required size is the larger of either the send or receive buffer sizes. For example, in sceInetSend(), it is the size obtained when quantizing the following send buffer size in 16-byte units.
+    
+    	sizeof(u_int) * 4 + (maximum size of send data)
+    
+That is, if sizeof(u_int) is 4 bytes and the maximum size of send data is 10 bytes, the size that must be allocated is 16+10, or 32 bytes when quantized in 16-byte units. Similarly, if the maximum size of send data is 16 bytes, the size that must be allocated will also be 32 bytes.
+    
+For details, refer to libnet.c, libnet.h, or the sample programs that use libnet.
+
+2 IOP modules required when using libnet
+
+To use libnet, the following modules must be loaded in order.
+
+   (1) Modules required by inet
+
+      <When using USB Ethernet>
+        inet.irx
+        netcnf.irx
+        inetctl.irx
+        an986.irx
+        usbd.irx
+
+      <When using PPP>
+        inet.irx
+        netcnf.irx
+        inetctl.irx
+        ppp.irx
+        usbd.irx
+        usbmload.irx
+
+   (2) Modules required by MSIFRPC
+
+        msifrpc.irx
+
+   (3) Modules required by libnet
+
+        libnet.irx
+
+libnet uses libmrpc, which is an SIFRPC system that supports multithreading. This permits functions to be called at arbitrary times from multiple threads on the EE. However, the maximum number of threads is 32 due to the limitations of MSIFRPC.
+
+A precondition for libnet is that all functions must be blocking functions.
+
+

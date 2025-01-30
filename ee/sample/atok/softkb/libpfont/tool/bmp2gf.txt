@@ -1,0 +1,26 @@
+#
+# bmp から gf ファイルを作成
+#
+# 使用方法
+# > Makefile
+# > ./bmp2gf bmp2gf.txt sample_k.gf
+#
+# gf2pb 設定ファイル 書式
+#
+# '#'の文字以降はコメントとして無視される
+#
+# 以下にサンプルを示す
+
+# source="xxx.bmp" : 元となる bmp ファイルを指定
+source="sample_k.bmp"
+
+# csize= width(dec) height(dec) : 一文字の大きさを指定
+csize="26 26"
+
+# mode= mode(0=縦 1=横)
+mode="1"
+
+# negative=neg(0!=反転)
+negative="1"
+
+#[eof]

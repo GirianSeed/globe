@@ -1,0 +1,5 @@
+vcl  -g -t3 -A   -ovu1cullSo.vsm vu1cullS.vcl
+vcl  -g -t3 -A   -ovu1pointSo.vsm vu1pointS.vcl
+vcl  -g -t3 -A -L  -ovu1spotSo.vsm vu1spotS.vcl
+vcl  -g -t3 -A   -ovu1combiSo.vsm vu1combiS.vcl
+vcl  -g -t3 -A   -ovu1cullBlinno.vsm vu1cullBlinn.vcl   

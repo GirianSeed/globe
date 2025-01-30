@@ -1,0 +1,16 @@
+#			Copyright (C) 2000-2001 Sony Computer Entertainment
+#			All Right Reserved
+#
+# ent_cnf.tbl - dummy entry to avoid multiple loading
+#
+# $Id: ent_cnf.tbl,v 1.1 2002/07/17 06:00:31 ksh Exp $
+#
+
+Libname ent_cnf
+
+Version 1.1
+
+Entry/5	start
+Entry	-
+Entry	-
+Entry	-

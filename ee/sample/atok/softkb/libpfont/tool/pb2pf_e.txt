@@ -1,0 +1,29 @@
+#
+# pb file integration program
+#
+# How to use the program
+# > Makefile
+# > ./pb2pf pb2pf.txt output.pf
+#
+# pb2pf setting file format
+# Characters after '#' are neglected as comments.
+#
+# Samples are shown below:
+
+# name="" # Embed name in pf data
+name = "font sample ver0.1"
+
+# comment="comment" # Embed comment
+comment="font sample"
+
+# source="xxx.pb"		# Specify pb file to be concatenated
+#source="latin.pb"		# latin
+source="iso0646_26.pb"		# ascii
+source="jis0201_26.pb"		# half size
+source="jis0213_1_26.pb"	# The first standard
+source="jis0213_2_26.pb"	# The second standard
+source="jis0213_0_26.pb"	# Non-kanji
+
+source="sample_k.pb"		# User-defined external character sample
+
+#[eof]

@@ -1,0 +1,362 @@
+<html lang="ja">
+<head>
+
+<script language="JavaScript">
+<!--
+  function startFixed(){
+    fixedLAYER('fixedLay0','rightBottom',-35,-35)
+  }
+
+  var ie= !!document.all
+  var n4= !!document.layers
+  var w3c=!!document.getElementById
+  var mac45 
+    = navigator.userAgent.indexOf('MSIE 4.5; Mac_PowerPC')
+
+  if(document.layers)window.onresize=resizeFunc
+  function resizeFunc(e){location.reload()}
+
+  function iniFunc(){
+    if(ie&&!(mac45!=-1))window.onscroll = startFixed
+    startFixed()
+  }
+
+  var tid=new Array()
+
+  function fixedLAYER(layName,posString,offSetX,offSetY){
+
+    offSetX = parseInt(offSetX,10)
+    offSetY = parseInt(offSetY,10)
+
+ if( posString == 'rightBottom' ){
+
+      if(ie) offLeft = document.body.clientWidth   + offSetX
+      else   offLeft = window.innerWidth           + offSetX
+      if(ie) offTop  = document.body.clientHeight  + offSetY
+      else   offTop  = window.innerHeight          + offSetY
+
+    }
+    else {
+
+      if(ie) offLeft =                               offSetX
+      else   offLeft =                               offSetX
+      if(ie) offTop  =                               offSetY
+      else   offTop  =                               offSetY
+
+    }
+
+    offLeft = parseInt(offLeft)
+    offTop  = parseInt(offTop)
+
+    if(document.all){
+      var mx = parseInt(document.body.scrollLeft +offLeft)
+      var my = parseInt(document.body.scrollTop  +offTop)
+    } else {
+      var mx = parseInt(self.pageXOffset+offLeft)
+      var my = parseInt(self.pageYOffset+offTop)
+
+    }
+
+    moveLAYER(layName,mx,my)
+
+    if(!(ie&&!(mac45!=-1)))
+      setTimeout("fixedLAYER('"+layName+"','"+posString
+                   +"','" +offSetX+"','"+offSetY+"')",100)
+  }
+
+  function moveLAYER(layName,x,y){
+      
+      if(document.getElementById){
+        document.getElementById(layName).style.left=x
+        document.getElementById(layName).style.top=y
+      }
+      else if(document.all){
+        document.all(layName).style.pixelLeft=x
+        document.all(layName).style.pixelTop=y
+      }
+      else if(document.layers)
+        document.layers[layName].moveTo(x,y)
+  }
+
+  function reloadMnTp(){
+        if(parent.menu_top){            
+                parent.menu_top.location.reload(true)
+        } 
+ }
+//-->
+</script>
+<title>簡易フォントライブラリ</title>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="Author" Content="Sony Computer Entertainment Inc.">
+<style type="text/css"><!--
+    div.fixedLay{position:absolute;z-index:100;left:0px;top:0px;}
+--></style>
+</head>
+<body onload="iniFunc()" bgcolor="#ffffff" text="#000000" >
+<a name=TOP></a>
+<div id="fixedLay0" class="fixedLay">
+<a href="#TOP"><img src="gif/link.gif" border="0" alt="TOP"></a>
+</div>
+<table WIDTH="100%">
+<tr><td>
+<h3>"PlayStation 2" Programmer Tool Runtime Library libpfont Version 1.2</h3>
+</td>
+</tr>
+</table>
+<hr noshade size=6>
+<center><h1>
+簡易フォントライブラリ
+</h1></center>
+</a>
+<div align=center>
+<table border=0 bgcolor=#F5F5F5 width=90%><tr><td>
+<h2><u>
+        <b>目次</b><br>
+</u></h2>
+
+<ul>
+<p><a href="#Heading3_1">  1 <b>概要</b></a>
+<ul>
+<a href="#Heading4_1_1"> <b>概要</b></a><br>
+<a href="#Heading4_1_2"> <b>関連ファイル</b></a><br>
+</ul>
+<p><a href="#Heading3_2">  2 <b>ライブラリの機能</b></a>
+<p><a href="#Heading3_3">  3 <b>描画パケット</b></a>
+<p><a href="#Heading3_4">  4 <b>使用方法</b></a>
+<p><a href="#Heading3_5">  5 <b>サンプルフォントデータ</b></a>
+<ul>
+<a href="#Heading4_5_1"> <b>著作権について</b></a><br>
+</ul>
+<p><a href="#Heading3_6">  6 <b>フォントデータ作成ツール</b></a>
+<p><a href="#Heading3_7">  7 <b>フォントデータのCLUT（インデックス）</b></a>
+<br></td></tr></table></div>
+
+<!-- 見出し　２，章見出し -->
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_1">
+
+<h2>
+ 1 <!-- hp --><b>概要</b>
+<hr noshade>
+</h2>
+
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_1_1">
+<a href="#Heading3_1"> 1. </a>1 <b>概要</b>
+</a>
+</h3>
+<div style="margin-left:50px;">簡易フォントライブラリは、フォントデータと文字列を入力とし、描画パケットを出力します。<br></div>
+<div style="margin-left:50px;"></div>
+<div style="margin-left:67px;">
+<p>
+<img src="gif/pfont001.gif"><p>
+
+</div>
+<br>
+<div style="margin-left:90px;">
+<table border=0>
+<tr>
+<td valign="TOP">&nbsp;フォントデータ&nbsp;</td>
+<td valign="TOP">&nbsp;：オリジナル形式のビットマップフォント&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;文字列&nbsp;</td>
+<td valign="TOP">&nbsp;：ユニコード（UTF8）&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;描画パケット&nbsp;</td>
+<td valign="TOP">&nbsp;：GSネイティブの形式&nbsp;</td>
+</tr>
+</table>
+</div>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_1_2">
+<a href="#Heading3_1"> 1. </a>2 <b>関連ファイル</b>
+</a>
+</h3>
+<div style="margin-left:50px;">簡易フォントライブラリを利用するために必要なファイルは次のとおりです。<br><br></div>
+<div style="margin-left:90px;">
+<table border=1>
+<tr>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>カテゴリ</b>&nbsp;</td>
+<td valign="TOP" bgcolor="#cccccc">&nbsp;<b>ファイル名</b>&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;ライブラリ&nbsp;</td>
+<td valign="TOP">&nbsp;libpfont.a&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;ERX関連ファイル&nbsp;</td>
+<td valign="TOP">&nbsp;libpfont.erx&nbsp;<br>&nbsp;libpfont.ilb&nbsp;</td>
+</tr>
+<tr>
+<td valign="TOP">&nbsp;ヘッダファイル&nbsp;</td>
+<td valign="TOP">&nbsp;libpfont.h&nbsp;</td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_2">
+
+<h2>
+ 2 <!-- hp --><b>ライブラリの機能</b>
+<hr noshade>
+</h2>
+
+<div style="margin-left:50px;">簡易フォントライブラリの主な機能は以下の通りです。<br></div>
+<div style="margin-left:40px;"><ul>
+<li> アルファ階調付きのビットマップフォントを表示することができ、インターレスでもちらつきが少ない見やすい表示になります。
+<li> フォントを文字単位で変換マトリックスを用いて変形できます。
+<li> サンプルのフォントデータを添付しています。
+<li> 専用のフォントデータ作成ツールを使えば、任意のビットマップフォントを変換してフォントデータとしてlibpfontで使用することが可能です。
+<li> 対応文字コードはユニコード（UTF8）なので、多言語対応が容易です。なお、libcccと併用することで、Shift-JISコードも使用することができます。
+<li> 半角フォントはプロポーショナル表示されます。
+<li> 特定文字のフィルタを定義することができます。例えば特定のエスケープコードに特殊機能を与える動作を記述するのに便利です。
+</ul></div>
+<div style="margin-left:50px;"><br></div>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_3">
+
+<h2>
+ 3 <!-- hp --><b>描画パケット</b>
+<hr noshade>
+</h2>
+
+<div style="margin-left:50px;">すべての描画パケットは、ユーザーから渡されたパケット領域上に作成されますので、一度作成されたパケットはライブラリの状態に依存しません。<br>但しテクスチャキャッシュに状態があるので、パケットの出力順を替えることはできません。<br><br></div>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_4">
+
+<h2>
+ 4 <!-- hp --><b>使用方法</b>
+<hr noshade>
+</h2>
+
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(1)&nbsp;<b>キャッシュしたい文字数を指定して必要なワークエリアのサイズを計算する</b><br></h4>
+</div>
+<div style="margin-left:67px;">size = scePFontCalcCacheSize(num);<br></div>
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(2)&nbsp;<b>ワークエリアを確保する</b><br></h4>
+</div>
+<div style="margin-left:67px;">pWork = alloc_work(size);<br></div>
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(3)&nbsp;<b>ワークを初期化、以後返された識別子を使う</b><br></h4>
+</div>
+<div style="margin-left:67px;">fd = scePFontInit(num, pWork);<br></div>
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(4)&nbsp;<b>フォント出力に使うテクスチャー領域を指定する</b><br></h4>
+</div>
+<div style="margin-left:67px;">scePFontSetTexMem(fd, tbp, size, cbp);<br></div>
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(5)&nbsp;<b>読み込んでおいたフォントデータを結びつける</b><br></h4>
+</div>
+<div style="margin-left:67px;">scePFontAttachData(fd, pData);<br></div>
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(6)&nbsp;<b>変換行列を設定する</b><br></h4>
+</div>
+<div style="margin-left:67px;">scePFontSetScreenMatrix(fd, pMatrix);<br>scePFontSetFontMatrix(fd, pMatrix);<br></div>
+
+<!-- 見出し　５，（１） -->
+<div style="margin-left:40px;"><h4>
+(7)&nbsp;<b>描画イベント</b><br></h4>
+</div>
+<div style="margin-left:67px;"><br></div>
+        <div style="margin-left:80px;"><pre><font size=3>{
+	// 座標を指定
+	scePFontSetLocate(fd, pLocate);
+
+	// パケット構築処理
+	if(1 == scePFontPuts(fd, pPacket, size, "test")){
+		do{
+			kick(pPacket);
+		}while(1 == scePFontPutsContinue(fd, pPacket, size));
+	}
+	kick(pPacket);
+}
+</font></pre></div>
+<div style="margin-left:50px;"><br></div>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_5">
+
+<h2>
+ 5 <!-- hp --><b>サンプルフォントデータ</b>
+<hr noshade>
+</h2>
+
+<div style="margin-left:40px;"><ul>
+<li> サンプルとしてlibpfont用フォントデータを提供します。Shift-JIS（JIS-X 0208）と、Latin-1（ISO 8859-1）の文字が含まれています。
+<li> 半角英数文字として2書体用意しています。デフォルトではiso0640_26.pbとjis0101_26.pb が使用され、これにはShift-JISの半角文字が含まれています。latin.pb を使用することもでき、これにはLatin-1文字がすべて含まれています。設定方法はサンプル設定ファイル（pb2pf.txt）を参考にして下さい。
+</ul></div>
+
+<!-- 見出し　４，小見出し -->
+<h3>
+<a name="Heading4_5_1">
+<a href="#Heading3_5"> 5. </a>1 <b>著作権について</b>
+</a>
+</h3>
+<div style="margin-left:40px;"><ul>
+<li> サンプルフォントデータの著作権は、株式会社ソニー･コンピュータエンタテインメントに帰属しています。
+<li> "PlayStation 2"用アプリケーションで使用する場合に限り、本サンプルフォントデータを各ライセンシ様の商品に組み込んで使用することができますが、当社の許諾なく、これを改変し、譲渡し、貸与し、または、公衆送信（送信可能化を含む）等することを禁止いたします。なお、商品にフォントライセンスの表記をする必要はありません。
+<li> 本サンプルフォントデータ、およびそれから生成されたものを、"PlayStation 2"用アプリケーション以外で使用することを禁止いたします。
+</ul></div>
+<div style="margin-left:50px;"><br></div>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_6">
+
+<h2>
+ 6 <!-- hp --><b>フォントデータ作成ツール</b>
+<hr noshade>
+</h2>
+
+<div style="margin-left:50px;">フォントデータにフォントを追加したり、オリジナルのフォントを作成するためのツールを提供します。<br>まずフォントのbmpファイルをgfファイルに変換、それをさらにpbファイルに変換し、複数のpbファイルをまとめてpfファイルとします。pfファイルがlibpfontが直接読み込むファイルです。<br></div>
+<div style="margin-left:50px;"></div>
+<div style="margin-left:67px;">
+<p>
+<img src="gif/pfont002.gif"><p>
+
+</div>
+<br>
+<div style="margin-left:50px;">各ツールは設定ファイルを読み込み、各種の設定を行います。詳しくはサンプルの設定ファイルを参考にして下さい。<br>bmpはCLUT（インデックス）付き4bitである必要があります。CLUTは、小さい方から背景色→文字色（文字の芯の色）となるようにしてください。<br></div>
+
+<!-- 見出し　３，節見出し -->
+<a name="Heading3_7">
+
+<h2>
+ 7 <!-- hp --><b>フォントデータのCLUT（インデックス）</b>
+<hr noshade>
+</h2>
+
+<div style="margin-left:50px;">現バージョンのlibpfontでは、フォントのCLUTはフォントデータの内部に静的に持っています。CLUTを変更したいときは、変換ツールgf2pb のソースを変更してフォントデータを再変換してください。<br>gf2pb.c の defFontClut が定義されているCLUTです。<br>デフォルトでは特殊な値になっていますが、これはフォントを黒フチ付きで表示するためです。<br>黒フチが不要な場合は、defFontClutを例えば以下のようにしてください。（ガンマを考慮した非線形の値にするのもよいでしょう）<br><br>{<br>{ 255, 255, 255,   0},<br>{ 255, 255, 255,   8*1-1},<br>{ 255, 255, 255,   8*2-1},<br>{ 255, 255, 255,   8*3-1},<br>{ 255, 255, 255,   8*4-1},<br>{ 255, 255, 255,   8*5-1},<br>{ 255, 255, 255,   8*6-1},<br>{ 255, 255, 255,   8*7-1},<br>{ 255, 255, 255,   8*8-1},<br>{ 255, 255, 255,   8*9-1},<br>{ 255, 255, 255,   8*10-1},<br>{ 255, 255, 255,   8*11-1},<br>{ 255, 255, 255,   8*12-1},<br>{ 255, 255, 255,   8*13-1},<br>{ 255, 255, 255,   8*14-1},<br>{ 255, 255, 255,   8*15-1},<br>}<br><br>上記のようにCLUTを設定すると、文字色はscePFontSetColor() で自由に設定することができます。<br>逆にデフォルトのままのCLUTでは、黒フチ用特殊CLUTが弊害となり、scePFontSetColor()で設定した色によってはうまくなじまない（ジャギーがでる）ことがあります。<br><br></div>
+<p><p><hr>
+<div ALIGN="right">
+    Copyright (c) 2003 Sony Computer Entertainment Inc.  All Rights Reserved.<br>
+    SCE CONFIDENTIAL
+</div>
+</body>
+</html>

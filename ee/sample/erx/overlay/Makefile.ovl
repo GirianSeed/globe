@@ -1,0 +1,122 @@
+SHELL       = /bin/sh
+
+TOP         = ../../../..
+LIBDIR      = $(TOP)/ee/lib
+INCDIR      = $(TOP)/ee/include -I$(TOP)/common/include
+OVER1       = balls
+OVER2       = iga
+OVER3       = ezmpeg
+
+TARGET      = main
+
+SRCS        = $(TARGET).c
+
+SRCS2       = $(OVER1)/balls.c \
+              $(OVER2)/iga.c \
+              $(OVER2)/devinit.c \
+              $(OVER3)/ezmpeg.c \
+              $(OVER3)/display.c \
+              $(OVER3)/ldimage.c
+
+OBJS        = $(TARGET).o
+
+OBJS2       = $(OVER1)/balls.o \
+              $(OVER2)/iga.o \
+              $(OVER2)/devinit.o \
+              $(OVER3)/ezmpeg.o \
+              $(OVER3)/display.o \
+              $(OVER3)/ldimage.o
+
+OBJS3       = $(OVER1)/balltex.o \
+              $(OVER2)/work.o \
+              crt0.o
+
+LCFILE      = over.cmd
+LIBOPT      = -lm -lgraph -ldma -ldev -lpkt -lvu0 -lpad -lsdr -lmpeg -lipu -lcdvd
+
+PREFIX      = ee
+AS          = $(PREFIX)-gcc
+CC          = $(PREFIX)-gcc
+LD          = $(PREFIX)-gcc
+DVPASM      = $(PREFIX)-dvp-as
+OBJDUMP     = $(PREFIX)-objdump
+RUN         = dsedb -ncmv -noexit -r run
+RM          = /bin/rm -f
+
+CFLAGS      = -O2 -Wall -W -Wa,-al -DUSE_OVERLAY=1
+CFLAGS2     = -fno-strict-aliasing -O2 -Wa,-al -G0 -DOVERLAY -DUSE_OVERLAY=1
+CXXFLAGS    = -O2 -Wall -Werror -Wa,-al -fno-exceptions -fno-common
+ASFLAGS     = -c -xassembler-with-cpp -Wa,-al
+DVPASMFLAGS = 
+LDFLAGS     = -Wl,-Map,$(TARGET).map -mno-crt0 -L$(LIBDIR) $(LIBOPT)
+
+# デバッギングステーション用の設定
+#TMPFLAGS    = -DREPLACE -DAUTO -DCDROM
+
+# DTL-T10000 用の設定(hostから読む)
+TMPFLAGS    = -DREPLACE -DAUTO -DT10K
+
+.SUFFIXES: .c .s .cc .dsm
+
+all: $(TARGET).elf
+
+$(TARGET).elf: $(OBJS) $(OBJS2) $(OBJS3)
+	$(LD) -o $@ -T $(LCFILE) $(OBJS) $(OBJS2) $(OBJS3) $(LDFLAGS)
+	cp main.elf main.sym
+	ee-objcopy -O binary -j .balls  main.elf balls.bin
+	ee-objcopy -O binary -j .iga    main.elf iga.bin
+	ee-objcopy -O binary -j .ezmpeg main.elf ezmpeg.bin
+	ee-objcopy -R .balls -R .iga -R .ezmpeg main.elf
+
+cdimage : $(TARGET).elf
+	mkdir cdimage
+	mkdir cdimage/data
+	mkdir cdimage/modules
+	mkdir cdimage/bin
+	cp /usr/local/sce/data/movie/mpeg/ez.m2v     cdimage/data/
+	cp /usr/local/sce/data/sound/wave/knot_l.int cdimage/data/
+	cp /usr/local/sce/iop/modules/ioprp*         cdimage/modules/
+	cp /usr/local/sce/iop/modules/sio2man.irx    cdimage/modules/sio2man.irx
+	cp /usr/local/sce/iop/modules/padman.irx     cdimage/modules/padman.irx
+	cp /usr/local/sce/iop/modules/libsd.irx      cdimage/modules/libsd.irx
+	cp /usr/local/sce/iop/modules/sdrdrv.irx     cdimage/modules/sdrdrv.irx
+	cp balls.bin                                 cdimage/bin
+	cp iga.bin                                   cdimage/bin
+	cp ezmpeg.bin                                cdimage/bin
+	ee-objcopy -S $(TARGET).elf                  cdimage/slps_999.99
+	cp system.cnf                                cdimage/system.cnf
+
+$(OBJS) : $(SRCS)
+	$(CC) $(CFLAGS) $(TMPFLAGS) -I$(INCDIR) -c $*.c -o $@ > $*.lst
+
+$(OBJS2) : $(SRCS2)
+	$(CC) $(CFLAGS2) $(TMPFLAGS) -I$(INCDIR) -c $*.c -o $@ > $*.lst
+
+crt0.o: $(LIBDIR)/crt0.s
+	$(AS) $(ASFLAGS) $(TMPFLAGS) -o $@ $< > $*.lst
+
+.s.o:
+	$(AS) $(ASFLAGS) $(TMPFLAGS) -I$(INCDIR) -o $@ $< > $*.lst
+
+.dsm.o:
+	$(CC) -I$(INCDIR) -x c -E $< > $*.tmp
+	$(DVPASM) $(DVPASMFLAGS) -I$(INCDIR) -o $@ $*.tmp > $*.lst
+	$(RM) $*.tmp
+
+.c.o:
+	$(CC) $(CFLAGS) $(TMPFLAGS) -I$(INCDIR) -c $< -o $*.o > $*.lst
+
+.cc.o:
+	$(CC) $(CXXFLAGS) $(TMPFLAGS) -I$(INCDIR) -c $< -o $*.o > $*.lst
+
+run: $(TARGET).elf
+	$(RUN) $(TARGET).elf
+
+clean:
+	$(RM) *.o *.map *.lst core *.dis *.elf
+	$(RM) balls.bin iga.bin ezmpeg.bin
+	$(RM) $(OVER1)/*.o $(OVER2)/*.o $(OVER3)/*.o
+	$(RM) $(OVER1)/*.lst $(OVER2)/*.lst $(OVER3)/*.lst
+	$(RM) *.sym
+	$(RM) -r cdimage
+

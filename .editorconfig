@@ -7,34 +7,40 @@ indent_style    = tab
 end_of_line     = lf
 max_line_length = off
 
+# C/C++
 [*.{c,h}]
 tab_width       = 8
 indent_size     = tab
 indent_style    = tab
 
+# assembler-with-cpp
 [*.{s,S,sx}]
 tab_width       = 8
 indent_size     = tab
 indent_style    = tab
 
+# dvp-gas assembly
 [*.{dsm,vsm,vcl}]
 tab_width       = 8
 indent_size     = tab
 indent_style    = tab
 
+# Makefile
 [{*{M,m}akefile*,*.{mk,mak,make}}]
 tab_width       = 8
 indent_size     = tab
 indent_style    = tab
 
-[*.{bash,sh,zsh}]
+# Scripts
+[*.{sh,bash}]
 indent_style    = space
 end_of_line     = lf
 
-[*.{bat,cmd,ps1}]
+[*.{bat,cmd}]
 indent_style    = space
 end_of_line     = crlf
 
+# Documents
 [*.txt]
 tab_width       = 8
 indent_size     = tab

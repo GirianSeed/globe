@@ -1,5 +1,6 @@
 * -text
 
+# C/C++
 *.c             linguist-language=C
 *.h             linguist-language=C
 
@@ -12,15 +13,17 @@
 *.vsm           linguist-language=Assembly
 *.vcl           linguist-language=Assembly
 
+# Makefile
 *.mkf           linguist-language=Makefile
 Makefile.*      linguist-language=Makefile
 MakeDefs        linguist-language=Makefile
 MakeRules       linguist-language=Makefile
 PathDefs        linguist-language=Makefile
 
-# end-of-line encoding
+# Scripts
 *.sh            text eol=lf
 *.bash          text eol=lf
+*.fish          text eol=lf
 *.csh           text eol=lf
 *.tcsh          text eol=lf
 *.ksh           text eol=lf
@@ -30,29 +33,35 @@ PathDefs        linguist-language=Makefile
 *.cmd           text eol=crlf
 *.ps1           text eol=crlf
 
-# data
-*.gz binary
-*.lzh binary
-*.rpm binary
-*.sit binary
-*.tar binary
-*.tgz binary
-*.zip binary
+# Visual Studio Code
+# Fix syntax highlighting on GitHub to allow comments
+.vscode/*.json  linguist-language=JSON-with-Comments
 
-*.gf binary
-*.ipu binary
-*.m2v binary
-*.pss binary
+# archives
+*.lzh           binary
+*.rpm           binary
+*.sit           binary
+*.tar           binary
+*.tar.gz        binary
+*.tgz           binary
+*.zip           binary
 
-*.bd binary
-*.hd binary
-*.inb binary
-*.int binary
-*.raw binary
-*.seq binary
-*.sq binary
-*.ssb binary
-*.vag binary
-*.vb binary
-*.vh binary
-*.wav binary
+# image data
+*.gf            binary
+*.ipu           binary
+*.m2v           binary
+*.pss           binary
+
+# sound data
+*.bd            binary
+*.hd            binary
+*.inb           binary
+*.int           binary
+*.raw           binary
+*.seq           binary
+*.sq            binary
+*.ssb           binary
+*.vag           binary
+*.vb            binary
+*.vh            binary
+*.wav           binary
